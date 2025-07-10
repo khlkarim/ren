@@ -1,0 +1,9 @@
+{
+  "dependencies": [
+    "boost-uuid",
+    "glad",
+    "glfw3",
+    "glm",
+    "spdlog"
+  ]
+}

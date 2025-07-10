@@ -12,7 +12,7 @@ public:
     bool add(Model& model);
     bool remove(Model& model);
 
-private:    
+public:
     Camera camera;
     std::vector<Model> models;
 };

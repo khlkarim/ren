@@ -48,12 +48,7 @@ bool Window::isOpen()
     return !glfwWindowShouldClose(this->_window);
 }
 
-void Window::setScene(Scene& scene) 
-{
-    this->scene = scene;
-}
-
-void Window::render() const
+void Window::render(const Scene& scene) const
 {
     // Poll events form the last frame
     glfwPollEvents();

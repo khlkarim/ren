@@ -13,8 +13,7 @@ public:
     Window(const std::string& name, const int width, const int height);
     virtual ~Window();
 
-    void setScene(Scene& scene);
-    void render() const;
+    void render(const Scene& scene) const;
     bool isOpen();
 
     friend void framebuffer_size_callback(GLFWwindow* window, int width, int height);    
@@ -22,7 +21,6 @@ private:
     int width;
     int height;
     std::string name;
-    Scene scene;    
     GLFWwindow* _window;
 };
 

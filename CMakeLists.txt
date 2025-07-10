@@ -16,6 +16,7 @@ target_include_directories(REN
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${CMAKE_CURRENT_SOURCE_DIR}/include/components
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/primitives
 )
 target_link_libraries(REN PUBLIC glfw glad::glad Boost::uuid spdlog::spdlog)
 

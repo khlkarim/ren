@@ -3,10 +3,15 @@
 
 int main()
 {
-    Window window("Scene 0", 800, 600);
+    Window window("Window0", 800, 600);
+    
+    Scene scene;
+    Model model;
+
+    scene.add(model);
 
     while(window.isOpen()) {
-        window.render();
+        window.render(scene);
     }
 
     return 0;

@@ -1,6 +1,10 @@
 #include "Model.hpp"
 
 Model::Model(const std::string& path)
+    : shader(
+        "C:\\Users\\karim\\dev\\workspaces\\personal\\ren\\assets\\shaders\\default.vert",
+        "C:\\Users\\karim\\dev\\workspaces\\personal\\ren\\assets\\shaders\\default.frag"
+    )
 {
     spdlog::info("Loading Model");
     this->_id = boost::uuids::random_generator()();
@@ -13,11 +17,17 @@ Model::~Model()
     spdlog::info("Unloaded model with ID: {}", boost::uuids::to_string(this->_id));
 }
 
-void Model::render(Shader& shader)
+void Model::render(const glm::mat4& projection, const glm::mat4& view)
 {
+    this->shader.use();
+
+    this->shader.setMat4("projection", projection);
+    this->shader.setMat4("view", view);
+    this->shader.setMat4("model", this->transform.getModel());
+
     for(unsigned int i = 0; i<this->meshes.size(); i++)
     {
-        meshes[i].render(shader);
+        this->meshes[i].render(this->shader);
     }
 }
 
@@ -165,6 +175,7 @@ unsigned int TextureFromFile(const char *path, const std::string &directory, boo
     spdlog::info("Generated the texture");
 
     int width, height, nrComponents;
+    stbi_set_flip_vertically_on_load(true);
     unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     spdlog::info("Texture data pointer: {}", static_cast<void*>(data));
     if (data)

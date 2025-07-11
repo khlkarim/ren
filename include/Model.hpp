@@ -21,7 +21,7 @@ class Model
 public:
     Model(const std::string& path);
     virtual ~Model();
-    void render(Shader& shader);
+    void render(const glm::mat4& projection, const glm::mat4& view);
     friend bool operator==(const Model& m1, const Model& m2);
     
 private:
@@ -36,6 +36,7 @@ public:
 private:
     boost::uuids::uuid _id;
     std::string _path;
+    Shader shader;
     std::vector<Mesh> meshes;
     std::vector<Texture> textures_loaded;
 };

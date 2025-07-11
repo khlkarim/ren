@@ -21,14 +21,15 @@ bool Scene::remove(Model& model) {
 
 void Scene::render()
 {   
-    std::string vertexShader = "C:\\Users\\karim\\dev\\workspaces\\personal\\ren\\assets\\shaders\\default.vert";
-    std::string fragShader = "C:\\Users\\karim\\dev\\workspaces\\personal\\ren\\assets\\shaders\\default.frag";
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    glm::mat4 view(1.0f);
 
-    Shader shader(vertexShader, fragShader);
-    shader.use();
+    view = glm::translate(view, -camera.position);
+    glm::quat q = glm::quat(glm::radians(-camera.direction));
+    view *= glm::mat4_cast(q);
 
-    for(int i = 0; i<this->models.size(); i++)
+    for(int i = 0; i < this->models.size(); i++)
     {
-        this->models[i].render(shader);
+        this->models[i].render(projection, view);
     }
 }

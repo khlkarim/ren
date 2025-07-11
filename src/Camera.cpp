@@ -21,5 +21,5 @@ void Camera::zoom(float scale)
 
 glm::mat4 Camera::getProjection()
 {
-    return glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    return glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
 }

@@ -3,14 +3,17 @@
 
 int main()
 {
-    Window window("Window0", 800, 600);
-    
-    Scene scene;
-    Model model;
+    std::string pathToModel = "C:\\Users\\karim\\dev\\workspaces\\personal\\ren\\assets\\models\\backpack\\backpack.obj";
 
+    Window window("hi", 800, 600);
+
+    Scene scene;
+    Model model(pathToModel);
+    
     scene.add(model);
 
-    while(window.isOpen()) {
+    while(window.isOpen())
+    {
         window.render(scene);
     }
 

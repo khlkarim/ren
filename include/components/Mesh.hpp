@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <glad/glad.h>
+#include "Shader.hpp"
 #include "Vertex.hpp"
 #include "Texture.hpp"
 
@@ -14,7 +15,7 @@ public:
         std::vector<unsigned int> indices, 
         std::vector<Texture> textures
     );
-    void render();
+    void render(Shader& shader);
 
 private:
     void init();

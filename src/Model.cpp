@@ -2,10 +2,10 @@
 
 Model::Model(const std::string& path)
 {
+    spdlog::info("Loading Model");
     this->_id = boost::uuids::random_generator()();
     this->load(path);
-
-    spdlog::info("Loaded model with ID: {}", boost::uuids::to_string(this->_id));
+    spdlog::info("Finished loading model");
 }
 
 Model::~Model()
@@ -13,11 +13,11 @@ Model::~Model()
     spdlog::info("Unloaded model with ID: {}", boost::uuids::to_string(this->_id));
 }
 
-void Model::render()
+void Model::render(Shader& shader)
 {
     for(unsigned int i = 0; i<this->meshes.size(); i++)
     {
-        meshes[i].render();
+        meshes[i].render(shader);
     }
 }
 
@@ -36,13 +36,15 @@ void Model::load(const std::string& path)
         spdlog::error("Failed to load model: {}", import.GetErrorString());
         return;
     }
-    this->_path = path.substr(0, path.find_last_of('/'));
+    this->_path = path.substr(0, path.find_last_of('\\'));
+    spdlog::info("Loaded the scene object");
 
     processNode(scene->mRootNode, scene);
 } 
 
 void Model::processNode(aiNode *node, const aiScene *scene)
 {
+    spdlog::info("Processing node: {}", node->mName.C_Str());
     for(unsigned int i = 0; i<node->mNumMeshes; i++)
     {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
@@ -57,6 +59,8 @@ void Model::processNode(aiNode *node, const aiScene *scene)
 
 Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 {
+    spdlog::info("Processing Mesh: {}", mesh->mName.C_Str());
+
     std::vector<Vertex> vertices;
     std::vector<Texture> textures;
     std::vector<unsigned int> indices;
@@ -78,9 +82,10 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 
         if(mesh->mTextureCoords[0])
         {
-            vector.x = mesh->mTextureCoords[0][i].x;
-            vector.y = mesh->mTextureCoords[0][i].y;
-            vertex.TexCoords = vector;
+            glm::vec2 texCoord;
+            texCoord.x = mesh->mTextureCoords[0][i].x;
+            texCoord.y = mesh->mTextureCoords[0][i].y;
+            vertex.TexCoords = texCoord;
         } 
         else 
         {
@@ -101,6 +106,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 
     if(mesh->mMaterialIndex >= 0)
     {
+        spdlog::info("Mesh has material. Loading...");
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
         std::vector<Texture> diffuseMaps = this->loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
@@ -115,19 +121,30 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial* material, aiTextureType type, std::string typeName)
 {
+    spdlog::info("Loading material textures");
     std::vector<Texture> textures;
 
-    for(unsigned int i = 0; i<material->GetTextureCount(type); i++)
-    {
+    // Ensure we never push to textures_loaded while iterating it
+    for (unsigned int i = 0; i < material->GetTextureCount(type); i++) {
         aiString str;
         material->GetTexture(type, i, &str);
 
-        Texture texture;
-        texture.id = TextureFromFile(str.C_Str(), this->_path);
-        texture.type = typeName;
-        texture.path = str.C_Str();
+        auto it = std::find_if(
+            this->textures_loaded.begin(), this->textures_loaded.end(),
+            [&](const Texture& t) { return std::strcmp(t.path.data(), str.C_Str()) == 0; }
+        );
 
-        textures.push_back(texture);
+        if (it != this->textures_loaded.end()) {
+            textures.push_back(*it);
+        } else {
+            Texture texture;
+            texture.id = TextureFromFile(str.C_Str(), this->_path);
+            texture.type = typeName;
+            texture.path = str.C_Str();
+
+            this->textures_loaded.push_back(texture);
+            textures.push_back(texture);
+        }
     }
 
     return textures;
@@ -137,15 +154,23 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* material, aiTexture
 unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma)
 {
     std::string filename(path);
-    filename = directory + '/' + filename;
+    if (directory.back() == '/' || directory.back() == '\\')
+        filename = directory + filename;
+    else
+        filename = directory + "\\" + filename;
+    spdlog::info("Texture from file: {}", filename);
 
     unsigned int textureID;
     glGenTextures(1, &textureID);
+    spdlog::info("Generated the texture");
 
     int width, height, nrComponents;
     unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+    spdlog::info("Texture data pointer: {}", static_cast<void*>(data));
     if (data)
     {
+        spdlog::info("Loaded Texture data");
+
         GLenum format;
         if (nrComponents == 1)
             format = GL_RED;
@@ -164,6 +189,7 @@ unsigned int TextureFromFile(const char *path, const std::string &directory, boo
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         stbi_image_free(data);
+        spdlog::info("Freed Texture data");
     }
     else
     {

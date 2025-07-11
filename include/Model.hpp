@@ -9,8 +9,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <glad/glad.h>
-#include <stb_image.h>
+#include "stb_image.h"
 #include "Transform.hpp"
+#include "Shader.hpp"
 #include "Mesh.hpp"
 
 unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma = false);
@@ -20,7 +21,7 @@ class Model
 public:
     Model(const std::string& path);
     virtual ~Model();
-    void render();
+    void render(Shader& shader);
     friend bool operator==(const Model& m1, const Model& m2);
     
 private:
@@ -36,6 +37,7 @@ private:
     boost::uuids::uuid _id;
     std::string _path;
     std::vector<Mesh> meshes;
+    std::vector<Texture> textures_loaded;
 };
 
 #endif // MODEL_HPP

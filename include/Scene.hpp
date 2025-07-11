@@ -8,7 +8,7 @@
 class Scene 
 {
 public:
-    void setCamera(Camera& camera);
+    void render();
     bool add(Model& model);
     bool remove(Model& model);
 

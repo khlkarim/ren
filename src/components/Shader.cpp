@@ -2,9 +2,14 @@
 
 Shader::Shader(const std::string& vertexShader, const std::string& fragShader)
 {
-    const char* vertexCode = read(vertexShader).c_str();
-    const char* fragCode = read(fragShader).c_str();
+    spdlog::info("Loading vertex shader: {}", vertexShader);
+    spdlog::info("Loading fragment shader: {}", fragShader);
 
+    std::string vertexCodeStr = read(vertexShader);
+    std::string fragCodeStr = read(fragShader);
+    const char* vertexCode = vertexCodeStr.c_str();
+    const char* fragCode = fragCodeStr.c_str();
+    
     unsigned int vertex, fragment;
     int success;
     char infoLog[512];
@@ -85,9 +90,9 @@ std::string read(const std::string& path)
         
         result = stream.str();
     }
-    catch(std::ifstream::failure e)
+    catch(const std::ifstream::failure& e)
     {
-        spdlog::error("Failed to read file: {}", path);
+        spdlog::error("Failed to read file: {} ({})", path, e.what());
     }
     
     return result;

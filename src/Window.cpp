@@ -6,6 +6,9 @@ Window::Window(const std::string& name, const int width, const int height)
         spdlog::critical("Failed to initialize GLFW");
         exit(-1);
     }
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     spdlog::info("Initialized GLFW");
     
     this->_window = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
@@ -31,6 +34,8 @@ Window::Window(const std::string& name, const int width, const int height)
     glfwGetFramebufferSize(this->_window, &framebufferWidth, &framebufferHeight);
     glViewport(0, 0, framebufferWidth, framebufferHeight);   
     spdlog::info("Set GL viewport");
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 Window::~Window() 
@@ -48,12 +53,12 @@ bool Window::isOpen()
     return !glfwWindowShouldClose(this->_window);
 }
 
-void Window::render(const Scene& scene) const
+void Window::render(Scene& scene)
 {
     // Poll events form the last frame
     glfwPollEvents();
 
-    // Render the scene
+    scene.render();
 
     // Display frame
     glfwSwapBuffers(this->_window);

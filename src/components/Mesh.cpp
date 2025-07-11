@@ -12,7 +12,7 @@ Mesh::Mesh(
     this->init();
 }
 
-void Mesh::render()
+void Mesh::render(Shader& shader)
 {
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
@@ -33,6 +33,7 @@ void Mesh::render()
             number = std::to_string(specularNr++);
         }
 
+        shader.setInt(("material." + name + number).c_str(), i);
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
     glActiveTexture(GL_TEXTURE0);

@@ -9,12 +9,12 @@ class Scene
 {
 public:
     void render();
-    bool add(Model& model);
-    bool remove(Model& model);
+    bool add(Model* model);
+    bool remove(Model* model);
 
 public:
     Camera camera;
-    std::vector<Model> models;
+    std::vector<Model*> models;
 };
 
 #endif // SCENE_HPP

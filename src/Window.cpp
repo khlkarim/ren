@@ -26,6 +26,7 @@ Window::Window(const std::string& name, const int width, const int height)
         glfwTerminate();
         exit(-1);
     }
+    glEnable(GL_DEPTH_TEST);
     glfwSetFramebufferSizeCallback(this->_window, framebuffer_size_callback);
     spdlog::info("Initialized glad");
     spdlog::info("Set framebuffer size callback");
@@ -53,6 +54,7 @@ bool Window::isOpen()
 
 void Window::render(Scene& scene)
 {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // Poll events form the last frame
     glfwPollEvents();
 

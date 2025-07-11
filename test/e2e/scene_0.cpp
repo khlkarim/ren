@@ -8,13 +8,14 @@ int main()
     Window window("hi", 800, 600);
 
     Scene scene;
-    Model model(pathToModel);
+    Model* model = new Model(pathToModel);
     
-    model.transform.rotate(glm::vec3(0.0f, 0.0f, 90.0f));
     scene.add(model);
     
     while(window.isOpen())
     {
+        model->transform.setRotation(glm::vec3(0.0f, 10.0f * glfwGetTime(), 0.0f));
+        // model->transform.setPosition(glm::vec3(glm::sin(glfwGetTime()), glm::cos(glfwGetTime()), 0.0f));
         window.render(scene);
     }
 

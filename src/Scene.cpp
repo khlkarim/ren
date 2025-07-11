@@ -1,8 +1,10 @@
 #include "Scene.hpp"
 
 bool Scene::add(Model& model) {
-    bool exists = find(this->models.begin(), this->models.end(), model) == this->models.end();
-    this->models.push_back(model);
+    bool exists = find(this->models.begin(), this->models.end(), model) != this->models.end();
+    if (!exists) {
+        this->models.push_back(std::move(model));
+    }
 
     spdlog::info("Added model to scene");
 
@@ -21,12 +23,8 @@ bool Scene::remove(Model& model) {
 
 void Scene::render()
 {   
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-    glm::mat4 view(1.0f);
-
-    view = glm::translate(view, -camera.position);
-    glm::quat q = glm::quat(glm::radians(-camera.direction));
-    view *= glm::mat4_cast(q);
+    glm::mat4 view = camera.transform.getView();
+    glm::mat4 projection = camera.getProjection();
 
     for(int i = 0; i < this->models.size(); i++)
     {

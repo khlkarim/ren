@@ -66,10 +66,15 @@ glm::mat4 Transform::getModel() const
 {
     glm::mat4 model = glm::mat4(1.0f);
 
-    model = glm::scale(model, this->_scale);
+    model = glm::translate(model, this->_position);
     glm::quat rotationQuat = glm::quat(glm::radians(this->_rotation));
     model *= glm::mat4_cast(rotationQuat);
-    model = glm::translate(model, this->_position);
+    model = glm::scale(model, this->_scale);
 
     return model;
+}
+
+glm::mat4 Transform::getView() const
+{
+    return glm::inverse(this->getModel());
 }

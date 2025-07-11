@@ -1,21 +1,25 @@
 #include "Camera.hpp"
 
-Camera::Camera(glm::vec3 position, glm::vec3 target)
+Camera::Camera(const glm::vec3& position, const glm::vec3& target)
 {
-    this->position = position;
-    this->direction = glm::normalize(position - target);
-    this->right = glm::normalize(glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), this->direction));
-    this->up = glm::normalize(glm::cross(this->direction, this->right));
-
+    this->transform.setPosition(position);
     this->lookAt(target);
 }
 
-void Camera::lookAt(glm::vec3 target)
+void Camera::lookAt(const glm::vec3& target)
 {
-    glm::mat4 view;
-    view = glm::lookAt(
-        this->position, 
-  		target, 
-  		glm::vec3(0.0f, 1.0f, 0.0f)
-    );
+    glm::vec3 position = glm::normalize(target - this->transform.getPosition());
+    glm::vec3 direction = glm::normalize(target - position);
+    glm::quat orientation = glm::quatLookAt(direction, glm::vec3(0.0f, 1.0f, 0.0f));
+    this->transform.setRotation(glm::eulerAngles(orientation));
+}
+
+void Camera::zoom(float scale)
+{
+    this->transform.setScale(glm::vec3(scale));
+}
+
+glm::mat4 Camera::getProjection()
+{
+    return glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 }

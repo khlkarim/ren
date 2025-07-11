@@ -22,6 +22,7 @@ public:
     glm::vec3 getScale() const;
 
     glm::mat4 getModel() const;
+    glm::mat4 getView() const;
 
 private:
     glm::vec3 _position = glm::vec3(0.0f, 0.0f, 0.0f);

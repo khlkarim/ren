@@ -2,6 +2,7 @@
 #define MESH_HPP
 
 #include <vector>
+#include <glad/glad.h>
 #include "Vertex.hpp"
 #include "Texture.hpp"
 

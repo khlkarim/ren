@@ -1,24 +1,23 @@
 #include "Scene.hpp"
 
-bool Scene::add(Model* model) {
-    bool exists = find(this->models.begin(), this->models.end(), model) != this->models.end();
-    if (!exists) {
-        this->models.push_back(std::move(model));
+bool Scene::add(std::shared_ptr<Model> model) {
+    if (!model) return false;
+
+    for (const auto& m : models) {
+        if (m == model) return false;
     }
 
-    spdlog::info("Added model to scene");
-
-    return exists;
+    models.push_back(model);
+    return true;
 }
 
-bool Scene::remove(Model* model) {
-    auto it = find(this->models.begin(), this->models.end(), model);
-    
-    if(it != this->models.end()) {
-        this->models.erase(it);
+bool Scene::remove(std::shared_ptr<Model> model) {
+    auto it = std::find(models.begin(), models.end(), model);
+    if (it != models.end()) {
+        models.erase(it);
+        return true;
     }
-
-    return it != this->models.end();
+    return false;
 }
 
 void Scene::render()

@@ -12,8 +12,22 @@ Mesh::Mesh(
     this->init();
 }
 
-void Mesh::render(Shader& shader)
+Shader Mesh::getShader() const {
+    return this->shader;
+}
+
+void Mesh::setShader(const Shader& shader) {
+    this->shader = shader;
+}
+
+void Mesh::render(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model)
 {
+    shader.use();
+
+    shader.setMat4("projection", projection);
+    shader.setMat4("view", view);
+    shader.setMat4("model", model);
+
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
 

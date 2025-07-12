@@ -14,7 +14,10 @@ public:
         std::vector<unsigned int> indices, 
         std::vector<Texture> textures
     );
-    void render(Shader& shader);
+    void render(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
+
+    Shader getShader() const;
+    void setShader(const Shader& shader);
 
 private:
     void init();
@@ -25,5 +28,6 @@ public:
     std::vector<Texture> textures;
 
 private:
+    Shader shader;
     unsigned int VAO, VBO, EBO;
 };

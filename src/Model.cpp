@@ -15,15 +15,9 @@ Model::~Model()
 
 void Model::render(const glm::mat4& projection, const glm::mat4& view)
 {
-    this->shader.use();
-
-    this->shader.setMat4("projection", projection);
-    this->shader.setMat4("view", view);
-    this->shader.setMat4("model", this->transform.getModelMatrix());
-
     for(unsigned int i = 0; i<this->meshes.size(); i++)
     {
-        this->meshes[i].render(this->shader);
+        this->meshes[i].render(projection, view, this->transform.getModelMatrix());
     }
 }
 

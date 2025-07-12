@@ -35,7 +35,6 @@ public:
 private:
     boost::uuids::uuid _id;
     std::string _path;
-    Shader shader;
     std::vector<Mesh> meshes;
     std::vector<Texture> textures_loaded;
 };

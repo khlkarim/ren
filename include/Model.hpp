@@ -1,5 +1,4 @@
-#ifndef MODEL_HPP
-#define MODEL_HPP
+#pragma once
 
 #include <spdlog/spdlog.h>
 #include <boost/uuid/uuid.hpp>
@@ -40,5 +39,3 @@ private:
     std::vector<Mesh> meshes;
     std::vector<Texture> textures_loaded;
 };
-
-#endif // MODEL_HPP

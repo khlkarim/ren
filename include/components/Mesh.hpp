@@ -1,5 +1,4 @@
-#ifndef MESH_HPP
-#define MESH_HPP
+#pragma once
 
 #include <vector>
 #include <glad/glad.h>
@@ -28,5 +27,3 @@ public:
 private:
     unsigned int VAO, VBO, EBO;
 };
-
-#endif

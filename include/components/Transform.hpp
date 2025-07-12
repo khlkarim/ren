@@ -1,5 +1,4 @@
-#ifndef TRANSFORM_HPP
-#define TRANSFORM_HPP
+#pragma once
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -32,5 +31,3 @@ private:
     glm::quat _rotation;
     glm::vec3 _scale;
 };
-
-#endif // TRANSFORM_HPP

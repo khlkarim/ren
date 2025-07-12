@@ -1,5 +1,4 @@
-#ifndef SCENE_HPP
-#define SCENE_HPP
+#pragma once
 
 #include <vector>
 #include "Camera.hpp"
@@ -16,5 +15,3 @@ public:
     Camera camera;
     std::vector<Model*> models;
 };
-
-#endif // SCENE_HPP

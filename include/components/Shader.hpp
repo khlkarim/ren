@@ -1,5 +1,4 @@
-#ifndef SHADER_HPP
-#define SHADER_HPP
+#pragma once
 
 #include <string>
 #include <fstream>
@@ -39,5 +38,3 @@ public:
 private:
     unsigned int id;
 };
-
-#endif // SHADER_HPP

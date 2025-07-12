@@ -1,5 +1,4 @@
-#ifndef WINDOW_HPP
-#define WINDOW_HPP
+#pragma once
 
 #include <string>
 #include <glad/glad.h>
@@ -23,5 +22,3 @@ private:
     std::string name;
     GLFWwindow* _window;
 };
-
-#endif // WINDOW_HPP

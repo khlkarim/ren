@@ -1,5 +1,4 @@
-#ifndef TEXTURE_HPP
-#define TEXTURE_HPP
+#pragma once
 
 #include <string>
 #include <glm/vec2.hpp>
@@ -11,5 +10,3 @@ struct Texture
     std::string type;
     std::string path;
 };
-
-#endif // TEXTURE_HPP

@@ -1,5 +1,4 @@
-#ifndef CAMERA_HPP
-#define CAMERA_HPP
+#pragma once
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -55,5 +54,3 @@ private:
     float farPlane;
     ProjectionType projectionType;
 };
-
-#endif // CAMERA_HPP

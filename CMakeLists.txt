@@ -30,5 +30,10 @@ target_link_libraries(REN
         assimp::assimp 
 )
 
-add_executable(Scene_0 test/e2e/scene_0.cpp)
-target_link_libraries(Scene_0 PRIVATE REN)
+file(GLOB E2E_TESTS test/e2e/*.cpp)
+
+foreach(TEST_SRC ${E2E_TESTS})
+    get_filename_component(TEST_NAME ${TEST_SRC} NAME_WE)
+    add_executable(${TEST_NAME} ${TEST_SRC})
+    target_link_libraries(${TEST_NAME} PRIVATE REN)
+endforeach()

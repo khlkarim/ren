@@ -2,8 +2,8 @@
 
 Model::Model(const std::string& path)
     : shader(
-        "C:\\Users\\karim\\dev\\workspaces\\personal\\ren\\assets\\shaders\\default.vert",
-        "C:\\Users\\karim\\dev\\workspaces\\personal\\ren\\assets\\shaders\\default.frag"
+        "assets\\shaders\\default.vert",
+        "assets\\shaders\\default.frag"
     )
 {
     spdlog::info("Loading Model");

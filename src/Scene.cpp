@@ -23,8 +23,8 @@ bool Scene::remove(Model* model) {
 
 void Scene::render()
 {   
-    glm::mat4 view = camera.transform.getView();
-    glm::mat4 projection = camera.getProjection();
+    glm::mat4 view = camera.getViewMatrix();
+    glm::mat4 projection = camera.getProjectionMatrix();
 
     for(int i = 0; i < this->models.size(); i++)
     {

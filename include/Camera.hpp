@@ -1,24 +1,59 @@
 #ifndef CAMERA_HPP
-#define CAMERA_HPP 
+#define CAMERA_HPP
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include "Transform.hpp"
 
-class Camera 
+class Camera
 {
 public:
-    Camera(
-        const glm::vec3& position = glm::vec3(0.0f, 0.0f, 6.0f), 
-        const glm::vec3& target = glm::vec3(0.0f, 0.0f, 0.0f)
-    );
-    void lookAt(const glm::vec3& target);
-    void zoom(float scale);
-    glm::mat4 getProjection();
+    enum class ProjectionType {
+        Perspective,
+        Orthographic
+    };
 
-public:
-    Transform transform;
+    Camera(
+        const glm::vec3& position = glm::vec3(0.0f, 0.0f, 6.0f),
+        const glm::vec3& target = glm::vec3(0.0f, 0.0f, 0.0f),
+        const glm::vec3& up = glm::vec3(0.0f, 1.0f, 0.0f),
+        float fov = 45.0f,
+        float aspectRatio = 16.0f / 9.0f,
+        float nearPlane = 0.1f,
+        float farPlane = 100.0f,
+        ProjectionType projectionType = ProjectionType::Perspective
+    );
+
+    void setPosition(const glm::vec3& position);
+    void setTarget(const glm::vec3& target);
+    void setUp(const glm::vec3& up);
+    void setFOV(float fov);
+    void setAspectRatio(float aspectRatio);
+    void setNearPlane(float nearPlane);
+    void setFarPlane(float farPlane);
+    void setProjectionType(ProjectionType type);
+
+    const glm::vec3& getPosition() const;
+    const glm::vec3& getTarget() const;
+    const glm::vec3& getUp() const;
+    float getFOV() const;
+    float getAspectRatio() const;
+    float getNearPlane() const;
+    float getFarPlane() const;
+    ProjectionType getProjectionType() const;
+
+    glm::mat4 getViewMatrix() const;
+    glm::mat4 getProjectionMatrix() const;
+
+private:
+    glm::vec3 position;
+    glm::vec3 target;
+    glm::vec3 up;
+    float fov;
+    float aspectRatio;
+    float nearPlane;
+    float farPlane;
+    ProjectionType projectionType;
 };
 
 #endif // CAMERA_HPP

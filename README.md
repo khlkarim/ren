@@ -51,3 +51,5 @@ how unique is that identifier?
 it would be used to reference that entity? lightweight reference
 
 i should add a namespace (ren::)
+read rotation as euler angles 
+store them as quaterions

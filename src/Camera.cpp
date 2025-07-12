@@ -1,25 +1,106 @@
 #include "Camera.hpp"
 
-Camera::Camera(const glm::vec3& position, const glm::vec3& target)
+Camera::Camera(
+    const glm::vec3& position,
+    const glm::vec3& target,
+    const glm::vec3& up,
+    float fov,
+    float aspectRatio,
+    float nearPlane,
+    float farPlane,
+    ProjectionType projectionType
+)
 {
-    this->transform.setPosition(position);
-    this->lookAt(target);
+    this->position = position;
+    this->target = target;
+    this->up = up;
+    this->fov = fov;
+    this->aspectRatio = aspectRatio;
+    this->nearPlane = nearPlane;
+    this->farPlane = farPlane;
+    this->projectionType = projectionType;
 }
 
-void Camera::lookAt(const glm::vec3& target)
-{
-    glm::vec3 position = glm::normalize(target - this->transform.getPosition());
-    glm::vec3 direction = glm::normalize(target - position);
-    glm::quat orientation = glm::quatLookAt(direction, glm::vec3(0.0f, 1.0f, 0.0f));
-    this->transform.setRotation(glm::eulerAngles(orientation));
+void Camera::setPosition(const glm::vec3& position) {
+    this->position = position;
 }
 
-void Camera::zoom(float scale)
-{
-    this->transform.setScale(glm::vec3(scale));
+void Camera::setTarget(const glm::vec3& target) {
+    this->target = target;
 }
 
-glm::mat4 Camera::getProjection()
+void Camera::setUp(const glm::vec3& up) {
+    this->up = up;
+}
+
+void Camera::setFOV(float fov) {
+    this->fov = fov;
+}
+
+void Camera::setAspectRatio(float aspectRatio) {
+    this->aspectRatio = aspectRatio;
+}
+
+void Camera::setNearPlane(float nearPlane) {
+    this->nearPlane = nearPlane;
+}
+
+void Camera::setFarPlane(float farPlane) {
+    this->farPlane = farPlane;
+}
+
+void Camera::setProjectionType(ProjectionType type) {
+    this->projectionType = type;
+}
+
+const glm::vec3& Camera::getPosition() const {
+    return position;
+}
+
+const glm::vec3& Camera::getTarget() const {
+    return target;
+}
+
+const glm::vec3& Camera::getUp() const {
+    return up;
+}
+
+float Camera::getFOV() const {
+    return fov;
+}
+
+float Camera::getAspectRatio() const {
+    return aspectRatio;
+}
+
+float Camera::getNearPlane() const {
+    return nearPlane;
+}
+
+float Camera::getFarPlane() const {
+    return farPlane;
+}
+
+Camera::ProjectionType Camera::getProjectionType() const {
+    return projectionType;
+}
+
+glm::mat4 Camera::getViewMatrix() const
 {
-    return glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
+    return glm::lookAt(position, target, up);
+}
+
+glm::mat4 Camera::getProjectionMatrix() const
+{
+    if (projectionType == ProjectionType::Perspective) {
+        return glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
+    } else {
+        float orthoHeight = tan(glm::radians(fov) / 2.0f) * nearPlane;
+        float orthoWidth = orthoHeight * aspectRatio;
+        return glm::ortho(
+            -orthoWidth, orthoWidth,
+            -orthoHeight, orthoHeight,
+            nearPlane, farPlane
+        );
+    }
 }

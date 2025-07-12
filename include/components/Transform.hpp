@@ -1,33 +1,36 @@
-#ifndef TRANSFORM_HPP 
+#ifndef TRANSFORM_HPP
 #define TRANSFORM_HPP
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 class Transform
 {
 public:
-    void translate(glm::vec3 translation);
-    void rotate(glm::vec3 rotation);
-    void rotate(float degrees, glm::vec3 axis);
-    void scale(glm::vec3 scaling);
+    Transform();
+    Transform(const glm::vec3& position, const glm::quat& rotation, const glm::vec3& scale);
+
+    void translate(const glm::vec3& delta);
+    void rotate(const glm::quat& delta);
+    void rotate(float angleRadians, const glm::vec3& axis);
+    void scale(const glm::vec3& factor);
 
     void setPosition(const glm::vec3& position);
-    void setRotation(const glm::vec3& rotation);
+    void setRotation(const glm::quat& rotation);
     void setScale(const glm::vec3& scale);
 
-    glm::vec3 getPosition() const;
-    glm::vec3 getRotation() const;
-    glm::vec3 getScale() const;
+    const glm::vec3& getPosition() const;
+    const glm::quat& getRotation() const;
+    const glm::vec3& getScale() const;
 
-    glm::mat4 getModel() const;
-    glm::mat4 getView() const;
+    glm::mat4 getModelMatrix() const;
 
 private:
-    glm::vec3 _position = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::vec3 _rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::vec3 _scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    glm::vec3 _position;
+    glm::quat _rotation;
+    glm::vec3 _scale;
 };
 
 #endif // TRANSFORM_HPP

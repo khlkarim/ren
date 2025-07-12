@@ -14,8 +14,10 @@ int main()
     
     while(window.isOpen())
     {
-        model->transform.setRotation(glm::vec3(50.0f * glfwGetTime(), 50.0f * glfwGetTime(), 0.0f));
-        model->transform.setPosition(glm::vec3(glm::sin(glfwGetTime()), glm::cos(glfwGetTime()), glm::cos(glfwGetTime())));
+        scene.camera.setProjectionType(Camera::ProjectionType::Orthographic);
+        // glm::vec3 pos = glm::vec3(6.0f * glm::sin(static_cast<float>(glfwGetTime())), 0.0f, 6.0f * glm::cos(static_cast<float>(glfwGetTime())));
+        // scene.camera.setPosition(pos);
+        scene.camera.setPosition(glm::vec3(0.0f, 0.0f, 6.0f));
         window.render(scene);
     }
 

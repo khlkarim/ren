@@ -8,12 +8,11 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-std::string read(const std::string& path);
-
 class Shader
 {
 public:
-    Shader(const std::string& vertexShader, const std::string& fragShader);
+    unsigned int getId() const;
+    void setId(unsigned int id);
 
     void use() const;
 
@@ -33,8 +32,6 @@ public:
     void setMat2(const std::string& name, const glm::mat2& mat) const;
     void setMat3(const std::string& name, const glm::mat3& mat) const;
     void setMat4(const std::string& name, const glm::mat4& mat) const;
-
-    void checkCompilerErrors(GLuint shader, const std::string& type) const;
 private:
     unsigned int id;
 };

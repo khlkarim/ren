@@ -1,10 +1,6 @@
 #include "Model.hpp"
 
 Model::Model(const std::string& path)
-    : shader(
-        "assets\\shaders\\default.vert",
-        "assets\\shaders\\default.frag"
-    )
 {
     spdlog::info("Loading Model");
     this->_id = boost::uuids::random_generator()();

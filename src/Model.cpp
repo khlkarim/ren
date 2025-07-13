@@ -1,5 +1,15 @@
 #include "Model.hpp"
 
+Model::Model()
+{
+    spdlog::info("Model created");
+}
+
+Model::~Model()
+{
+    spdlog::info("Model destroyed");
+}
+
 bool Model::addMesh(const std::shared_ptr<Mesh>& mesh)
 {
     if(!mesh) return false;

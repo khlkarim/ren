@@ -12,21 +12,21 @@ Mesh::Mesh(
     this->init();
 }
 
-Shader Mesh::getShader() const {
+std::shared_ptr<Shader> Mesh::getShader() const {
     return this->shader;
 }
 
-void Mesh::setShader(const Shader& shader) {
+void Mesh::setShader(const std::shared_ptr<Shader>& shader) {
     this->shader = shader;
 }
 
 void Mesh::render(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model)
 {
-    shader.use();
+    shader->use();
 
-    shader.setMat4("projection", projection);
-    shader.setMat4("view", view);
-    shader.setMat4("model", model);
+    shader->setMat4("projection", projection);
+    shader->setMat4("view", view);
+    shader->setMat4("model", model);
 
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
@@ -47,7 +47,7 @@ void Mesh::render(const glm::mat4& projection, const glm::mat4& view, const glm:
             number = std::to_string(specularNr++);
         }
 
-        shader.setInt(("material." + name + number).c_str(), i);
+        shader->setInt(("material." + name + number).c_str(), i);
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
     glActiveTexture(GL_TEXTURE0);

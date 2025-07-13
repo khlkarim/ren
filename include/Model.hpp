@@ -10,6 +10,9 @@
 class Model
 {
 public:
+    Model();
+    ~Model();
+
     bool addMesh(const std::shared_ptr<Mesh>& mesh);
     bool removeMesh(const std::shared_ptr<Mesh>& mesh);
     void render(const glm::mat4& projection, const glm::mat4& view);

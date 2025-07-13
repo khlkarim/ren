@@ -16,8 +16,8 @@ public:
     );
     void render(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
 
-    Shader getShader() const;
-    void setShader(const Shader& shader);
+    std::shared_ptr<Shader> getShader() const;
+    void setShader(const std::shared_ptr<Shader>& shader);
 
 private:
     void init();
@@ -28,6 +28,6 @@ public:
     std::vector<Texture> textures;
 
 private:
-    Shader shader;
+    std::shared_ptr<Shader> shader;
     unsigned int VAO, VBO, EBO;
 };

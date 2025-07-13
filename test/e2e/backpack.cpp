@@ -8,18 +8,21 @@ int main()
 
     Window window("hi", 1920, 1080);
     AssetManager assetManager;
-    assetManager.loadShader("assets\\shaders\\default.vert", "assets\\shaders\\default.frag");
+    std::optional<Model> model = assetManager.loadModel("assets\\models\\backpack\\backpack.obj");
 
-    // Scene scene;
-    // Model* model = new Model(pathToModel);
-    
-    // scene.add(model);
-    
-    // while(window.isOpen())
-    // {
-    //     scene.camera.setPosition(glm::vec3(6.0f * glm::sin(static_cast<float>(glfwGetTime())), 0.0f, 6.0f * glm::cos(static_cast<float>(glfwGetTime()))));
-    //     window.render(scene);
-    // }
+    if(model.has_value()) 
+    {
+        Scene scene;
+        scene.add(std::make_shared<Model>(model.value()));
+        
+        while(window.isOpen())
+        {
+            // scene.camera.setPosition(glm::vec3(6.0f * glm::sin(static_cast<float>(glfwGetTime())), 0.0f, 6.0f * glm::cos(static_cast<float>(glfwGetTime()))));
+            window.render(scene);
+        }
+
+    }
+
 
     return 0;
 }

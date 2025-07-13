@@ -17,6 +17,7 @@ public:
 private:
     std::optional<std::string> readText(const std::string& path);
     bool checkCompilerErrors(GLuint shader, const std::string& type) const;
+    
     void processNode(aiNode *node, const aiScene *scene, Model& model, const std::string& directory);
     Mesh processMesh(aiMesh *mesh, const aiScene *scene, const std::string& directory);
     std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName, const std::string& dircetory);

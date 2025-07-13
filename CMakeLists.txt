@@ -17,9 +17,10 @@ add_library(REN STATIC ${REN_SOURCES})
 target_include_directories(REN
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/primitives
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/components/io
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/components/rendering
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/io
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/components
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/components/meshes
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/components/shaders
 )
 target_link_libraries(REN 
     PUBLIC 

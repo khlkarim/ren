@@ -4,25 +4,33 @@
 
 int main()
 {
-    // std::string pathToModel = "assets\\models\\backpack\\backpack.obj";
-
     Window window("hi", 1920, 1080);
+
     AssetManager assetManager;
-    std::optional<Model> model = assetManager.loadModel("assets\\models\\backpack\\backpack.obj");
+    std::optional<Model> modelOpt = assetManager.loadModel("assets\\models\\backpack\\backpack.obj");
+    std::optional<Shader> shaderOpt = assetManager.loadShader(
+        "assets\\shaders\\backpack\\backpack.vert", 
+        "assets\\shaders\\backpack\\backpack.frag"
+    );
 
-    if(model.has_value()) 
+    if(!modelOpt || !shaderOpt)
     {
-        Scene scene;
-        scene.add(std::make_shared<Model>(model.value()));
-        
-        while(window.isOpen())
-        {
-            // scene.camera.setPosition(glm::vec3(6.0f * glm::sin(static_cast<float>(glfwGetTime())), 0.0f, 6.0f * glm::cos(static_cast<float>(glfwGetTime()))));
-            window.render(scene);
-        }
-
+        spdlog::critical("Failed to load assets");
+        exit(-1);
     }
 
+    std::shared_ptr<Model> model(std::make_shared<Model>(*modelOpt));
+    std::shared_ptr<Shader> shader(std::make_shared<Shader>(*shaderOpt));
+
+    model->setShader(shader);
+
+    Scene scene;
+    scene.add(model);
+    
+    while(window.isOpen())
+    {
+        window.render(scene);
+    }
 
     return 0;
 }

@@ -198,14 +198,6 @@ Mesh AssetManager::processMesh(aiMesh *mesh, const aiScene *scene, const std::st
     }
 
     Mesh parsedMesh(vertices, indices, textures);
-
-    std::optional<Shader> shader = this->loadShader("assets\\shaders\\backpack\\backpack.vert", "assets\\shaders\\backpack\\backpack.frag");
-
-    if(shader.has_value()) 
-    {
-        parsedMesh.setShader(std::make_shared<Shader>(shader.value()));
-    }
-
     return parsedMesh;
 }
 

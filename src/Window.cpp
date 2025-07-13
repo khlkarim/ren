@@ -35,8 +35,6 @@ Window::Window(const std::string& name, const int width, const int height)
     glfwGetFramebufferSize(this->_window, &framebufferWidth, &framebufferHeight);
     glViewport(0, 0, framebufferWidth, framebufferHeight);   
     spdlog::info("Set GL viewport");
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 Window::~Window() 

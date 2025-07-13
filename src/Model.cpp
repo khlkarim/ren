@@ -10,6 +10,16 @@ Model::~Model()
     spdlog::info("Model destroyed");
 }
 
+void Model::setShader(const std::shared_ptr<Shader>& shader)
+{
+    this->shader = shader;
+}
+
+std::shared_ptr<Shader> Model::getShader()
+{
+    return this->shader;
+}
+
 bool Model::addMesh(const std::shared_ptr<Mesh>& mesh)
 {
     if(!mesh) return false;
@@ -41,6 +51,7 @@ void Model::render(const glm::mat4& projection, const glm::mat4& view)
 {
     for(unsigned int i = 0; i<this->meshes.size(); i++)
     {
+        if(this->shader) this->meshes[i]->setShader(this->shader);
         this->meshes[i]->render(projection, view, this->transform.getModelMatrix());
     }
 }

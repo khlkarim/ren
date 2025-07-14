@@ -1,4 +1,5 @@
 #include "Scene.hpp"
+using ren::Scene;
 
 bool Scene::add(std::shared_ptr<Model> model) {
     if (!model) return false;

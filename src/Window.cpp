@@ -1,4 +1,5 @@
 #include "Window.hpp"
+using ren::Window;
 
 Window::Window(const std::string& name, const int width, const int height) 
 {
@@ -55,16 +56,14 @@ bool Window::isOpen()
 void Window::render(Scene& scene)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    // Poll events form the last frame
     glfwPollEvents();
 
     scene.render();
 
-    // Display frame
     glfwSwapBuffers(this->_window);
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) 
+void ren::framebuffer_size_callback(GLFWwindow* window, int width, int height) 
 {  
     glViewport(0, 0, width, height);
 }

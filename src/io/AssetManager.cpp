@@ -1,4 +1,8 @@
 #include "AssetManager.hpp"
+using ren::Model;
+using ren::io::AssetManager;
+using namespace ren::components::meshes;
+using namespace ren::components::shaders;
 
 std::optional<Shader> AssetManager::loadShader(const std::string& vertexShader, const std::string& fragShader)
 {

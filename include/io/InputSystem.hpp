@@ -1,6 +1,7 @@
 #pragma once
-
 #include <vector>
+
+namespace ren::io {
 
 class InputSystem
 {
@@ -12,3 +13,5 @@ public:
 private:
     std::vector<int> callbacks;
 };
+
+}

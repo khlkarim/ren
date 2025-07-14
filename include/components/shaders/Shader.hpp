@@ -1,12 +1,9 @@
 #pragma once
-
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <spdlog/spdlog.h>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <spdlog/spdlog.h>
+
+namespace ren::components::shaders {
 
 class Shader
 {
@@ -35,3 +32,5 @@ public:
 private:
     unsigned int id;
 };
+
+}

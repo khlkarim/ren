@@ -49,5 +49,3 @@ use high composition
 each  entity has a unique identifier just in case
 how unique is that identifier?
 it would be used to reference that entity? lightweight reference
-
-i should add a namespace (ren::)

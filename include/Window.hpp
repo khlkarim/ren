@@ -1,10 +1,10 @@
 #pragma once
-
 #include <string>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <spdlog/spdlog.h>
 #include "Scene.hpp"
+
+namespace ren {
 
 class Window
 {
@@ -22,3 +22,5 @@ private:
     std::string name;
     GLFWwindow* _window;
 };
+
+}

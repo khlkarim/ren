@@ -1,4 +1,5 @@
 #include "Shader.hpp"
+using ren::components::shaders::Shader;
 
 unsigned int Shader::getId() const
 {

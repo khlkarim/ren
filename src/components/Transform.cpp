@@ -1,4 +1,5 @@
 #include "Transform.hpp"
+using ren::components::Transform;
 
 Transform::Transform()
 {

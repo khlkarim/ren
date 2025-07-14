@@ -1,4 +1,7 @@
 #include "Cube.hpp"
+using ren::components::meshes::Cube;
+using ren::components::meshes::Vertex;
+using ren::components::shaders::Texture;
 
 Cube::Cube() : Mesh(this->getVertices(), this->getIndices(), this->getTextures()) {}
 

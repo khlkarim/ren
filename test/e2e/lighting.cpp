@@ -5,11 +5,11 @@
 
 int main()
 {
-    Window window("Lighting", 1980, 1080);
-    Scene scene;
+    ren::Window window("Lighting", 1980, 1080);
+    ren::Scene scene;
 
-    AssetManager assetManager;
-    std::optional<Shader> shaderOpt = assetManager.loadShader(
+    ren::io::AssetManager assetManager;
+    auto shaderOpt = assetManager.loadShader(
         "assets\\shaders\\lighting\\lighting.vert",
         "assets\\shaders\\lighting\\lighting.frag"
     );
@@ -20,12 +20,12 @@ int main()
         exit(-1);
     }
 
-    std::shared_ptr<Shader> shader(std::make_shared<Shader>(*shaderOpt));
+    auto shader(std::make_shared<ren::components::shaders::Shader>(*shaderOpt));
 
-    std::shared_ptr<Cube> cube(std::make_shared<Cube>(Cube()));
+    auto cube(std::make_shared<ren::components::meshes::Cube>(ren::components::meshes::Cube()));
     cube->setShader(shader);
 
-    std::shared_ptr<Model> model(std::make_shared<Model>(Model()));
+    auto model(std::make_shared<ren::Model>(ren::Model()));
     model->addMesh(cube);
     
     scene.add(model);

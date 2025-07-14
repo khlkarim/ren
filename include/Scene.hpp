@@ -1,9 +1,8 @@
 #pragma once
-
-#include <vector>
-#include <memory>
 #include "Camera.hpp"
 #include "Model.hpp"
+
+namespace ren {
 
 class Scene 
 {
@@ -16,3 +15,5 @@ public:
     Camera camera;
     std::vector<std::shared_ptr<Model>> models;
 };
+
+}

@@ -2,18 +2,18 @@
 #include "AssetManager.hpp"
 #include <random>
 
-Mesh generateGridMesh();
-void setupScene(Window& window, AssetManager& assetManager);
+ren::components::meshes::Mesh generateGridMesh();
+void setupScene(ren::Window& window, ren::io::AssetManager& assetManager);
 
 int main() {
-    Window window("Voronoi", 1980, 1080);
-    AssetManager assetManager;
+    ren::Window window("Voronoi", 1980, 1080);
+    ren::io::AssetManager assetManager;
 
     setupScene(window, assetManager);
     return 0;
 }
 
-void setupScene(Window& window, AssetManager& assetManager) {
+void setupScene(ren::Window& window, ren::io::AssetManager& assetManager) {
     auto shaderOpt = assetManager.loadShader(
         "assets/shaders/voronoi/voronoi.vert", 
         "assets/shaders/voronoi/voronoi.frag"
@@ -24,14 +24,14 @@ void setupScene(Window& window, AssetManager& assetManager) {
         exit(-1);
     }
 
-    auto model = std::make_shared<Model>();
-    auto mesh = std::make_shared<Mesh>(generateGridMesh());
-    auto shader = std::make_shared<Shader>(*shaderOpt);
+    auto model = std::make_shared<ren::Model>();
+    auto mesh = std::make_shared<ren::components::meshes::Mesh>(generateGridMesh());
+    auto shader = std::make_shared<ren::components::shaders::Shader>(*shaderOpt);
 
     mesh->setShader(shader);
     model->addMesh(mesh);
 
-    Scene scene;
+    ren::Scene scene;
     scene.camera.setPosition(glm::vec3(0.0f, 8.0f, 10.0f));
     scene.add(model);
 
@@ -41,15 +41,15 @@ void setupScene(Window& window, AssetManager& assetManager) {
     }
 }
 
-Mesh generateGridMesh() {
+ren::components::meshes::Mesh generateGridMesh() {
     constexpr int gridWidth = 50;
     constexpr int gridHeight = 50;
     constexpr float cellSize = 0.8f;
     constexpr float offsetRange = 0.4f; // ±0.4 for offset
 
-    std::vector<Vertex> vertices;
+    std::vector<ren::components::meshes::Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
+    std::vector<ren::components::shaders::Texture> textures;
 
     std::mt19937 rng(std::random_device{}());
     std::uniform_real_distribution<float> offsetDist(-offsetRange, offsetRange);
@@ -58,7 +58,7 @@ Mesh generateGridMesh() {
 
     for (int y = 0; y <= gridHeight; ++y) {
         for (int x = 0; x <= gridWidth; ++x) {
-            Vertex v;
+            ren::components::meshes::Vertex v;
             float offsetX = offsetDist(rng);
             float offsetZ = offsetDist(rng);
             float posX = x * cellSize - (cellSize * gridWidth / 2.0f) + offsetX;
@@ -86,5 +86,5 @@ Mesh generateGridMesh() {
         }
     }
 
-    return Mesh(vertices, indices, textures);
+    return ren::components::meshes::Mesh(vertices, indices, textures);
 }

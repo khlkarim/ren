@@ -1,4 +1,7 @@
 #include "Model.hpp"
+using ren::Model;
+using ren::components::meshes::Mesh;
+using ren::components::shaders::Shader;
 
 Model::Model()
 {

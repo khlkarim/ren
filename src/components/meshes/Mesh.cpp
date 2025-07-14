@@ -1,5 +1,8 @@
 #include "Mesh.hpp"
 
+using namespace ren::components::meshes;
+using namespace ren::components::shaders;
+
 Mesh::Mesh(
     std::vector<Vertex> vertices, 
     std::vector<unsigned int> indices, 

@@ -2,7 +2,7 @@
 #include <string>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "Scene.hpp"
+#include <core/Scene.hpp>
 
 namespace ren {
 
@@ -13,7 +13,7 @@ public:
     virtual ~Window();
 
     bool isOpen();
-    void render(Scene& scene);
+    void render(const Scene& scene) const;
 
     friend void framebuffer_size_callback(GLFWwindow* window, int width, int height);    
 private:

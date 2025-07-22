@@ -49,3 +49,161 @@ use high composition
 each  entity has a unique identifier just in case
 how unique is that identifier?
 it would be used to reference that entity? lightweight reference
+
+how do i implement composition? pointers or stack allocated classes? => unique pointers
+stack allocated classes have to be initialized
+and live and die simultainously with the class!
+
+you cant change the camera in the scene
+int instanceID = scene.instantiate(prefab)
+
+EntityInstance entity = scene.get(instanceID)
+
+entities are what is in the scene object, any outside asset in not an entity
+entities are instances of prefabs
+
+there are two worlds:
+    offline:
+        outside any scene
+        utils 
+        assets
+        static files
+    online:
+        in a scene
+        visual and audioal instances of static assets
+
+an entity is anything that is part of a scene
+an static asset is anything that can be instantiated as entity
+
+it is not like the scene cant access disk
+
+why would i load a whole entity
+
+what are the different assets that can be loaded into a 3d scene?
+    3D models:
+        meshes
+        textures 
+        shaders
+    audio files
+
+Entity component system:
+    the scene is composed of entities
+    each entity has an id managed by the scene
+    you can retrieve the entity by its id
+    you can add components to an entity
+    and these components add functionality to an entity (extend its interface: entity.component.functionality())
+
+would i ever need to manipulate an entity offline (maybe add a functionality that mimics that: component.disable)
+maybe each asset corresponds to a component and each component correponds to a functionality
+
+asset -> component -> functionlity
+prefab -> entity
+
+there is no concept of a "model", it is just meshes textures materials and shaders
+each corresponds to a seperate asset
+and each is added seperately to an entity
+
+component = entity.addComponent<ComponentType>()
+
+how do i store the components in the entity (linearly?)
+an entity is generic, it does not know its component
+you can ask it for a component of a type
+
+entity.getComponent<ComponentType>()
+
+you prepare components
+they dont care about the entities they are inserted in 
+
+you add a copy of a component to an entity
+now that entity has that functionality and you can use it *through the entity*
+
+some components should exist twice, some may
+
+entities CANT be manipulated outside of a scene
+they can be extracted to prefabs through
+
+Component formal = AssetManager.loadComponent<>();
+
+Entity entity = scene.newEntity();
+entity.addComponent<>(formal);
+
+Component effective = entity.getComponent<>();
+effective.mutate();
+
+scene.render:
+    if entity.hasComponent<Render | Mesh>():
+        Component rendereble = entity.getComponent<Renderable>();
+        renderable.render();
+
+there are 3 major components of the system:
+    the asset manager:
+        transforms static physical assets to entity components
+    the components:
+        each one represents a functionality
+        if an entity has a component of a type => the entity *implements* that functionality
+    the input system:
+        the input system is a seperate thing 
+        independent of anything
+        it wraps arround glfw callbacks
+        it is not that complex: keyboard keys and mouse clicks
+        the user then can hook to those callbacks to implement interactivity however they want
+        this component can also be used by other core components to implement default behavior (Camera, anything else?)
+    the core:
+        window management 
+        scene management => entity management
+        it receives components prepared by an outside system
+        adds them to entities and uses the functionality
+
+i always need glfw to be initialized (assert?)
+
+not everything is a component:  
+    a component is a high level characteristic of an entity
+    you dont add an audio asset to an entity
+    you dont add a shader to an entity
+    you dont add a texture to an entity
+
+    => an entity can and is encouraged to have complex components rather than many components
+
+what are the different components an entity can have?
+    Transform: world space position
+    Mesh: mesh data (vertex attributes) (geometry)
+    Renderer: mesh rendering data (textures maps and materials) (applied to geometry)
+    Collider: collition detection / mesh boundry
+
+
+entities are ID encapsulates in a scene (map<entity.id, vector<component>>)
+entity.has/add/remove-component
+components are structs that hold relevant state
+systems are static class that mutate components
+
+the user creates a scene
+the user creates a component
+
+using the scene, the user creates an entity
+the user adds the component the entity
+
+when the user wants to change something about the entity
+he calls a system method on that component
+
+how do i contruct components?
+    how do i contruct a mesh or a renderer
+
+    some components, you just instantiate
+    other components are tied to resources, maybe use RAII (multiple contructors)
+
+Systems:
+    you dont use the systems
+    you set the state in the components, that state fully describes the behavior you want
+    then the systems iterate over all the entity and get applied on them, they are like workers
+
+CreateEntity
+set
+set
+set
+Render
+
+InputSystem inputSystem;
+inputSystem.on("W", () => {
+    scene.getcomponent();
+    alter
+});

@@ -1,4 +1,4 @@
-#include "Camera.hpp"
+#include "core/Camera.hpp"
 using ren::Camera;
 
 Camera::Camera(

@@ -5,7 +5,7 @@ using ren::components::shaders::Texture;
 
 Cube::Cube() : Mesh(this->getVertices(), this->getIndices(), this->getTextures()) {}
 
-std::vector<Vertex> Cube::getVertices()
+const std::vector<Vertex>& Cube::getVertices() const
 {
     return {
         // Vertex positions and normals for a cube (normal = normalized position)
@@ -20,7 +20,7 @@ std::vector<Vertex> Cube::getVertices()
     };
 }
 
-std::vector<unsigned int> Cube::getIndices()
+const std::vector<unsigned int>& Cube::getIndices() const
 {
     return {
         0, 1, 2, 2, 3, 0,       // Bottom face
@@ -30,9 +30,4 @@ std::vector<unsigned int> Cube::getIndices()
         4, 0, 3, 3, 7, 4,       // Back face
         1, 5, 6, 6, 2, 1        // Front face
     };
-}
-
-std::vector<Texture> Cube::getTextures()
-{
-    return {};
 }

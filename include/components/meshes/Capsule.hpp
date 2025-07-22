@@ -3,11 +3,11 @@
 
 namespace ren::components::meshes {
 
-class Cube : public Mesh
+class Capsule : public Mesh
 {
 public:
-    Cube();
-    virtual ~Cube();
+    Capsule();
+    virtual ~Capsule();
 
     const std::vector<Vertex>& getVertices() const;
     const std::vector<unsigned int>& getIndices() const;

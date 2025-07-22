@@ -3,6 +3,8 @@ using ren::Window;
 
 Window::Window(const std::string& name, const int width, const int height) 
 {
+    spdlog::info("Window Constructor");
+
     if(!glfwInit()) {
         spdlog::critical("Failed to initialize GLFW");
         exit(-1);
@@ -40,6 +42,8 @@ Window::Window(const std::string& name, const int width, const int height)
 
 Window::~Window() 
 {
+    spdlog::info("Window Destructor");
+
     if (this->_window) {
         glfwDestroyWindow(this->_window);
         spdlog::info("Destroyed window");
@@ -53,7 +57,7 @@ bool Window::isOpen()
     return !glfwWindowShouldClose(this->_window);
 }
 
-void Window::render(Scene& scene)
+void Window::render(const Scene& scene) const
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glfwPollEvents();

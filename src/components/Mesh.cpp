@@ -1,6 +1,7 @@
-#include "Mesh.hpp"
+#include <components/Mesh.hpp>
 
-using namespace ren::components::meshes;
+using ren::components::Mesh;
+using ren::components::meshes::Vertex;
 using namespace ren::components::shaders;
 
 Mesh::Mesh(

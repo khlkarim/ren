@@ -23,9 +23,17 @@ void Scene::setCamera(const Camera& camera)
     spdlog::info("Camera set");
 }
 
-const Camera& Scene::getCamera()
+std::optional<std::reference_wrapper<const Camera>> Scene::getCamera() const
 {
-    return *(this->camera);
+    if(this->camera)
+    {
+        return *(this->camera);
+    }
+    else 
+    {
+        spdlog::warn("Scene has no camera");
+        return std::nullopt;
+    }
 }
 
 const std::string& Scene::createEntity()
@@ -63,7 +71,10 @@ std::optional<std::reference_wrapper<const T>> Scene::getComponent(const std::st
 
 void Scene::render() const
 {
+    ren::systems::RenderingSystem renderingSystem;
+
     for(const auto& [id, entity]: this->entities)
     {
+        renderingSystem.render(*this->camera, *entity);
     }
 }

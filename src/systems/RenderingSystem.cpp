@@ -1,0 +1,53 @@
+#include <systems/RenderSystem.hpp>
+using ren::systems::RenderingSystem;
+
+void RenderingSystem::render(const Camera& camera, const Entity& entity) const
+{
+    if(!entity.getComponent<ren::components::Mesh>()) return;
+    if(!entity.getComponent<ren::components::MeshRenderer>()) return;
+    if(!entity.getComponent<ren::components::Transform>()) return;
+
+    ren::components::Mesh mesh = entity.getComponent<ren::components::Mesh>().value();
+    ren::components::MeshRenderer meshRenderer = entity.getComponent<ren::components::MeshRenderer>().value();
+    ren::components::Transform transform = entity.getComponent<ren::components::Transform>().value();
+
+    glm::mat4 view = camera.getViewMatrix();
+    glm::mat4 model = transform.getModelMatrix();
+    glm::mat4 projection = camera.getProjectionMatrix();
+
+    ren::components::shaders::Shader shader = meshRenderer.getShader();
+
+    shader.use();
+
+    shader.setMat4("projection", projection);
+    shader.setMat4("view", view);
+    shader.setMat4("model", model);
+
+    unsigned int diffuseNr = 1;
+    unsigned int specularNr = 1;
+
+    for(unsigned int i = 0; i<meshRenderer.textures.size(); i++) 
+    {
+        glActiveTexture(GL_TEXTURE0 + i);
+
+        std::string number;
+        std::string name = meshRenderer.textures[i].type;
+
+        if(name == "texture_diffuse") 
+        {
+            number = std::to_string(diffuseNr++);
+        }
+        else 
+        {
+            number = std::to_string(specularNr++);
+        }
+
+        shader.setInt(("material." + name + number).c_str(), i);
+        glBindTexture(GL_TEXTURE_2D, meshRenderer.textures[i].id);
+    }
+    glActiveTexture(GL_TEXTURE0);
+
+    glBindVertexArray(mesh.VAO);
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.indices.size()), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}

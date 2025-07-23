@@ -2,10 +2,10 @@
 
 #include <vector>
 #include <glad/glad.h>
-#include "Shader.hpp"
-#include "Vertex.hpp"
-#include "Texture.hpp"
+#include <glm/glm.hpp>
+#include <spdlog/spdlog.h>
 #include <components/Component.hpp>
+#include <components/meshes/Vertex.hpp>
 
 namespace ren::components
 {
@@ -14,26 +14,17 @@ class Mesh : public Component
 {
 public:
     Mesh(
-        std::vector<meshes::Vertex> vertices,
-        std::vector<unsigned int> indices,
-        std::vector<shaders::Texture> textures
+        const std::vector<meshes::Vertex>& vertices, 
+        const std::vector<unsigned int>& indices
     );
-    void render(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
-
-    std::shared_ptr<shaders::Shader> getShader() const;
-    void setShader(const std::shared_ptr<shaders::Shader>& shader);
 
 private:
     void init();
 
 public:
+    unsigned int VAO, VBO, EBO;
     std::vector<meshes::Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<shaders::Texture> textures;
-
-private:
-    std::shared_ptr<shaders::Shader> shader;
-    unsigned int VAO, VBO, EBO;
 };
 
 }

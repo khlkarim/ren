@@ -2,63 +2,15 @@
 
 using ren::components::Mesh;
 using ren::components::meshes::Vertex;
-using namespace ren::components::shaders;
 
 Mesh::Mesh(
-    std::vector<Vertex> vertices, 
-    std::vector<unsigned int> indices, 
-    std::vector<Texture> textures
+    const std::vector<Vertex>& vertices, 
+    const std::vector<unsigned int>& indices
 ) {
     this->vertices = vertices;
     this->indices = indices;
-    this->textures = textures;
 
     this->init();
-}
-
-std::shared_ptr<Shader> Mesh::getShader() const {
-    return this->shader;
-}
-
-void Mesh::setShader(const std::shared_ptr<Shader>& shader) {
-    this->shader = shader;
-}
-
-void Mesh::render(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model)
-{
-    shader->use();
-
-    shader->setMat4("projection", projection);
-    shader->setMat4("view", view);
-    shader->setMat4("model", model);
-
-    unsigned int diffuseNr = 1;
-    unsigned int specularNr = 1;
-
-    for(unsigned int i = 0; i<this->textures.size(); i++) 
-    {
-        glActiveTexture(GL_TEXTURE0 + i);
-
-        std::string number;
-        std::string name = textures[i].type;
-
-        if(name == "texture_diffuse") 
-        {
-            number = std::to_string(diffuseNr++);
-        }
-        else 
-        {
-            number = std::to_string(specularNr++);
-        }
-
-        shader->setInt(("material." + name + number).c_str(), i);
-        glBindTexture(GL_TEXTURE_2D, textures[i].id);
-    }
-    glActiveTexture(GL_TEXTURE0);
-
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
 }
 
 void Mesh::init()

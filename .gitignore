@@ -6,3 +6,4 @@ vcpkg_downloads
 .vcpkg-root
 .vscode
 CMakeUserPresets.json
+test/cpp

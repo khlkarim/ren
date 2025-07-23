@@ -21,7 +21,7 @@ public:
 
     template<typename T>
     std::optional<std::reference_wrapper<const T>> getComponent() const;
-
+    
 private:
     std::vector<std::unique_ptr<ren::components::Component>> components;
 };

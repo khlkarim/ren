@@ -207,3 +207,24 @@ inputSystem.on("W", () => {
     scene.getcomponent();
     alter
 });
+
+implement a mesh and a mesh renderer component
+add dimentional parameters to primitive meshes
+
+in the wilde you dont incounter single meshes, but rather full models aka prefabs
+i dont know what information the meshrenderer holds
+    the mesh contains vertex information 
+    the meshrenderer contains rendering information
+    does a mesh renderer have a mesh or a mesh has a meshrenderer
+
+entity = gameobject
+the parent child relationships exist between entities/gameobjects
+
+entity <-> mesh <-> meshrenderer
+
+i need to implement the concept of prefabs
+they are a snapshot of an entity
+they are loaded using the assetloader
+they can be instantiated to a scene
+
+input system

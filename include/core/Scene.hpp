@@ -9,6 +9,7 @@
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/uuid/uuid_generators.hpp>
+#include <systems/RenderSystem.hpp>
 
 namespace ren {
 
@@ -19,7 +20,7 @@ public:
     virtual ~Scene();
 
     void setCamera(const Camera& camera);
-    const Camera& getCamera();
+    std::optional<std::reference_wrapper<const Camera>> getCamera() const;
 
     const std::string& createEntity();
 

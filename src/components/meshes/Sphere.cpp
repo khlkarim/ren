@@ -12,7 +12,7 @@ Sphere::~Sphere()
     spdlog::info("Sphere destructor");
 }
 
-const std::vector<Vertex>& Sphere::getVertices() const
+std::vector<Vertex> Sphere::getVertices() const
 {
     return {
         { {1.0f, -1.0f, -1.0f}, glm::normalize(glm::vec3(1.0f, -1.0f, -1.0f)), {0.0f, 0.0f} },
@@ -26,7 +26,7 @@ const std::vector<Vertex>& Sphere::getVertices() const
     };
 }
 
-const std::vector<unsigned int>& Sphere::getIndices() const
+std::vector<unsigned int> Sphere::getIndices() const
 {
     return {
         0, 1, 2, 2, 3, 0,      

@@ -228,3 +228,8 @@ they are loaded using the assetloader
 they can be instantiated to a scene
 
 input system
+
+why am i opting to return references to things
+    dont return references to local variables
+
+i dont want undefined behavior, so i should return const refs and let the user make a mutable copy if they like to

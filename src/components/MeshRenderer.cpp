@@ -21,15 +21,17 @@ void MeshRenderer::setShader(const Shader& shader)
     this->shader = std::make_unique<Shader>(shader);
 }
 
-std::optional<std::reference_wrapper<const Shader>> MeshRenderer::getShader() const
+const Shader& MeshRenderer::getShader() const
 {
-    if(this->shader)
-    {
-        return *(this->shader);
-    }
-    else 
-    {
-        spdlog::warn("MeshRenderer has no shader");
-        return std::nullopt;
-    }
+    return *(this->shader);
+}
+
+void MeshRenderer::setTextures(const std::vector<Texture>& textures)
+{
+    this->textures = textures;
+}
+
+const std::vector<Texture>& MeshRenderer::getTextures()
+{
+    return this->textures;
 }

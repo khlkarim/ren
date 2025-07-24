@@ -12,7 +12,7 @@ Cube::~Cube()
     spdlog::info("Cube destructor");
 }
 
-const std::vector<Vertex>& Cube::getVertices() const
+std::vector<Vertex> Cube::getVertices() const
 {
     return {
         { {1.0f, -1.0f, -1.0f}, glm::normalize(glm::vec3(1.0f, -1.0f, -1.0f)), {0.0f, 0.0f} },
@@ -26,7 +26,7 @@ const std::vector<Vertex>& Cube::getVertices() const
     };
 }
 
-const std::vector<unsigned int>& Cube::getIndices() const
+std::vector<unsigned int> Cube::getIndices() const
 {
     return {
         0, 1, 2, 2, 3, 0,      

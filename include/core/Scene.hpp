@@ -22,13 +22,29 @@ public:
     void setCamera(const Camera& camera);
     std::optional<std::reference_wrapper<const Camera>> getCamera() const;
 
-    const std::string& createEntity();
+    std::string createEntity();
 
     template<typename T>
-    void setComponent(const std::string& id, const T& component);
+    void setComponent(const std::string& id, const T& component)
+    {
+        if (this->entities.find(id) != this->entities.end()) {
+            this->entities[id]->setComponent(component);
+            spdlog::info("Component added to Entity with id: {}", id);
+        } else {
+            spdlog::warn("Entity with id: {} does not exist", id);
+        }
+    }
 
     template<typename T>
-    std::optional<std::reference_wrapper<const T>> getComponent(const std::string& id) const;
+    std::optional<std::reference_wrapper<const T>> getComponent(const std::string& id) const
+    {
+        if (this->entities.find(id) != this->entities.end()) {
+            return this->entities[id]->getComponent<T>();
+        } else {
+            spdlog::warn("Entity with id: {} does not exist", id);
+            return std::nullopt;
+        }
+    }
 
     void render() const;
 

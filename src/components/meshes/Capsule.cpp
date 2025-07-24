@@ -12,7 +12,7 @@ Capsule::~Capsule()
     spdlog::info("Capsule destructor");
 }
 
-const std::vector<Vertex>& Capsule::getVertices() const
+std::vector<Vertex> Capsule::getVertices() const
 {
     return {
         { {1.0f, -1.0f, -1.0f}, glm::normalize(glm::vec3(1.0f, -1.0f, -1.0f)), {0.0f, 0.0f} },
@@ -26,7 +26,7 @@ const std::vector<Vertex>& Capsule::getVertices() const
     };
 }
 
-const std::vector<unsigned int>& Capsule::getIndices() const
+std::vector<unsigned int> Capsule::getIndices() const
 {
     return {
         0, 1, 2, 2, 3, 0,      

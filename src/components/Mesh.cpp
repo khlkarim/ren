@@ -15,6 +15,8 @@ Mesh::Mesh(
 
 void Mesh::init()
 {
+    spdlog::info("initializing mesh");
+
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);

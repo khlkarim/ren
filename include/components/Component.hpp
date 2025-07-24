@@ -6,7 +6,7 @@ namespace ren::components
 class Component
 {
 public:
-    virtual ~Component();
+	virtual ~Component() = default;
 };
 
 }

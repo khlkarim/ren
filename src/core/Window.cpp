@@ -1,4 +1,4 @@
-#include "Window.hpp"
+#include <core/Window.hpp>
 using ren::Window;
 
 Window::Window(const std::string& name, const int width, const int height) 

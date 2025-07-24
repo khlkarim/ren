@@ -9,8 +9,8 @@ public:
     Quad();
     virtual ~Quad();
 
-    const std::vector<Vertex>& getVertices() const;
-    const std::vector<unsigned int>& getIndices() const;
+    std::vector<Vertex> getVertices() const;
+    std::vector<unsigned int> getIndices() const;
 };
 
 }

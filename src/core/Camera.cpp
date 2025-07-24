@@ -88,7 +88,8 @@ Camera::ProjectionType Camera::getProjectionType() const {
 
 glm::mat4 Camera::getViewMatrix() const
 {
-    return glm::lookAt(position, target, up);
+    glm::mat4 view = glm::lookAt(position, target, up);
+    return view;
 }
 
 glm::mat4 Camera::getProjectionMatrix() const

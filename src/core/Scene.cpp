@@ -36,7 +36,7 @@ std::optional<std::reference_wrapper<const Camera>> Scene::getCamera() const
     }
 }
 
-const std::string& Scene::createEntity()
+std::string Scene::createEntity()
 {   
     const boost::uuids::uuid id_struct = boost::uuids::random_generator()();
     const std::string id = boost::uuids::to_string(id_struct);
@@ -45,28 +45,6 @@ const std::string& Scene::createEntity()
     spdlog::info("Entity with id: {} created", id);
 
     return id;
-}
-
-template<typename T>
-void Scene::setComponent(const std::string& id, const T& component)
-{
-    if (this->entities.find(id) != this->entities.end()) {
-        this->entities[id]->setComponent(component);
-        spdlog::info("Component added to Entity with id: {}", id);
-    } else {
-        spdlog::warn("Entity with id: {} does not exist", id);
-    }
-}
-
-template<typename T>
-std::optional<std::reference_wrapper<const T>> Scene::getComponent(const std::string& id) const
-{
-    if (this->entities.find(id) != this->entities.end()) {
-        return this->entities[id]->getComponent<T>();
-    } else {
-        spdlog::warn("Entity with id: {} does not exist", id);
-        return std::nullopt;
-    }
 }
 
 void Scene::render() const

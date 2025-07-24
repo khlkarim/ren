@@ -17,11 +17,13 @@ int main()
     
     ren::components::meshes::Cube cube;
     ren::components::Transform transform;
+    ren::components::Hierarchy hierarchy;
     ren::components::MeshRenderer meshRenderer(shader, {});
     
     player.setComponent<ren::components::Mesh>(cube);
     player.setComponent<ren::components::Transform>(transform);
     player.setComponent<ren::components::MeshRenderer>(meshRenderer);
+    player.setComponent<ren::components::Hierarchy>(hierarchy);
     
     player.setId("player1");
     scene.instantiate(player);
@@ -29,6 +31,9 @@ int main()
     scene.instantiate(player);
 
     float lastFrame = static_cast<float>(glfwGetTime());
+
+    auto& h = scene.getComponent<ren::components::Hierarchy>("player1");
+    h.addChild("player2");
 
     while(window.isOpen()) {
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -39,7 +44,7 @@ int main()
         auto& mr1 = scene.getComponent<ren::components::MeshRenderer>("player1");
         auto& s1 = mr1.getShader();
 
-        t1.rotate(10 * delta, glm::vec3(1.0f, 0.0f, 1.0f));
+        t1.rotate(10 * delta, glm::vec3(0.0f, 1.0f, 0.0f));
         s1.setVec3("ulightPos", glm::vec3(6.0f, 0.0f, 6.0f));
         s1.setVec3("ulightColor", glm::vec3(
             glm::cos(glfwGetTime()) * glm::cos(glfwGetTime()), 
@@ -52,6 +57,7 @@ int main()
         auto& s2 = mr1.getShader();
 
         t2.rotate(50 * delta, glm::vec3(1.0f, 0.0f, 1.0f));
+        t2.setPosition(glm::vec3(1.0f, 0.0f, 1.0f));
         s2.setVec3("ulightPos", glm::vec3(6.0f, 0.0f, 6.0f));
         s2.setVec3("ulightColor", glm::vec3(
             glm::cos(glfwGetTime()) * glm::cos(glfwGetTime()), 

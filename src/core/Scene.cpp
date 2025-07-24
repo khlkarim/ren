@@ -32,6 +32,24 @@ Camera& Scene::getCamera()
     return *(this->camera);
 }
 
+const Camera& Scene::getCamera() const
+{
+    if(!this->camera)
+    {
+        fatal("Scene camera is not defined");
+    }
+    return *(this->camera);
+}
+
+Entity& Scene::getEntity(const std::string& id)
+{
+    if(this->entities.find(id) == this->entities.end())
+    {
+        fatal("Entity with given id does not exist");
+    }
+    return *(this->entities[id]);
+}
+
 void Scene::instantiate(const Entity& entity)
 {   
     if(entity.getId().length() == 0)
@@ -57,18 +75,4 @@ void Scene::remove(const std::string& id)
 
     this->entities[id].reset(nullptr);
     this->entities.erase(id);
-}
-
-void Scene::render() const
-{
-    if(!this->camera)
-    {
-        fatal("Scene camera is not defined");
-    }
-    ren::systems::RenderingSystem renderingSystem;
-
-    for(const auto& [id, entity]: this->entities)
-    {
-        renderingSystem.render(*this->camera, *entity);
-    }
 }

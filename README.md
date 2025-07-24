@@ -262,5 +262,6 @@ entity.hierarchyComponent.addchild/setParent
 renderingSystem.render(scene)
 
 1. move id management to Entity class (should make you able to work with entities outside the scene) (id should be customizable) done
-2. move rendering logic to RenderingSystem class
-3. add a hierarchy component
+3. add a hierarchy component (rendering depends on the hierarchy)
+2. move rendering logic to RenderingSystem class (rendering a scene is a per Entity thing) 
+    this is honestly unecessary, it works already

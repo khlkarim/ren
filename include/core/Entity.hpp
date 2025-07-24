@@ -83,6 +83,19 @@ public:
         }
     }
     
+    template<typename T>
+    bool has()
+    {
+        for (const auto& comp : components)
+        {
+            if (dynamic_cast<T*>(comp.get()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 private:
     std::string id;
     std::vector<std::unique_ptr<ren::components::Component>> components;

@@ -57,12 +57,13 @@ bool Window::isOpen()
     return !glfwWindowShouldClose(this->_window);
 }
 
-void Window::render(const Scene& scene) const
+void Window::render(Scene& scene)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glfwPollEvents();
 
-    scene.render();
+    ren::systems::RenderingSystem renderer;
+    renderer.render(scene);
 
     glfwSwapBuffers(this->_window);
 }

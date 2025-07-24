@@ -19,31 +19,24 @@ public:
     Scene();
     virtual ~Scene();
 
+    Camera& getCamera();
     void setCamera(const Camera& camera);
-    std::optional<std::reference_wrapper<Camera>> getCamera() const;
 
     std::string createEntity();
+    void deleteEntity(const std::string& id);
 
     template<typename T>
     void setComponent(const std::string& id, const T& component)
     {
-        if (this->entities.find(id) != this->entities.end()) {
-            this->entities[id]->setComponent(component);
-            spdlog::info("Component added to Entity with id: {}", id);
-        } else {
-            spdlog::warn("Entity with id: {} does not exist", id);
-        }
+        assert(this->entities.find(id) != this->entities.end() && "Entity with given id does not exist");
+        this->entities[id]->setComponent(component);
     }
 
     template<typename T>
-    std::optional<std::reference_wrapper<T>> getComponent(const std::string& id)
+    T& getComponent(const std::string& id)
     {
-        if (this->entities.find(id) != this->entities.end()) {
-            return this->entities[id]->getComponent<T>();
-        } else {
-            spdlog::warn("Entity with id: {} does not exist", id);
-            return std::nullopt;
-        }
+        assert(this->entities.find(id) != this->entities.end() && "Entity with given id does not exist");
+        return this->entities[id]->getComponent<T>();
     }
 
     void render() const;

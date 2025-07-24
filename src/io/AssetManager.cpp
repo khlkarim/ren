@@ -2,7 +2,7 @@
 using ren::io::AssetManager;
 using namespace ren::components::shaders;
 
-std::optional<Shader> AssetManager::loadShader(const std::string& vertexShader, const std::string& fragShader)
+Shader AssetManager::loadShader(const std::string& vertexShader, const std::string& fragShader)
 {
     spdlog::info("Loading vertex shader: {}", vertexShader);
     spdlog::info("Loading fragment shader: {}", fragShader);
@@ -10,7 +10,7 @@ std::optional<Shader> AssetManager::loadShader(const std::string& vertexShader, 
     std::optional<std::string> vertexCodeStr = this->readText(vertexShader);
     std::optional<std::string> fragCodeStr = this->readText(fragShader);
 
-    if(!vertexCodeStr.has_value() || !fragCodeStr.has_value()) return std::nullopt;
+    assert(vertexCodeStr.has_value() && fragCodeStr.has_value() && "Failed to read shader code");
 
     const char* vertexCode = vertexCodeStr.value().c_str();
     const char* fragCode = fragCodeStr.value().c_str();
@@ -21,19 +21,13 @@ std::optional<Shader> AssetManager::loadShader(const std::string& vertexShader, 
     glShaderSource(vertex, 1, &vertexCode, NULL);
     glCompileShader(vertex);
 
-    if(this->checkCompilerErrors(vertex, "VERTEX_SHADER"))
-    {
-        return std::nullopt;
-    }
+    assert(!this->checkCompilerErrors(vertex, "VERTEX_SHADER"));
 
     fragment = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment, 1, &fragCode, NULL);
     glCompileShader(fragment);
 
-    if(this->checkCompilerErrors(fragment, "FRAGMENT_SHADER"))
-    {
-        return std::nullopt;
-    }
+    assert(!this->checkCompilerErrors(fragment, "FRAGMENT_SHADER"));
 
     Shader shader;
     shader.setId(glCreateProgram());
@@ -41,10 +35,7 @@ std::optional<Shader> AssetManager::loadShader(const std::string& vertexShader, 
     glAttachShader(shader.getId(), fragment);
     glLinkProgram(shader.getId());
 
-    if(this->checkCompilerErrors(shader.getId(), "PROGRAM"))
-    {
-        return std::nullopt;
-    }
+    assert(!this->checkCompilerErrors(shader.getId(), "PROGRAM"));
 
     glDeleteShader(vertex);
     glDeleteShader(fragment);

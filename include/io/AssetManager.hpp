@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <cassert>
 #include <iostream>
 #include <optional>
 #include <glad/glad.h>
@@ -18,7 +19,7 @@ namespace ren::io {
 class AssetManager
 {
 public:
-    std::optional<ren::components::shaders::Shader> loadShader(const std::string& vertexShader, const std::string& fragShader);
+    ren::components::shaders::Shader loadShader(const std::string& vertexShader, const std::string& fragShader);
 
 private:
     std::optional<std::string> readText(const std::string& path);

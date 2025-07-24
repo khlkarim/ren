@@ -23,17 +23,10 @@ void Scene::setCamera(const Camera& camera)
     spdlog::info("Camera set");
 }
 
-std::optional<std::reference_wrapper<Camera>> Scene::getCamera() const
+Camera& Scene::getCamera()
 {
-    if(this->camera)
-    {
-        return *(this->camera);
-    }
-    else 
-    {
-        spdlog::warn("Scene has no camera");
-        return std::nullopt;
-    }
+    assert(this->camera && "Scene camera is not defined");
+    return *(this->camera);
 }
 
 std::string Scene::createEntity()

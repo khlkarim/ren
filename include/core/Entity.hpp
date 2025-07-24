@@ -3,7 +3,8 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <optional>
+#include <cassert>
+#include <type_traits>
 #include <spdlog/spdlog.h>
 #include <components/Component.hpp>
 
@@ -20,28 +21,44 @@ public:
     void setComponent(const T& component)
     {
         static_assert(std::is_base_of<ren::components::Component, T>::value, "T must derive from Component");
+        
         for (auto& comp : components)
         {
             if (dynamic_cast<T*>(comp.get()))
             {
-            comp = std::make_unique<T>(component);
-            return;
+                comp = std::make_unique<T>(component);
+                return;
             }
         }
         components.push_back(std::make_unique<T>(component));
     }
 
     template<typename T>
-    std::optional<std::reference_wrapper<T>> getComponent()
+    T& getComponent()
     {
         for (const auto& comp : components)
         {
             if (auto ptr = dynamic_cast<T*>(comp.get()))
             {
-                return std::reference_wrapper<T>(*ptr);
+                return *ptr;
             }
         }
-        return std::nullopt;
+
+        assert(0 && "Entity has no component of such type");
+    }
+
+    template<typename T>
+    const T& getComponent() const
+    {
+        for (const auto& comp : components)
+        {
+            if (auto ptr = dynamic_cast<T*>(comp.get()))
+            {
+                return *ptr;
+            }
+        }
+
+        assert(0 && "Entity has no component of such type");
     }
     
 private:

@@ -233,3 +233,8 @@ why am i opting to return references to things
     dont return references to local variables
 
 i dont want undefined behavior, so i should return const refs and let the user make a mutable copy if they like to
+if the program should fail, just let it fail
+when should the program fail:
+    illegal access (valid access required)
+add assert statements instead
+remove entity and remove component

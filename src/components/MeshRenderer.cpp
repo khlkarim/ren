@@ -21,17 +21,22 @@ void MeshRenderer::setShader(const Shader& shader)
     this->shader = std::make_unique<Shader>(shader);
 }
 
+Shader& MeshRenderer::getShader() 
+{
+    return *(this->shader);
+}
+
 const Shader& MeshRenderer::getShader() const
 {
     return *(this->shader);
 }
 
+std::vector<Texture>& MeshRenderer::getTextures()
+{
+    return this->textures;
+}
+
 void MeshRenderer::setTextures(const std::vector<Texture>& textures)
 {
     this->textures = textures;
-}
-
-const std::vector<Texture>& MeshRenderer::getTextures()
-{
-    return this->textures;
 }

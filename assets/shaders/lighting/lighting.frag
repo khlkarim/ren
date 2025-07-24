@@ -21,7 +21,7 @@ void main()
     vec3 diffuse = diff * lightColor;
 
     // Tells you the % of each channel (from the source) is ambient
-    float ambientStrength = 0.01f;
+    float ambientStrength = 0.1f;
 
     // Calculates the quantity of ambient light an each channel
     vec3 ambient = ambientStrength * lightColor;

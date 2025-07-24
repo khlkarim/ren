@@ -1,15 +1,11 @@
 #include <systems/RenderSystem.hpp>
 using ren::systems::RenderingSystem;
 
-void RenderingSystem::render(Camera& camera, Entity& entity)
+void RenderingSystem::render(const Camera& camera, const Entity& entity)
 {
-    if(!entity.getComponent<ren::components::Mesh>()) return;
-    if(!entity.getComponent<ren::components::MeshRenderer>()) return;
-    if(!entity.getComponent<ren::components::Transform>()) return;
-
-    ren::components::Mesh mesh = entity.getComponent<ren::components::Mesh>().value();
-    ren::components::MeshRenderer meshRenderer = entity.getComponent<ren::components::MeshRenderer>().value();
-    ren::components::Transform transform = entity.getComponent<ren::components::Transform>().value();
+    auto& mesh = entity.getComponent<ren::components::Mesh>();
+    auto& meshRenderer = entity.getComponent<ren::components::MeshRenderer>();
+    auto& transform = entity.getComponent<ren::components::Transform>();
 
     glm::mat4 view = camera.getViewMatrix();
     glm::mat4 model = transform.getModelMatrix();

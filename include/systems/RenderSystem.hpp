@@ -15,7 +15,7 @@ namespace ren::systems
 class RenderingSystem
 {
 public:
-    void render(Camera& camera, Entity& entity);
+    void render(const Camera& camera, const Entity& entity);
 };
 
 }

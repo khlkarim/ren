@@ -34,9 +34,9 @@ public:
     void setFarPlane(float farPlane);
     void setProjectionType(ProjectionType type);
 
-    const glm::vec3& getPosition() const;
-    const glm::vec3& getTarget() const;
-    const glm::vec3& getUp() const;
+    glm::vec3& getPosition();
+    glm::vec3& getTarget();
+    glm::vec3& getUp();
     float getFOV() const;
     float getAspectRatio() const;
     float getNearPlane() const;

@@ -54,15 +54,15 @@ void Camera::setProjectionType(ProjectionType type) {
     this->projectionType = type;
 }
 
-const glm::vec3& Camera::getPosition() const {
+glm::vec3& Camera::getPosition() {
     return position;
 }
 
-const glm::vec3& Camera::getTarget() const {
+glm::vec3& Camera::getTarget() {
     return target;
 }
 
-const glm::vec3& Camera::getUp() const {
+glm::vec3& Camera::getUp() {
     return up;
 }
 

@@ -253,3 +253,14 @@ and child the others
 1. implement a parent child relationship (alter other code sections)
     demonstrate this by implementing a planetery system
 2. load prefabs as parent entities
+
+why dont i straight up instanciate entities?
+and i wouldn't need prefabs at all
+
+<!-- scene.instantiate(entity) -->
+entity.hierarchyComponent.addchild/setParent
+renderingSystem.render(scene)
+
+1. move id management to Entity class (should make you able to work with entities outside the scene) (id should be customizable) done
+2. move rendering logic to RenderingSystem class
+3. add a hierarchy component

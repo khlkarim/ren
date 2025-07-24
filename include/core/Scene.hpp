@@ -23,8 +23,8 @@ public:
     Camera& getCamera();
     void setCamera(const Camera& camera);
 
-    std::string createEntity();
-    void deleteEntity(const std::string& id);
+    void remove(const std::string& id);
+    void instantiate(const Entity& entity);
 
     template<typename T>
     void setComponent(const std::string& id, const T& component)

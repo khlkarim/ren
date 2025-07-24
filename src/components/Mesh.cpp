@@ -1,6 +1,7 @@
 #include <components/Mesh.hpp>
 
 using ren::components::Mesh;
+using ren::components::Component;
 using ren::components::meshes::Vertex;
 
 Mesh::Mesh(
@@ -59,4 +60,8 @@ const std::vector<unsigned int>& Mesh::getIndices() const {
 
 const std::vector<Vertex>& Mesh::getVertices() const {
     return vertices;
+}
+
+std::unique_ptr<Component> Mesh::clone() const {
+    return std::make_unique<Mesh>(*this);
 }

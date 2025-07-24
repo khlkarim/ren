@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -28,6 +29,8 @@ public:
     glm::vec3& getScale();
 
     glm::mat4 getModelMatrix() const;
+
+    std::unique_ptr<Component> clone() const override;
 
 private:
     glm::vec3 _position;

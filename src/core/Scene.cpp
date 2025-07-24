@@ -32,18 +32,13 @@ Camera& Scene::getCamera()
     return *(this->camera);
 }
 
-std::string Scene::createEntity()
+void Scene::instantiate(const Entity& entity)
 {   
-    const boost::uuids::uuid id_struct = boost::uuids::random_generator()();
-    const std::string id = boost::uuids::to_string(id_struct);
-
-    this->entities[id] = std::make_unique<Entity>();
-    spdlog::info("Entity with id: {} created", id);
-
-    return id;
+    this->entities[entity.getId()] = std::make_unique<Entity>(entity);
+    spdlog::info("Entity with id: {} instantiated", entity.getId());
 }
 
-void Scene::deleteEntity(const std::string& id)
+void Scene::remove(const std::string& id)
 {
     if(this->entities.find(id) == this->entities.end())
     {

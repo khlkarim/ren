@@ -1,4 +1,5 @@
 #include <components/MeshRenderer.hpp>
+using ren::components::Component;
 using ren::components::MeshRenderer;
 using namespace ren::components::shaders;
 
@@ -47,4 +48,8 @@ std::vector<Texture>& MeshRenderer::getTextures()
 void MeshRenderer::setTextures(const std::vector<Texture>& textures)
 {
     this->textures = textures;
+}
+
+std::unique_ptr<Component> MeshRenderer::clone() const {
+    return std::make_unique<MeshRenderer>(*this);
 }

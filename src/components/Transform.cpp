@@ -1,4 +1,5 @@
 #include <components/Transform.hpp>
+using ren::components::Component;
 using ren::components::Transform;
 
 Transform::Transform()
@@ -73,4 +74,8 @@ glm::mat4 Transform::getModelMatrix() const
     model *= glm::mat4_cast(this->_rotation);
     model = glm::scale(model, this->_scale);
     return model;
+}
+
+std::unique_ptr<Component> Transform::clone() const {
+    return std::make_unique<Transform>(*this);
 }

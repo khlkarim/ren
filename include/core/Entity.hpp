@@ -14,8 +14,12 @@ namespace ren
 class Entity
 {
 public:
-    Entity();
+    Entity(const std::string& id);
+    Entity(const Entity& other);
     virtual ~Entity();
+
+    const std::string& getId() const;
+    void setId(const std::string& id);
 
     template<typename T>
     void setComponent(const T& component)
@@ -79,6 +83,7 @@ public:
     }
     
 private:
+    std::string id;
     std::vector<std::unique_ptr<ren::components::Component>> components;
 };
 

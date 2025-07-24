@@ -24,6 +24,8 @@ public:
 
     const std::vector<unsigned int>& getIndices() const;
     const std::vector<meshes::Vertex>& getVertices() const;
+    
+    std::unique_ptr<Component> clone() const override;
 
 private:
     void init();

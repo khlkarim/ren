@@ -10,7 +10,9 @@ Shader AssetManager::loadShader(const std::string& vertexShader, const std::stri
     std::optional<std::string> vertexCodeStr = this->readText(vertexShader);
     std::optional<std::string> fragCodeStr = this->readText(fragShader);
 
-    assert(vertexCodeStr.has_value() && fragCodeStr.has_value() && "Failed to read shader code");
+    if (!vertexCodeStr.has_value() || !fragCodeStr.has_value()) {
+        fatal("Failed to read shader code");
+    }
 
     const char* vertexCode = vertexCodeStr.value().c_str();
     const char* fragCode = fragCodeStr.value().c_str();
@@ -21,13 +23,17 @@ Shader AssetManager::loadShader(const std::string& vertexShader, const std::stri
     glShaderSource(vertex, 1, &vertexCode, NULL);
     glCompileShader(vertex);
 
-    assert(!this->checkCompilerErrors(vertex, "VERTEX_SHADER"));
+    if (this->checkCompilerErrors(vertex, "VERTEX_SHADER")) {
+        fatal("Vertex shader compilation failed");
+    }
 
     fragment = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment, 1, &fragCode, NULL);
     glCompileShader(fragment);
 
-    assert(!this->checkCompilerErrors(fragment, "FRAGMENT_SHADER"));
+    if (this->checkCompilerErrors(fragment, "FRAGMENT_SHADER")) {
+        fatal("Fragment shader compilation failed");
+    }
 
     Shader shader;
     shader.setId(glCreateProgram());
@@ -35,7 +41,9 @@ Shader AssetManager::loadShader(const std::string& vertexShader, const std::stri
     glAttachShader(shader.getId(), fragment);
     glLinkProgram(shader.getId());
 
-    assert(!this->checkCompilerErrors(shader.getId(), "PROGRAM"));
+    if (this->checkCompilerErrors(shader.getId(), "PROGRAM")) {
+        fatal("Shader program linking failed");
+    }
 
     glDeleteShader(vertex);
     glDeleteShader(fragment);

@@ -7,8 +7,8 @@ int main()
     ren::Window window("ecs", 1980, 1080);
 
     ren::Scene scene;
-    ren::Camera camera;
-    scene.setCamera(camera);
+    // ren::Camera camera;
+    // scene.setCamera(camera);
 
     ren::io::AssetManager assetManager; 
     ren::components::shaders::Shader shader = assetManager.loadShader("assets\\shaders\\lighting\\lighting.vert", "assets\\shaders\\lighting\\lighting.frag");
@@ -41,7 +41,7 @@ int main()
             glm::sin(glfwGetTime()) * glm::sin(glfwGetTime()), 
             glm::cos(glfwGetTime() - glm::pi<double>()/4) * glm::cos(glfwGetTime() - glm::pi<double>()/4)
         ));
-
+        
         window.render(scene);
     }
 

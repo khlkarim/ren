@@ -25,7 +25,10 @@ void Scene::setCamera(const Camera& camera)
 
 Camera& Scene::getCamera()
 {
-    assert(this->camera && "Scene camera is not defined");
+    if(!this->camera)
+    {
+        fatal("Scene camera is not defined");
+    }
     return *(this->camera);
 }
 
@@ -40,8 +43,24 @@ std::string Scene::createEntity()
     return id;
 }
 
+void Scene::deleteEntity(const std::string& id)
+{
+    if(this->entities.find(id) == this->entities.end())
+    {
+        spdlog::warn("Entity with Id: {} not found", id);
+        return;
+    }
+
+    this->entities[id].reset(nullptr);
+    this->entities.erase(id);
+}
+
 void Scene::render() const
 {
+    if(!this->camera)
+    {
+        fatal("Scene camera is not defined");
+    }
     ren::systems::RenderingSystem renderingSystem;
 
     for(const auto& [id, entity]: this->entities)

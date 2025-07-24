@@ -3,9 +3,9 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <cassert>
 #include <type_traits>
 #include <spdlog/spdlog.h>
+#include <utils/error_handler.hpp>
 #include <components/Component.hpp>
 
 namespace ren
@@ -20,7 +20,10 @@ public:
     template<typename T>
     void setComponent(const T& component)
     {
-        static_assert(std::is_base_of<ren::components::Component, T>::value, "T must derive from Component");
+        if(!std::is_base_of<ren::components::Component, T>::value)
+        {
+            fatal("T must derive from Component");
+        }
         
         for (auto& comp : components)
         {
@@ -44,7 +47,7 @@ public:
             }
         }
 
-        assert(0 && "Entity has no component of such type");
+        fatal("Entity has no component of such type");
     }
 
     template<typename T>
@@ -58,7 +61,21 @@ public:
             }
         }
 
-        assert(0 && "Entity has no component of such type");
+        fatal("Entity has no component of such type");
+    }
+
+    template<typename T>
+    void deleteComponent()
+    {
+        for(unsigned int i = 0; i<this->components.size(); i++)
+        {
+            if(dynamic_cast<T*>(this->components[i].get()))
+            {
+                this->components[i].reset(nullptr);
+                this->components.erase(this->components.begin() + i);
+                return;
+            }
+        }
     }
     
 private:

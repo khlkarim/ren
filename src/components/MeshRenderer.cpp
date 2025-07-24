@@ -23,13 +23,19 @@ void MeshRenderer::setShader(const Shader& shader)
 
 Shader& MeshRenderer::getShader() 
 {
-    assert(this->shader && "MeshRenderer has no defined Shader");
+    if(!this->shader)
+    {
+        fatal("MeshRenderer has no defined Shader");
+    }
     return *(this->shader);
 }
 
 const Shader& MeshRenderer::getShader() const
 {
-    assert(this->shader && "MeshRenderer has no defined Shader");
+    if(!this->shader)
+    {
+        fatal("MeshRenderer has no defined Shader");
+    }
     return *(this->shader);
 }
 

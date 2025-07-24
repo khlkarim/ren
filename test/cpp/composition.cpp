@@ -112,7 +112,7 @@ int main() {
 
     std::cout << ptr1 << std::endl;
 
-    D d;
+    [[maybe_unused]] D d;
     f(ui);
 
     assert(false && "what");

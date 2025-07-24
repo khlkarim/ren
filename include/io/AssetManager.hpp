@@ -2,7 +2,6 @@
 
 #include <fstream>
 #include <sstream>
-#include <cassert>
 #include <iostream>
 #include <optional>
 #include <glad/glad.h>
@@ -13,6 +12,7 @@
 #include <components/Mesh.hpp>
 #include <components/MeshRenderer.hpp>
 #include <components/shaders/Shader.hpp>
+#include <utils/error_handler.hpp>
 
 namespace ren::io {
 

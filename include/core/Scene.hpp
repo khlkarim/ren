@@ -10,6 +10,7 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <systems/RenderSystem.hpp>
+#include <utils/error_handler.hpp>
 
 namespace ren {
 
@@ -28,14 +29,20 @@ public:
     template<typename T>
     void setComponent(const std::string& id, const T& component)
     {
-        assert(this->entities.find(id) != this->entities.end() && "Entity with given id does not exist");
+        if(this->entities.find(id) == this->entities.end())
+        {
+            fatal("Entity with given id does not exist");
+        }
         this->entities[id]->setComponent(component);
     }
 
     template<typename T>
     T& getComponent(const std::string& id)
     {
-        assert(this->entities.find(id) != this->entities.end() && "Entity with given id does not exist");
+        if(this->entities.find(id) == this->entities.end())
+        {
+            fatal("Entity with given id does not exist");
+        }
         return this->entities[id]->getComponent<T>();
     }
 

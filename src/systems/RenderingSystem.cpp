@@ -43,7 +43,7 @@ void RenderingSystem::render(const Camera& camera, const Entity& entity)
     }
     glActiveTexture(GL_TEXTURE0);
 
-    glBindVertexArray(mesh.VAO);
-    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.indices.size()), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(mesh.getVAO());
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.getIndices().size()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }

@@ -18,10 +18,17 @@ public:
         const std::vector<unsigned int>& indices
     );
 
+    unsigned int getVAO() const;
+    unsigned int getVBO() const;
+    unsigned int getEBO() const;
+
+    const std::vector<unsigned int>& getIndices() const;
+    const std::vector<meshes::Vertex>& getVertices() const;
+
 private:
     void init();
 
-public:
+private:
     unsigned int VAO, VBO, EBO;
     std::vector<meshes::Vertex> vertices;
     std::vector<unsigned int> indices;

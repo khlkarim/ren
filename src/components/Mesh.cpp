@@ -40,3 +40,23 @@ void Mesh::init()
 
     glBindVertexArray(0);
 }
+
+unsigned int Mesh::getVAO() const {
+    return VAO;
+}
+
+unsigned int Mesh::getVBO() const {
+    return VBO;
+}
+
+unsigned int Mesh::getEBO() const {
+    return EBO;
+}
+
+const std::vector<unsigned int>& Mesh::getIndices() const {
+    return indices;
+}
+
+const std::vector<Vertex>& Mesh::getVertices() const {
+    return vertices;
+}

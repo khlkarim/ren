@@ -23,7 +23,7 @@ void Scene::setCamera(const Camera& camera)
     spdlog::info("Camera set");
 }
 
-std::optional<std::reference_wrapper<const Camera>> Scene::getCamera() const
+std::optional<std::reference_wrapper<Camera>> Scene::getCamera() const
 {
     if(this->camera)
     {

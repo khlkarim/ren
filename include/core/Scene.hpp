@@ -20,7 +20,7 @@ public:
     virtual ~Scene();
 
     void setCamera(const Camera& camera);
-    std::optional<std::reference_wrapper<const Camera>> getCamera() const;
+    std::optional<std::reference_wrapper<Camera>> getCamera() const;
 
     std::string createEntity();
 
@@ -36,7 +36,7 @@ public:
     }
 
     template<typename T>
-    std::optional<std::reference_wrapper<const T>> getComponent(const std::string& id) const
+    std::optional<std::reference_wrapper<T>> getComponent(const std::string& id)
     {
         if (this->entities.find(id) != this->entities.end()) {
             return this->entities[id]->getComponent<T>();

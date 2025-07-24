@@ -32,13 +32,13 @@ public:
     }
 
     template<typename T>
-    std::optional<std::reference_wrapper<const T>> getComponent() const
+    std::optional<std::reference_wrapper<T>> getComponent()
     {
         for (const auto& comp : components)
         {
-            if (auto ptr = dynamic_cast<const T*>(comp.get()))
+            if (auto ptr = dynamic_cast<T*>(comp.get()))
             {
-                return std::cref(*ptr);
+                return std::reference_wrapper<T>(*ptr);
             }
         }
         return std::nullopt;

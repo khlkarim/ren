@@ -1,7 +1,7 @@
 #include <systems/RenderSystem.hpp>
 using ren::systems::RenderingSystem;
 
-void RenderingSystem::render(const Camera& camera, const Entity& entity) const
+void RenderingSystem::render(Camera& camera, Entity& entity)
 {
     if(!entity.getComponent<ren::components::Mesh>()) return;
     if(!entity.getComponent<ren::components::MeshRenderer>()) return;

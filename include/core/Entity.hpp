@@ -14,6 +14,7 @@ namespace ren
 class Entity
 {
 public:
+    Entity();
     Entity(const std::string& id);
     Entity(const Entity& other);
     virtual ~Entity();

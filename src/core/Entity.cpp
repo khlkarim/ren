@@ -1,6 +1,11 @@
 #include <core/Entity.hpp>
 using ren::Entity;
 
+Entity::Entity()
+{
+    spdlog::info("Entity Constructor");
+}
+
 Entity::Entity(const std::string& id)
 {
     spdlog::info("Entity Constructor");

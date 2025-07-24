@@ -13,7 +13,7 @@ int main()
     ren::io::AssetManager assetManager; 
     ren::components::shaders::Shader shader = assetManager.loadShader("assets\\shaders\\lighting\\lighting.vert", "assets\\shaders\\lighting\\lighting.frag");
 
-    ren::Entity player("player1");
+    ren::Entity player;
     
     ren::components::meshes::Cube cube;
     ren::components::Transform transform;
@@ -23,6 +23,7 @@ int main()
     player.setComponent<ren::components::Transform>(transform);
     player.setComponent<ren::components::MeshRenderer>(meshRenderer);
     
+    player.setId("player1");
     scene.instantiate(player);
     player.setId("player2");
     scene.instantiate(player);

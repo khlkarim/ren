@@ -34,6 +34,15 @@ Camera& Scene::getCamera()
 
 void Scene::instantiate(const Entity& entity)
 {   
+    if(entity.getId().length() == 0)
+    {
+        fatal("Entity has no ID");
+    }
+    if(this->entities.find(entity.getId()) != this->entities.end())
+    {
+        fatal("An Entity with the same ID already exists");
+    }
+
     this->entities[entity.getId()] = std::make_unique<Entity>(entity);
     spdlog::info("Entity with id: {} instantiated", entity.getId());
 }

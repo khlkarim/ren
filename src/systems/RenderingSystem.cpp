@@ -51,19 +51,20 @@ void RenderingSystem::render(const Camera& camera, const Entity& entity) const
 void RenderingSystem::render(Scene& scene) 
 {
     const Camera& camera = scene.getCamera();
+    ren::components::Hierarchy& hierarchy = scene.getHierarchy();
 
     glm::mat4 model(1.0f);
     glm::mat4 view = camera.getViewMatrix();
     glm::mat4 projection = camera.getProjectionMatrix();
 
-    std::vector<std::string> entities = scene.getEntitiesWith
+    std::vector<std::string> entities = hierarchy.getEntitiesWith
         <ren::components::Mesh, 
         ren::components::MeshRenderer, 
         ren::components::Transform>();
 
     for(const auto& entityId : entities)
     {
-        this->render(projection, view, model, scene.getEntity(entityId));
+        this->render(projection, view, model, hierarchy.get(entityId));
     }
 }
 

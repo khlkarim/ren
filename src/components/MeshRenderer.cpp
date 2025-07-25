@@ -7,37 +7,23 @@ MeshRenderer::MeshRenderer(
     const Shader& shader,
     const std::vector<Texture>& textures
 ) {
-    this->shader = std::make_unique<Shader>(shader);
+    this->shader = shader;
     this->textures = textures;
-}
- 
-MeshRenderer::MeshRenderer(const MeshRenderer& other)
-{
-    this->shader = std::make_unique<Shader>(other.getShader());
-    this->textures = other.textures;
 }
 
 void MeshRenderer::setShader(const Shader& shader)
 {
-    this->shader = std::make_unique<Shader>(shader);
+    this->shader = shader;
 }
 
 Shader& MeshRenderer::getShader() 
 {
-    if(!this->shader)
-    {
-        fatal("MeshRenderer has no defined Shader");
-    }
-    return *(this->shader);
+    return this->shader;
 }
 
 const Shader& MeshRenderer::getShader() const
 {
-    if(!this->shader)
-    {
-        fatal("MeshRenderer has no defined Shader");
-    }
-    return *(this->shader);
+    return this->shader;
 }
 
 std::vector<Texture>& MeshRenderer::getTextures()

@@ -2,6 +2,7 @@
 using ren::Scene;
 using ren::Camera; 
 using ren::Entity; 
+using ren::components::Hierarchy;
 
 Scene::Scene()
 {   
@@ -15,64 +16,32 @@ Scene::~Scene()
 
 void Scene::setCamera(const Camera& camera)
 {
-    if (!this->camera) {
-        this->camera = std::make_unique<Camera>(camera);
-    } else {
-        *this->camera = camera;
-    }
+    this->camera = camera;
     spdlog::info("Camera set");
 }
 
 Camera& Scene::getCamera()
 {
-    if(!this->camera)
-    {
-        fatal("Scene camera is not defined");
-    }
-    return *(this->camera);
+    return this->camera;
 }
 
 const Camera& Scene::getCamera() const
 {
-    if(!this->camera)
-    {
-        fatal("Scene camera is not defined");
-    }
-    return *(this->camera);
+    return this->camera;
 }
 
-Entity& Scene::getEntity(const std::string& id)
+Hierarchy& Scene::getHierarchy()
 {
-    if(this->entities.find(id) == this->entities.end())
-    {
-        fatal("Entity with given id does not exist");
-    }
-    return *(this->entities[id]);
+    return this->hierarchy;
 }
 
-void Scene::instantiate(const Entity& entity)
-{   
-    if(entity.getId().length() == 0)
-    {
-        fatal("Entity has no ID");
-    }
-    if(this->entities.find(entity.getId()) != this->entities.end())
-    {
-        fatal("An Entity with the same ID already exists");
-    }
-
-    this->entities[entity.getId()] = std::make_unique<Entity>(entity);
-    spdlog::info("Entity with id: {} instantiated", entity.getId());
-}
-
-void Scene::remove(const std::string& id)
+const Hierarchy& Scene::getHierarchy() const
 {
-    if(this->entities.find(id) == this->entities.end())
-    {
-        spdlog::warn("Entity with Id: {} not found", id);
-        return;
-    }
+    return this->hierarchy;
+}
 
-    this->entities[id].reset(nullptr);
-    this->entities.erase(id);
+void Scene::setHierarchy(const Hierarchy& hierarchy)
+{
+    this->hierarchy = hierarchy;
+    spdlog::info("Hierarchy set");
 }

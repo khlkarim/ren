@@ -282,3 +282,14 @@ remove use of unique ptr when unnecessary
         i need unique pointers when working with components
         i dont think i need them with entities, or scene camera, or shader
     use stack based objects
+
+scene   
+    camera 
+    hierarchy 
+        unordered_map of entities
+            entity (copy constructor)
+                pointers to components (polymorphism)
+                    MeshRenderer
+                        shader
+                    Hierarchy
+                        entities

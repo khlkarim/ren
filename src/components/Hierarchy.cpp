@@ -7,7 +7,7 @@ void Hierarchy::add(const Entity& child) {
     if (children.find(child.getId()) != children.end()) {
         fatal("Entity with given id already exist");
     }
-    children[child.getId()] = std::make_unique<Entity>(child);
+    children[child.getId()] = child;
 }
 
 Entity& Hierarchy::get(const std::string& id)
@@ -16,19 +16,11 @@ Entity& Hierarchy::get(const std::string& id)
     {
         fatal("Entity with given id does not exist");
     }
-    return *(this->children[id]);
+    return this->children[id];
 }
 
 void Hierarchy::remove(const std::string& id) {
     children.erase(id);
-}
-
-Hierarchy::Hierarchy(const Hierarchy& other) {
-    for (const auto& [id, entityPtr] : other.children) {
-        if (entityPtr) {
-            children[id] = std::make_unique<Entity>(*entityPtr);
-        }
-    }
 }
 
 std::unique_ptr<Component> Hierarchy::clone() const

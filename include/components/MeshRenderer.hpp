@@ -16,7 +16,6 @@ public:
         const shaders::Shader& shader,
         const std::vector<shaders::Texture>& textures
     );
-    MeshRenderer(const MeshRenderer& other);
 
     shaders::Shader& getShader();
     const shaders::Shader& getShader() const;
@@ -28,7 +27,7 @@ public:
     std::unique_ptr<Component> clone() const override;
 
 public:
-    std::unique_ptr<shaders::Shader> shader;
+    shaders::Shader shader;
     std::vector<shaders::Texture> textures;
 };
 

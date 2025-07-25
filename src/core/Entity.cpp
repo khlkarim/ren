@@ -6,6 +6,11 @@ Entity::Entity()
     spdlog::info("Entity Constructor");
 }
 
+Entity::~Entity()
+{
+    spdlog::info("Entity Destructor");
+}
+
 Entity::Entity(const std::string& id)
 {
     spdlog::info("Entity Constructor");
@@ -24,9 +29,20 @@ Entity::Entity(const Entity& other)
     }
 }
 
-Entity::~Entity()
+Entity& Entity::operator=(const Entity& other)
 {
-    spdlog::info("Entity Destructor");
+    if (this != &other) {
+        this->id = other.id;
+        
+        this->components.clear();
+        for (const auto& comp : other.components) {
+            if (comp) {
+                spdlog::info("Component transfer ...");
+                this->components.push_back(comp->clone());
+            }
+        }
+    }
+    return *this;
 }
 
 const std::string& Entity::getId() const

@@ -5,10 +5,7 @@
 int main()
 {
     ren::Window window("ecs", 1980, 1080);
-
     ren::Scene scene;
-    ren::Camera camera;
-    scene.setCamera(camera);
 
     ren::io::AssetManager assetManager; 
     ren::components::shaders::Shader shader = assetManager.loadShader("assets\\shaders\\lighting\\lighting.vert", "assets\\shaders\\lighting\\lighting.frag");
@@ -26,11 +23,11 @@ int main()
     player.setComponent<ren::components::Hierarchy>(hierarchy);
     
     player.setId("player1");
-    scene.instantiate(player);
+    scene.getHierarchy().add(player);
 
     float lastFrame = static_cast<float>(glfwGetTime());
 
-    auto& h = scene.getComponent<ren::components::Hierarchy>("player1");
+    auto& h = scene.getHierarchy().getComponent<ren::components::Hierarchy>("player1");
     player.setId("player2");
     h.add(player);
 
@@ -39,8 +36,8 @@ int main()
         float delta = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        auto& t1 = scene.getComponent<ren::components::Transform>("player1");
-        auto& mr1 = scene.getComponent<ren::components::MeshRenderer>("player1");
+        auto& t1 = scene.getHierarchy().getComponent<ren::components::Transform>("player1");
+        auto& mr1 = scene.getHierarchy().getComponent<ren::components::MeshRenderer>("player1");
         auto& s1 = mr1.getShader();
 
         t1.rotate(10 * delta, glm::vec3(0.0f, 1.0f, 0.0f));

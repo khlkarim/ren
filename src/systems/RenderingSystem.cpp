@@ -63,7 +63,7 @@ void RenderingSystem::render(Scene& scene)
 
     for(const auto& entityId : entities)
     {
-        this->render(projection, view, model, scene.getEntity(entityId), scene);
+        this->render(projection, view, model, scene.getEntity(entityId));
     }
 }
 
@@ -71,8 +71,7 @@ void RenderingSystem::render(
     const glm::mat4& projection,
     const glm::mat4& view,
     const glm::mat4& model,
-    Entity& entity,
-    Scene& scene
+    Entity& entity
 ) {
     auto& mesh = entity.getComponent<ren::components::Mesh>();
     auto& meshRenderer = entity.getComponent<ren::components::MeshRenderer>();
@@ -118,9 +117,15 @@ void RenderingSystem::render(
     if(entity.has<ren::components::Hierarchy>())
     {
         auto& hierarchy = entity.getComponent<ren::components::Hierarchy>();
-        for(const auto& entityId : hierarchy.getChildren())
+
+        std::vector<std::string> entities = hierarchy.getEntitiesWith
+            <ren::components::Mesh, 
+            ren::components::MeshRenderer, 
+            ren::components::Transform>();
+
+        for(const auto& entityId : entities)
         {
-            this->render(projection, view, model * transform.getModelMatrix(), scene.getEntity(entityId), scene);
+            this->render(projection, view, model * transform.getModelMatrix(), hierarchy.get(entityId));
         }
     }
 }

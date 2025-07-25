@@ -1,30 +1,34 @@
 #include <components/Hierarchy.hpp>
+using ren::Entity;
 using ren::components::Component;
 using ren::components::Hierarchy;
 
-void Hierarchy::setParent(const std::string& parentId) {
-    parent = parentId;
-}
-
-const std::string& Hierarchy::getParent() const {
-    return parent;
-}
-
-void Hierarchy::addChild(const std::string& childId) {
-    if (std::find(children.begin(), children.end(), childId) == children.end()) {
-        children.push_back(childId);
+void Hierarchy::add(const Entity& child) {
+    if (children.find(child.getId()) != children.end()) {
+        fatal("Entity with given id already exist");
     }
+    children[child.getId()] = std::make_unique<Entity>(child);
 }
 
-void Hierarchy::removeChild(const std::string& childId) {
-    auto it = std::find(children.begin(), children.end(), childId);
-    if (it != children.end()) {
-        children.erase(it);
+Entity& Hierarchy::get(const std::string& id)
+{
+    if(this->children.find(id) == this->children.end())
+    {
+        fatal("Entity with given id does not exist");
     }
+    return *(this->children[id]);
 }
 
-const std::vector<std::string>& Hierarchy::getChildren() const {
-    return children;
+void Hierarchy::remove(const std::string& id) {
+    children.erase(id);
+}
+
+Hierarchy::Hierarchy(const Hierarchy& other) {
+    for (const auto& [id, entityPtr] : other.children) {
+        if (entityPtr) {
+            children[id] = std::make_unique<Entity>(*entityPtr);
+        }
+    }
 }
 
 std::unique_ptr<Component> Hierarchy::clone() const

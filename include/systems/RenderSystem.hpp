@@ -23,8 +23,7 @@ public:
         const glm::mat4& projection,
         const glm::mat4& view,
         const glm::mat4& model,
-        Entity& entity,
-        Scene& scene
+        Entity& entity
     );
 };
 

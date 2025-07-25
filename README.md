@@ -265,3 +265,20 @@ renderingSystem.render(scene)
 3. add a hierarchy component (rendering depends on the hierarchy)
 2. move rendering logic to RenderingSystem class (rendering a scene is a per Entity thing) 
     this is honestly unecessary, it works already
+
+even the scene has a hierarchy
+and you just render hierarchies to a camera
+
+the hierarchy component just contains a collection of entities
+you can register a child, but you need to give it a unique id in its hierarchy level to access it later
+you construct an entity and you register copies of it as children with different ids
+then you add the root entities to the scene
+
+each entity might have a hierarchy component
+the scene also has a hierarchy
+
+remove use of unique ptr when unnecessary
+    you only need pointers when polymorphism
+        i need unique pointers when working with components
+        i dont think i need them with entities, or scene camera, or shader
+    use stack based objects

@@ -27,13 +27,12 @@ int main()
     
     player.setId("player1");
     scene.instantiate(player);
-    player.setId("player2");
-    scene.instantiate(player);
 
     float lastFrame = static_cast<float>(glfwGetTime());
 
     auto& h = scene.getComponent<ren::components::Hierarchy>("player1");
-    h.addChild("player2");
+    player.setId("player2");
+    h.add(player);
 
     while(window.isOpen()) {
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -52,8 +51,8 @@ int main()
             glm::cos(glfwGetTime() - glm::pi<double>()/4) * glm::cos(glfwGetTime() - glm::pi<double>()/4)
         ));
 
-        auto& t2 = scene.getComponent<ren::components::Transform>("player2");
-        auto& mr2 = scene.getComponent<ren::components::MeshRenderer>("player2");
+        auto& t2 = h.getComponent<ren::components::Transform>("player2");
+        auto& mr2 = h.getComponent<ren::components::MeshRenderer>("player2");
         auto& s2 = mr1.getShader();
 
         t2.rotate(50 * delta, glm::vec3(1.0f, 0.0f, 1.0f));

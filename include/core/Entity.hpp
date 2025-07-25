@@ -37,7 +37,7 @@ public:
     template<typename T>
     void deleteComponent();
 
-    template<typename T>
+    template<typename... ComponentTypes>
     bool has() const;
 
 private:
@@ -108,15 +108,15 @@ void ren::Entity::deleteComponent()
     }
 }
 
-template<typename T>
+template<typename... ComponentTypes>
 bool ren::Entity::has() const
 {
-    for (const auto& comp : components)
-    {
-        if (dynamic_cast<T*>(comp.get()))
-        {
-            return true;
+    return (... && ([this]() {
+        for (const auto& comp : components) {
+            if (dynamic_cast<ComponentTypes*>(comp.get())) {
+                return true;
+            }
         }
-    }
-    return false;
+        return false;
+    }()));
 }

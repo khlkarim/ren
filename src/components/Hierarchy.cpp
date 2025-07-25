@@ -19,6 +19,17 @@ Entity& Hierarchy::get(const std::string& id)
     return this->children[id];
 }
 
+std::vector<std::string> Hierarchy::getChildren() const
+{
+    std::vector<std::string> keys;
+
+    for (const auto& pair : children) {
+        keys.push_back(pair.first);
+    }
+
+    return keys;
+}
+
 void Hierarchy::remove(const std::string& id) {
     children.erase(id);
 }

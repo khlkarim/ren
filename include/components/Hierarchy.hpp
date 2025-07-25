@@ -23,11 +23,12 @@ public:
     template<typename T>
     void setComponent(const std::string& id, const T& component);    
     
-    template<typename T>
+    template<typename... ComponentTypes>
     bool has(const std::string& id);
     
     template<typename... ComponentTypes>
     std::vector<std::string> getEntitiesWith() const;
+    std::vector<std::string> getChildren() const;
 
     std::unique_ptr<Component> Hierarchy::clone() const;
 
@@ -57,10 +58,10 @@ T& ren::components::Hierarchy::getComponent(const std::string& id)
     return this->children[id].getComponent<T>();
 }
 
-template<typename T>
+template<typename... ComponentTypes>
 bool ren::components::Hierarchy::has(const std::string& id)
 {
-    return this->children[id].has<T>();
+    return (this->children[id].has<ComponentTypes>() && ...);
 }
 
 template<typename... ComponentTypes>

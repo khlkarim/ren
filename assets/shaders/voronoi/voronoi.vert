@@ -9,8 +9,8 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-uniform vec3 vertexPositions[10];
-uniform vec3 vertexColors[10];
+uniform vec3 vertexPositions[100];
+uniform vec3 vertexColors[100];
 
 void main()
 {
@@ -19,13 +19,26 @@ void main()
     float minDist = distance(aPos, vertexPositions[0]);
     Color = vertexColors[0];
 
-    for(int i = 1; i < 10; i++) 
+    if(minDist < 0.03f)
+    {
+        Color = vec3(1.0f);
+    }
+
+    for(int i = 1; i < 15; i++) 
     {
         float dist = distance(aPos, vertexPositions[i]);
         if(dist < minDist)
         {
             minDist = dist;
-            Color = vertexColors[i];
+
+            if(dist < 0.03f)
+            {
+                Color = vec3(1.0f);
+            }
+            else 
+            {
+                Color = vertexColors[i];
+            }
         }
     }    
 }

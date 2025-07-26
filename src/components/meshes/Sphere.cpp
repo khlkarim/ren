@@ -2,7 +2,11 @@
 using ren::components::meshes::Sphere;
 using ren::components::meshes::Vertex;
 
-Sphere::Sphere() : Mesh(this->getVertices(), this->getIndices()) 
+Sphere::Sphere(
+    const float radius,
+    const unsigned int segments,
+    const unsigned int rings
+) : radius(radius), segments(segments), rings(rings), Mesh(this->getVertices(), this->getIndices())
 {
     spdlog::info("Sphere constructor");
 }

@@ -295,3 +295,5 @@ scene
                         entities
 
 a material encapsulates a shader, uniforms and textures
+
+i need a mesh factory

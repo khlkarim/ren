@@ -3,14 +3,20 @@
 
 namespace ren::components::meshes {
 
-class Capsule : public Mesh
+class Cylinder : public Mesh
 {
 public:
-    Capsule();
-    virtual ~Capsule();
+    Cylinder();
+    virtual ~Cylinder();
 
     std::vector<Vertex> getVertices() const;
     std::vector<unsigned int> getIndices() const;
+
+private:
+    float radius;
+    float height;
+    unsigned int segments;
+    unsigned int rings;
 };
 
 }

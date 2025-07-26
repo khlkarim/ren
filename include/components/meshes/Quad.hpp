@@ -6,11 +6,42 @@ namespace ren::components::meshes {
 class Quad : public Mesh
 {
 public:
-    Quad();
+    Quad(
+        const float width = 1,
+        const float height = 1,
+        const unsigned int widthSegments = 1,
+        const unsigned int heightSegments = 1
+    );
     virtual ~Quad();
 
-    std::vector<Vertex> getVertices() const;
-    std::vector<unsigned int> getIndices() const;
+    std::vector<Vertex> getVertices(
+        const float width = 1,
+        const float height = 1,
+        const unsigned int widthSegments = 1,
+        const unsigned int heightSegments = 1
+    ) const;
+    std::vector<unsigned int> getIndices(
+        const float width = 1,
+        const float height = 1,
+        const unsigned int widthSegments = 1,
+        const unsigned int heightSegments = 1
+    ) const;
+
+    float getWidth() const;
+    float getHeight() const;
+    unsigned int getWidthSegments() const;
+    unsigned int getHeightSegments() const;
+
+    void setWidth(float width);
+    void setHeight(float height);
+    void setWidthSegments(unsigned int widthSegments);
+    void setHeightSegments(unsigned int heightSegments);
+
+private:
+    float width;
+    float height;
+    unsigned int widthSegments;
+    unsigned int heightSegments;
 };
 
 }

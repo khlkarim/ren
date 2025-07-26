@@ -15,6 +15,7 @@ class Hierarchy: public Component
 public:
     void add(const Entity& entity);
     Entity& get(const std::string& id);
+    const Entity& get(const std::string& id) const;
     void remove(const std::string& id);
 
     template<typename T>
@@ -26,10 +27,7 @@ public:
     template<typename... ComponentTypes>
     bool has(const std::string& id);
     
-    template<typename... ComponentTypes>
-    std::vector<std::string> getEntitiesWith() const;
     std::vector<std::string> getChildren() const;
-
     std::unique_ptr<Component> Hierarchy::clone() const;
 
 private:
@@ -62,18 +60,4 @@ template<typename... ComponentTypes>
 bool ren::components::Hierarchy::has(const std::string& id)
 {
     return (this->children[id].has<ComponentTypes>() && ...);
-}
-
-template<typename... ComponentTypes>
-std::vector<std::string> ren::components::Hierarchy::getEntitiesWith() const
-{
-    std::vector<std::string> result;
-    for (const auto& [id, entity] : this->children)
-    {
-        if ((entity.has<ComponentTypes>() && ...))
-        {
-            result.push_back(id);
-        }
-    }
-    return result;
 }

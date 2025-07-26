@@ -4,7 +4,6 @@
 #include <glm/glm.hpp>
 #include <core/Camera.hpp>
 #include <core/Entity.hpp>
-#include <core/Scene.hpp>
 #include <components/Mesh.hpp>
 #include <components/Transform.hpp>
 #include <components/MeshRenderer.hpp>
@@ -17,14 +16,16 @@ namespace ren::systems
 class RenderingSystem
 {
 public:
-    void render(Scene& scene);
-    void render(const Camera& camera, const Entity& entity) const;
     void render(
-        const glm::mat4& projection,
-        const glm::mat4& view,
-        const glm::mat4& model,
-        Entity& entity
-    );
+        const Camera& camera, 
+        const components::Hierarchy& hierarchy
+    ) const;
+    void render(
+        const Entity& entity,
+        const glm::mat4& projection = glm::mat4(1.0f),
+        const glm::mat4& view = glm::mat4(1.0f),
+        const glm::mat4& model = glm::mat4(1.0f)
+    ) const;
 };
 
 }

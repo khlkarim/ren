@@ -297,3 +297,6 @@ scene
 a material encapsulates a shader, uniforms and textures
 
 i need a mesh factory
+
+improve error handling (bubble up)
+fixed systems usage (its currently akward)

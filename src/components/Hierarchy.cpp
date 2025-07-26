@@ -16,7 +16,16 @@ Entity& Hierarchy::get(const std::string& id)
     {
         FATAL("Entity with given id does not exist");
     }
-    return this->children[id];
+    return this->children.at(id);
+}
+
+const Entity& Hierarchy::get(const std::string& id) const
+{
+    if(this->children.find(id) == this->children.end())
+    {
+        FATAL("Entity with given id does not exist");
+    }
+    return this->children.at(id);
 }
 
 std::vector<std::string> Hierarchy::getChildren() const

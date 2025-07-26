@@ -45,3 +45,9 @@ void Scene::setHierarchy(const Hierarchy& hierarchy)
     this->hierarchy = hierarchy;
     spdlog::info("Hierarchy set");
 }
+
+void Scene::render()
+{
+    systems::RenderingSystem renderer;
+    renderer.render(this->camera, this->hierarchy);
+}

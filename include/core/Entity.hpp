@@ -14,8 +14,8 @@ namespace ren
 class Entity
 {
 public:
-    Entity();
-    virtual ~Entity();
+    Entity() = default;
+    virtual ~Entity() {};
 
     Entity(const std::string& id);
     Entity(const Entity& other);
@@ -52,7 +52,7 @@ void ren::Entity::setComponent(const T& component)
 {
     if(!std::is_base_of<ren::components::Component, T>::value)
     {
-        fatal("T must derive from Component");
+        FATAL("T must derive from Component");
     }
     
     for (auto& comp : components)
@@ -77,7 +77,7 @@ T& ren::Entity::getComponent()
         }
     }
 
-    fatal("Entity has no component of such type");
+    FATAL("Entity has no component of such type: {}", typeid(T).name());
 }
 
 template<typename T>
@@ -91,7 +91,7 @@ const T& ren::Entity::getComponent() const
         }
     }
 
-    fatal("Entity has no component of such type");
+    FATAL("Entity has no component of such type");
 }
 
 template<typename T>

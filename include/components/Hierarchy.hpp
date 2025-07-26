@@ -43,7 +43,7 @@ void ren::components::Hierarchy::setComponent(const std::string& id, const T& co
 {
     if(this->children.find(id) == this->children.end())
     {
-        fatal("Entity with given id does not exist");
+        FATAL("Entity with given id does not exist");
     }
     this->children[id].setComponent(component);
 }
@@ -53,7 +53,7 @@ T& ren::components::Hierarchy::getComponent(const std::string& id)
 {
     if(this->children.find(id) == this->children.end())
     {
-        fatal("Entity with given id does not exist");
+        FATAL("Entity with given id does not exist");
     }
     return this->children[id].getComponent<T>();
 }

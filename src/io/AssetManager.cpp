@@ -17,7 +17,7 @@ Shader AssetManager::loadShader(const std::string& vertexShader, const std::stri
     std::optional<std::string> fragCodeStr = this->readText(fragShader);
 
     if (!vertexCodeStr.has_value() || !fragCodeStr.has_value()) {
-        fatal("Failed to read shader code");
+        FATAL("Failed to read shader code");
     }
 
     const char* vertexCode = vertexCodeStr.value().c_str();
@@ -30,7 +30,7 @@ Shader AssetManager::loadShader(const std::string& vertexShader, const std::stri
     glCompileShader(vertex);
 
     if (this->checkCompilerErrors(vertex, "VERTEX_SHADER")) {
-        fatal("Vertex shader compilation failed");
+        FATAL("Vertex shader compilation failed");
     }
 
     fragment = glCreateShader(GL_FRAGMENT_SHADER);
@@ -38,7 +38,7 @@ Shader AssetManager::loadShader(const std::string& vertexShader, const std::stri
     glCompileShader(fragment);
 
     if (this->checkCompilerErrors(fragment, "FRAGMENT_SHADER")) {
-        fatal("Fragment shader compilation failed");
+        FATAL("Fragment shader compilation failed");
     }
 
     Shader shader;
@@ -48,7 +48,7 @@ Shader AssetManager::loadShader(const std::string& vertexShader, const std::stri
     glLinkProgram(shader.getId());
 
     if (this->checkCompilerErrors(shader.getId(), "PROGRAM")) {
-        fatal("Shader program linking failed");
+        FATAL("Shader program linking failed");
     }
 
     glDeleteShader(vertex);
@@ -118,7 +118,7 @@ ren::Entity AssetManager::loadEntity(const std::string& path)
 	
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) 
     {
-        fatal("Failed to load model: " + path);
+        FATAL("Failed to load model: {}", path);
     }
     
     Entity entity(scene->mRootNode->mName.C_Str());
@@ -212,15 +212,15 @@ void AssetManager::processMesh(Entity& entity, const std::string& directory, con
     std::vector<Texture> specularMaps = loadMaterialTextures(directory, "texture_specular",material, aiTextureType_SPECULAR);
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
-    // std::vector<Texture> normalMaps = loadMaterialTextures(directory, "texture_normal", material, aiTextureType_HEIGHT);
-    // textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+    std::vector<Texture> normalMaps = loadMaterialTextures(directory, "texture_normal", material, aiTextureType_HEIGHT);
+    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
-    // std::vector<Texture> heightMaps = loadMaterialTextures(directory, "texture_height", material, aiTextureType_AMBIENT);
-    // textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+    std::vector<Texture> heightMaps = loadMaterialTextures(directory, "texture_height", material, aiTextureType_AMBIENT);
+    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
     
     entity.setComponent<Mesh>(Mesh(vertices, indices));
     entity.setComponent<MeshRenderer>(MeshRenderer(
-        this->loadShader("assets\\shaders\\backpack\\backpack.vert", "assets\\shaders\\backpack\\backpack.frag"), 
+        this->loadShader("assets\\shaders\\default\\default.vert", "assets\\shaders\\default\\default.frag"), 
         textures
     ));
 }
@@ -293,7 +293,7 @@ unsigned int AssetManager::loadTextureFromImage(const std::string& path, bool ga
     else
     {
         stbi_image_free(data);
-        fatal("Texture failed to load at path: " + path);
+        FATAL("Texture failed to load at path: {}", path);
     }
 
     return textureID;

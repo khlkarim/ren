@@ -293,3 +293,5 @@ scene
                         shader
                     Hierarchy
                         entities
+
+a material encapsulates a shader, uniforms and textures

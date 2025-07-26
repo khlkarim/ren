@@ -212,11 +212,11 @@ void AssetManager::processMesh(Entity& entity, const std::string& directory, con
     std::vector<Texture> specularMaps = loadMaterialTextures(directory, "texture_specular",material, aiTextureType_SPECULAR);
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
-    std::vector<Texture> normalMaps = loadMaterialTextures(directory, "texture_normal", material, aiTextureType_HEIGHT);
-    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+    // std::vector<Texture> normalMaps = loadMaterialTextures(directory, "texture_normal", material, aiTextureType_HEIGHT);
+    // textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
-    std::vector<Texture> heightMaps = loadMaterialTextures(directory, "texture_height", material, aiTextureType_AMBIENT);
-    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+    // std::vector<Texture> heightMaps = loadMaterialTextures(directory, "texture_height", material, aiTextureType_AMBIENT);
+    // textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
     
     entity.setComponent<Mesh>(Mesh(vertices, indices));
     entity.setComponent<MeshRenderer>(MeshRenderer(
@@ -267,6 +267,7 @@ unsigned int AssetManager::loadTextureFromImage(const std::string& path, bool ga
     glGenTextures(1, &textureID);
 
     int width, height, nrComponents;
+    stbi_set_flip_vertically_on_load(true);
     unsigned char *data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0);
     if (data)
     {

@@ -8,7 +8,10 @@ Quad::Quad(
     const unsigned int widthSegments,
     const unsigned int heightSegments
 ) : width(width), height(height), widthSegments(widthSegments), heightSegments(heightSegments), 
-    Mesh(this->getVertices(width, height, widthSegments, heightSegments), this->getIndices(width, height, widthSegments, heightSegments))
+    Mesh(
+        this->getVertices(width, height, widthSegments, heightSegments), 
+        this->getIndices(width, height, widthSegments, heightSegments)
+    )
 {
     spdlog::info("Quad constructor");
 }
@@ -55,7 +58,7 @@ std::vector<Vertex> Quad::getVertices(
     const float height,
     const unsigned int widthSegments,
     const unsigned int heightSegments
-) const
+)
 {
     std::vector<Vertex> vertices;
 
@@ -94,7 +97,7 @@ std::vector<unsigned int> Quad::getIndices(
     const float height,
     const unsigned int widthSegments,
     const unsigned int heightSegments
-) const
+)
 {
     std::vector<unsigned int> indices;
 

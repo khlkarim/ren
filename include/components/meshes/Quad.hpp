@@ -13,29 +13,29 @@ public:
         const unsigned int heightSegments = 1
     );
     virtual ~Quad();
-
-    std::vector<Vertex> getVertices(
-        const float width = 1,
-        const float height = 1,
-        const unsigned int widthSegments = 1,
-        const unsigned int heightSegments = 1
-    ) const;
-    std::vector<unsigned int> getIndices(
-        const float width = 1,
-        const float height = 1,
-        const unsigned int widthSegments = 1,
-        const unsigned int heightSegments = 1
-    ) const;
-
+    
     float getWidth() const;
     float getHeight() const;
     unsigned int getWidthSegments() const;
     unsigned int getHeightSegments() const;
-
+    
     void setWidth(float width);
     void setHeight(float height);
     void setWidthSegments(unsigned int widthSegments);
     void setHeightSegments(unsigned int heightSegments);
+    
+    static std::vector<Vertex> getVertices(
+        const float width,
+        const float height,
+        const unsigned int widthSegments,
+        const unsigned int heightSegments
+    );
+    static std::vector<unsigned int> getIndices(
+        const float width,
+        const float height,
+        const unsigned int widthSegments,
+        const unsigned int heightSegments
+    );
 
 private:
     float width;

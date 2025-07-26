@@ -10,14 +10,11 @@ public:
         const float width = 1,
         const float height = 1,
         const float depth = 1,
-        const unsigned int widthSegments = 2,
-        const unsigned int heightSegments = 2,
-        const unsigned int depthSegments = 2
+        const unsigned int widthSegments = 1,
+        const unsigned int heightSegments = 1,
+        const unsigned int depthSegments = 1
     );
     virtual ~Cube();
-
-    std::vector<Vertex> getVertices() const;
-    std::vector<unsigned int> getIndices() const;
 
     float getWidth() const;
     float getHeight() const;
@@ -33,9 +30,42 @@ public:
     void setHeightSegments(unsigned int heightSegments);
     void setDepthSegments(unsigned int depthSegments);
 
+    static std::vector<Vertex> getVertices(
+        const float width,
+        const float height,
+        const float depth,
+        const unsigned int widthSegments,
+        const unsigned int heightSegments,
+        const unsigned int depthSegments
+    );
+    static std::vector<unsigned int> getIndices(
+        const float width,
+        const float height,
+        const float depth,
+        const unsigned int widthSegments,
+        const unsigned int heightSegments,
+        const unsigned int depthSegments
+    );
+
 private:
-    std::vector<Vertex> getFaceVertices(const glm::vec3& normal) const;
-    std::vector<unsigned int> getFaceIndices(const glm::vec3& normal) const;
+    static std::vector<Vertex> getFaceVertices(
+        const float width,
+        const float height,
+        const float depth,
+        const unsigned int widthSegments,
+        const unsigned int heightSegments,
+        const unsigned int depthSegments,
+        const glm::vec3& normal
+    );
+    static std::vector<unsigned int> getFaceIndices(
+        const float width,
+        const float height,
+        const float depth,
+        const unsigned int widthSegments,
+        const unsigned int heightSegments,
+        const unsigned int depthSegments,
+        const glm::vec3& normal
+    );
 
 private:
     float width;

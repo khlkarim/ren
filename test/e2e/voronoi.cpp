@@ -20,17 +20,17 @@ int main()
     auto shader = assetManager.loadShader("assets\\shaders\\voronoi\\voronoi.vert", "assets\\shaders\\voronoi\\voronoi.frag");
 
     ren::Entity plane("plane");
-    plane.setComponent<ren::components::Mesh>(ren::components::meshes::Quad(10, 5, 100, 100));
+    plane.setComponent<ren::components::Mesh>(ren::components::meshes::Quad(10, 5, 250, 250));
     plane.setComponent<ren::components::MeshRenderer>(ren::components::MeshRenderer(shader, {}));
 
     auto& sceneH = scene.getHierarchy();
     sceneH.add(plane);
 
-    std::vector<glm::vec3> initColors = generateColors(100);
-    std::vector<glm::vec3> initPositions = generateControlPoints(10, 10, 100);
+    std::vector<glm::vec3> initColors = generateColors(20);
+    std::vector<glm::vec3> initPositions = generateControlPoints(10, 10, 20);
 
-    std::vector<glm::vec3> targetColors = generateColors(100);
-    std::vector<glm::vec3> targetPositions = generateControlPoints(10, 10, 100);
+    std::vector<glm::vec3> targetColors = generateColors(20);
+    std::vector<glm::vec3> targetPositions = generateControlPoints(10, 10, 20);
     
     float lastT = static_cast<float>(glfwGetTime());
     while(window.isOpen())
@@ -52,8 +52,8 @@ int main()
             initColors = targetColors;
             initPositions = targetPositions;
             
-            targetColors = generateColors(100);
-            targetPositions = generateControlPoints(10, 10, 100);
+            targetColors = generateColors(20);
+            targetPositions = generateControlPoints(10, 10, 20);
         }
 
         window.render(scene);
@@ -61,80 +61,6 @@ int main()
 
     return 0;
 }
-
-// ren::components::Mesh generateMesh()
-// {
-//     const unsigned int gridWidth = 7;
-//     const unsigned int gridHeight = 4;
-//     const unsigned int subdivisionsPerUnit = 500;
-    
-//     return ren::components::Mesh(generateVertices(gridWidth, gridHeight, subdivisionsPerUnit), generateIndices(gridWidth, gridHeight, subdivisionsPerUnit));
-// }
-
-// std::vector<ren::components::meshes::Vertex> generateVertices(
-//     const unsigned int gridWidth, 
-//     const unsigned int gridHeight, 
-//     const unsigned int subdivisionsPerUnit)
-// {
-//     std::vector<ren::components::meshes::Vertex> vertices;
-
-//     const float dx = 1.0f / subdivisionsPerUnit;
-//     const float dy = 1.0f / subdivisionsPerUnit;
-
-//     const unsigned int vertexCols = gridWidth * subdivisionsPerUnit;
-//     const unsigned int vertexRows = gridHeight * subdivisionsPerUnit;
-
-//     for (unsigned int y = 0; y <= vertexRows; ++y)
-//     {
-//         for (unsigned int x = 0; x <= vertexCols; ++x)
-//         {
-//             ren::components::meshes::Vertex vertex;
-//             vertex.Position = glm::vec3(
-//                 x * dx - static_cast<float>(gridWidth) / 2.0f,
-//                 y * dy - static_cast<float>(gridHeight) / 2.0f,
-//                 0.0f
-//             );
-//             vertices.push_back(vertex);
-//         }
-//     }
-
-//     return vertices;
-// }
-
-// std::vector<unsigned int> generateIndices(
-//     const unsigned int gridWidth, 
-//     const unsigned int gridHeight,
-//     const unsigned int subdivisionsPerUnit)
-// {
-//     std::vector<unsigned int> indices;
-
-//     const unsigned int vertexCols = gridWidth * subdivisionsPerUnit;
-//     const unsigned int vertexRows = gridHeight * subdivisionsPerUnit;
-//     unsigned int rowStride = vertexCols + 1;
-
-//     for (unsigned int y = 0; y < vertexRows; ++y)
-//     {
-//         for (unsigned int x = 0; x < vertexCols; ++x)
-//         {
-//             unsigned int bl = y * rowStride + x;
-//             unsigned int br = bl + 1;
-//             unsigned int tl = bl + rowStride;
-//             unsigned int tr = tl + 1;
-
-//             // Triangle 1
-//             indices.push_back(bl);
-//             indices.push_back(br);
-//             indices.push_back(tr);
-
-//             // Triangle 2
-//             indices.push_back(bl);
-//             indices.push_back(tr);
-//             indices.push_back(tl);
-//         }
-//     }
-
-//     return indices;
-// }
 
 std::vector<glm::vec3> generateColors(const unsigned int count)
 {

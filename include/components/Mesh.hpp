@@ -22,6 +22,9 @@ public:
     unsigned int getVBO() const;
     unsigned int getEBO() const;
 
+    void setIndices(const std::vector<unsigned int>& indices);
+    void setVertices(const std::vector<meshes::Vertex>& vertices);
+
     const std::vector<unsigned int>& getIndices() const;
     const std::vector<meshes::Vertex>& getVertices() const;
     
@@ -29,6 +32,7 @@ public:
 
 private:
     void init();
+    void reinit();
 
 private:
     unsigned int VAO, VBO, EBO;

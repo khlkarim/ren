@@ -26,9 +26,11 @@ void Mesh::init()
     
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+    spdlog::info("vertices initialized");
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+    spdlog::info("indices initialized");
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<GLvoid*>(0));
@@ -39,6 +41,21 @@ void Mesh::init()
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, TexCoords)));
     
+    glBindVertexArray(0);
+}
+
+void Mesh::reinit()
+{
+    spdlog::info("reinitializing mesh data");
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+
     glBindVertexArray(0);
 }
 
@@ -60,6 +77,18 @@ const std::vector<unsigned int>& Mesh::getIndices() const {
 
 const std::vector<Vertex>& Mesh::getVertices() const {
     return vertices;
+}
+
+void Mesh::setIndices(const std::vector<unsigned int>& indices)
+{
+    this->indices = indices;
+    this->reinit();
+}
+
+void Mesh::setVertices(const std::vector<meshes::Vertex>& vertices)
+{
+    this->vertices = vertices;
+    this->reinit();
 }
 
 std::unique_ptr<Component> Mesh::clone() const {

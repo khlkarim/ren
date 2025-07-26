@@ -11,7 +11,10 @@ Cube::Cube(
     const unsigned int depthSegments
 ) : width(width), height(height), depth(depth),
     widthSegments(widthSegments), heightSegments(heightSegments), depthSegments(depthSegments),
-    Mesh(this->getVertices(), this->getIndices())
+    Mesh(
+        this->getVertices(width, height, depth, widthSegments, heightSegments, depthSegments), 
+        this->getIndices(width, height, depth, widthSegments, heightSegments, depthSegments)
+    )
 {
     spdlog::info("Cube constructor");
 }
@@ -69,7 +72,14 @@ void Cube::setDepthSegments(unsigned int depthSegments) {
     this->depthSegments = depthSegments;
 }
 
-std::vector<Vertex> Cube::getVertices() const
+std::vector<Vertex> Cube::getVertices(
+    const float width,
+    const float height,
+    const float depth,
+    const unsigned int widthSegments,
+    const unsigned int heightSegments,
+    const unsigned int depthSegments
+)
 {
     std::vector<glm::vec3> normals = {
         { 0.0f,  0.0f,  1.0f }, 
@@ -84,14 +94,21 @@ std::vector<Vertex> Cube::getVertices() const
 
     for(const auto& normal : normals)
     {
-        std::vector<Vertex> face = this->getFaceVertices(normal);
+        std::vector<Vertex> face = getFaceVertices(width, height, depth, widthSegments, heightSegments, depthSegments, normal);
         vertices.insert(vertices.end(), face.begin(), face.end());
     }
 
     return vertices;
 }
 
-std::vector<unsigned int> Cube::getIndices() const
+std::vector<unsigned int> Cube::getIndices(
+    const float width,
+    const float height,
+    const float depth,
+    const unsigned int widthSegments,
+    const unsigned int heightSegments,
+    const unsigned int depthSegments
+)
 {
     std::vector<glm::vec3> normals = {
         { 0.0f,  0.0f,  1.0f }, 
@@ -107,7 +124,7 @@ std::vector<unsigned int> Cube::getIndices() const
 
     for(const auto& normal : normals)
     {
-        std::vector<unsigned int> faceI = this->getFaceIndices(normal);
+        std::vector<unsigned int> faceI = getFaceIndices(width, height, depth, widthSegments, heightSegments, depthSegments, normal);
 
         for(unsigned int i = 0; i<faceI.size(); i++)
         {
@@ -116,14 +133,22 @@ std::vector<unsigned int> Cube::getIndices() const
 
         indices.insert(indices.end(), faceI.begin(), faceI.end());
 
-        std::vector<Vertex> faceV = this->getFaceVertices(normal);
-        k += faceV.size();
+        std::vector<Vertex> faceV = getFaceVertices(width, height, depth, widthSegments, heightSegments, depthSegments, normal);
+        k += static_cast<unsigned int>(faceV.size());
     }
 
     return indices;
 }
 
-std::vector<Vertex> Cube::getFaceVertices(const glm::vec3& normal) const
+std::vector<Vertex> Cube::getFaceVertices(
+    const float width,
+    const float height,
+    const float depth,
+    const unsigned int widthSegments,
+    const unsigned int heightSegments,
+    const unsigned int depthSegments,
+    const glm::vec3& normal
+)
 {
     float w;
     float h;
@@ -132,24 +157,24 @@ std::vector<Vertex> Cube::getFaceVertices(const glm::vec3& normal) const
 
     if(normal == glm::vec3{ 0.0f,  0.0f,  1.0f } || normal == glm::vec3{ 0.0f,  0.0f,  -1.0f })
     {
-        w = this->width;
-        h = this->height;
-        wSegments = this->widthSegments;
-        hSegments = this->heightSegments;
+        w = width;
+        h = height;
+        wSegments = widthSegments;
+        hSegments = heightSegments;
     }
     else if(normal == glm::vec3{ 1.0f, 0.0f, 0.0f } || normal == glm::vec3{ -1.0f, 0.0f, 0.0f })
     {
-        w = this->depth;
-        h = this->height;
-        wSegments = this->depthSegments;
-        hSegments = this->heightSegments;
+        w = depth;
+        h = height;
+        wSegments = depthSegments;
+        hSegments = heightSegments;
     }
     else if(normal == glm::vec3{ 0.0f, 1.0f, 0.0f } || normal == glm::vec3{ 0.0f, -1.0f, 0.0f })
     {
-        w = this->width;
-        h = this->depth;
-        wSegments = this->widthSegments;
-        hSegments = this->depthSegments;
+        w = width;
+        h = depth;
+        wSegments = widthSegments;
+        hSegments = depthSegments;
     }
 
     std::vector<Vertex> vertices;
@@ -157,8 +182,8 @@ std::vector<Vertex> Cube::getFaceVertices(const glm::vec3& normal) const
     const float dx = 1.0f / wSegments;
     const float dy = 1.0f / hSegments;
 
-    const unsigned int vertexCols = w * wSegments;
-    const unsigned int vertexRows = h * hSegments;
+    const unsigned int vertexCols = static_cast<unsigned int>(w * wSegments);
+    const unsigned int vertexRows = static_cast<unsigned int>(h * hSegments);
 
     for (unsigned int y = 0; y <= vertexRows; ++y)
     {
@@ -218,7 +243,15 @@ std::vector<Vertex> Cube::getFaceVertices(const glm::vec3& normal) const
     return vertices;
 }
 
-std::vector<unsigned int> Cube::getFaceIndices(const glm::vec3& normal) const
+std::vector<unsigned int> Cube::getFaceIndices(
+    const float width,
+    const float height,
+    const float depth,
+    const unsigned int widthSegments,
+    const unsigned int heightSegments,
+    const unsigned int depthSegments,
+    const glm::vec3& normal
+)
 {
     float w;
     float h;
@@ -227,30 +260,30 @@ std::vector<unsigned int> Cube::getFaceIndices(const glm::vec3& normal) const
 
     if(normal == glm::vec3{ 0.0f,  0.0f,  1.0f } || normal == glm::vec3{ 0.0f,  0.0f,  -1.0f })
     {
-        w = this->width;
-        h = this->height;
-        wSegments = this->widthSegments;
-        hSegments = this->heightSegments;
+        w = width;
+        h = height;
+        wSegments = widthSegments;
+        hSegments = heightSegments;
     }
     else if(normal == glm::vec3{ 1.0f, 0.0f, 0.0f } || normal == glm::vec3{ -1.0f, 0.0f, 0.0f })
     {
-        w = this->depth;
-        h = this->height;
-        wSegments = this->depthSegments;
-        hSegments = this->heightSegments;
+        w = depth;
+        h = height;
+        wSegments = depthSegments;
+        hSegments = heightSegments;
     }
     else if(normal == glm::vec3{ 0.0f, 1.0f, 0.0f } || normal == glm::vec3{ 0.0f, -1.0f, 0.0f })
     {
-        w = this->width;
-        h = this->depth;
-        wSegments = this->widthSegments;
-        hSegments = this->depthSegments;
+        w = width;
+        h = depth;
+        wSegments = widthSegments;
+        hSegments = depthSegments;
     }
 
     std::vector<unsigned int> indices;
 
-    const unsigned int vertexCols = w * wSegments;
-    const unsigned int vertexRows = h * hSegments;
+    const unsigned int vertexCols = static_cast<unsigned int>(w * wSegments);
+    const unsigned int vertexRows = static_cast<unsigned int>(h * hSegments);
     unsigned int rowStride = vertexCols + 1;
 
     for (unsigned int y = 0; y < vertexRows; ++y)

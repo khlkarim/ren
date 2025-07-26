@@ -40,7 +40,7 @@ int main()
         auto& mr1 = scene.getHierarchy().getComponent<ren::components::MeshRenderer>("player1");
         auto& s1 = mr1.getShader();
 
-        t1.rotate(10 * delta, glm::vec3(0.0f, 1.0f, 0.0f));
+        t1.rotate(50 * delta, glm::vec3(1.0f, 0.0f, 1.0f));
         s1.setVec3("ulightPos", glm::vec3(6.0f, 0.0f, 6.0f));
         s1.setVec3("ulightColor", glm::vec3(
             glm::cos(glfwGetTime()) * glm::cos(glfwGetTime()), 

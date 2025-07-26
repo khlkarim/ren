@@ -3,15 +3,29 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
 
-out vec2 TexCoords;
+out vec3 Color;
 
-uniform float time;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
+uniform vec3 vertexPositions[10];
+uniform vec3 vertexColors[10];
+
 void main()
 {
-    TexCoords = aTexCoords;    
-    gl_Position = projection * view * model * vec4(aPos.x + aNormal.x * sin(time) * sin(time), aPos.y + aNormal.y * cos(time)* sin(time), aPos.z, 1.0);
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
+
+    float minDist = distance(aPos, vertexPositions[0]);
+    Color = vertexColors[0];
+
+    for(int i = 1; i < 10; i++) 
+    {
+        float dist = distance(aPos, vertexPositions[i]);
+        if(dist < minDist)
+        {
+            minDist = dist;
+            Color = vertexColors[i];
+        }
+    }    
 }

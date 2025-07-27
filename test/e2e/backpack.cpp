@@ -1,5 +1,5 @@
 #include <core/Window.hpp>
-#include <io/AssetManager.hpp>
+#include <assets/AssetManager.hpp>
 
 void setShader(ren::Entity& entity, ren::components::shaders::Shader& shader);
 

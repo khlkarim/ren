@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -20,7 +21,16 @@ public:
     bool isOpen();
     void render(Scene& scene); 
 
-    friend void framebuffer_size_callback(GLFWwindow* window, int width, int height);    
+    int getWidth() const;
+    int getHeight() const;
+    const std::string& getName() const;
+    GLFWwindow* getGLFWwindow() const;
+
+    void setWidth(int width);
+    void setHeight(int height);
+    void setName(const std::string& name);
+
+    friend void framebuffer_size_callback(GLFWwindow* window, int width, int height);   
 
 private:
     int width;

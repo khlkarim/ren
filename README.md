@@ -300,3 +300,21 @@ i need a mesh factory
 
 improve error handling (bubble up)
 fixed systems usage (its currently akward)
+
+input cant happen in multiple windows 
+the lowest level of input is a window you cant go beyond that
+
+the window has an inputSystem
+window.inputSystem.on(ren::io::events::mouse::leftClick, do());
+
+initially all event are being listened to (all callbacks are set to methods of the window that emit into to the inputsystem)
+
+the window has an inputsystem
+initially the window sets all necessary callbacks
+when a window.callback is called it forwards the event to the inputsystem (using inputsystem.emit)
+
+there are 2 types of events 
+    keyboard
+    mouse
+
+the window creates and bundles the events

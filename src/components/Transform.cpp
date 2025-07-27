@@ -52,17 +52,17 @@ void Transform::setScale(const glm::vec3& scale)
     this->_scale = scale;
 }
 
-glm::vec3& Transform::getPosition() 
+const glm::vec3& Transform::getPosition() const
 {
     return this->_position;
 }
 
-glm::quat& Transform::getRotation() 
+const glm::quat& Transform::getRotation() const
 {
     return this->_rotation;
 }
 
-glm::vec3& Transform::getScale() 
+const glm::vec3& Transform::getScale() const
 {
     return this->_scale;
 }

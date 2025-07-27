@@ -1,6 +1,6 @@
 #include <core/Window.hpp>
 #include <components/meshes/Cube.hpp>
-#include <io/AssetManager.hpp>
+#include <assets/AssetManager.hpp>
 
 int main()
 {

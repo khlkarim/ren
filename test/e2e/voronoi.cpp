@@ -1,6 +1,6 @@
 #include <core/Window.hpp>
 #include <components/meshes/Quad.hpp>
-#include <io/AssetManager.hpp>
+#include <assets/AssetManager.hpp>
 
 // ren::components::Mesh generateMesh();
 // std::vector<ren::components::meshes::Vertex> generateVertices(const unsigned int gridWidth, const unsigned int gridHeight, const unsigned int subdivisionsPerUnit);

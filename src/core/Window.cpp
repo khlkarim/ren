@@ -67,6 +67,37 @@ void Window::render(Scene& scene)
     glfwSwapBuffers(this->_window);
 }
 
+int Window::getWidth() const {
+    return this->width;
+}
+
+int Window::getHeight() const {
+    return this->height;
+}
+
+const std::string& Window::getName() const {
+    return this->name;
+}
+
+GLFWwindow* Window::getGLFWwindow() const {
+    return this->_window;
+}
+
+void Window::setWidth(int width) {
+    this->width = width;
+    glfwSetWindowSize(this->_window, this->width, this->height);
+}
+
+void Window::setHeight(int height) {
+    this->height = height;
+    glfwSetWindowSize(this->_window, this->width, this->height);
+}
+
+void Window::setName(const std::string& name) {
+    this->name = name;
+    glfwSetWindowTitle(this->_window, this->name.c_str());
+}
+
 void ren::framebuffer_size_callback(GLFWwindow* window, int width, int height) 
 {  
     glViewport(0, 0, width, height);

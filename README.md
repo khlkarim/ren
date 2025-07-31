@@ -318,3 +318,19 @@ there are 2 types of events
     mouse
 
 the window creates and bundles the events
+
+i need to fix the camera class
+its messy and redundent
+
+camera:
+    position 
+    target direction (down range)
+        the target and position can be determined by the transform
+        i dont know why we need an Up attribute
+
+        the target determines the pitch and yaw
+        the up determines the roll => both affect the transform (you rotate arround target direction)
+    camera attributes
+
+redesign the window class to have more controll over the rendering 
+maybe make the rendering loop a callback functions

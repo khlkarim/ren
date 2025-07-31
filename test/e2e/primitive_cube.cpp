@@ -7,7 +7,7 @@ int main()
     ren::Window window("ecs", 1980, 1080);
     ren::Scene scene;
 
-    ren::io::AssetManager assetManager; 
+    ren::assets::AssetManager assetManager; 
     ren::components::shaders::Shader shader = assetManager.loadShader("assets\\shaders\\lighting\\lighting.vert", "assets\\shaders\\lighting\\lighting.frag");
 
     ren::Entity player;

@@ -18,6 +18,8 @@ public:
     int button;
     int action;
     int mods;
+
+    static std::optional<Clicked> poll(GLFWwindow* window);
 };
 
 }

@@ -16,7 +16,7 @@ int main()
     ren::Window window("Voronoi", 1980, 1080);
     ren::Scene scene;
 
-    ren::io::AssetManager assetManager;
+    ren::assets::AssetManager assetManager;
     auto shader = assetManager.loadShader("assets\\shaders\\voronoi\\voronoi.vert", "assets\\shaders\\voronoi\\voronoi.frag");
 
     ren::Entity plane("plane");

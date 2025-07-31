@@ -11,6 +11,8 @@ public:
     Entered(GLFWwindow* window, int entered) : Event(window), entered(entered) {}
 
     int entered;
+
+    static std::optional<Entered> poll(GLFWwindow* window);
 };
 
 }

@@ -1,6 +1,6 @@
 #include "AssetManager.hpp"
 using ren::Entity;
-using ren::io::AssetManager;
+using ren::assets::AssetManager;
 using ren::components::Mesh;
 using ren::components::MeshRenderer;
 using ren::components::Transform;

@@ -8,7 +8,7 @@ int main()
     ren::Window window("Backpack", 1980, 1080);
     ren::Scene scene;
 
-    ren::io::AssetManager assetManager;
+    ren::assets::AssetManager assetManager;
     ren::Entity entity(assetManager.loadEntity("assets\\models\\backpack\\backpack.obj"));
 
     entity.setComponent<ren::components::Transform>(ren::components::Transform());

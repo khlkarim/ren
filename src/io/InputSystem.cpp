@@ -6,6 +6,11 @@ using namespace ren::io::events;
 
 std::unique_ptr<InputSystem> InputSystem::instance = nullptr;
 
+InputSystem::InputSystem(GLFWwindow* window)
+{
+    this->window = window;
+}
+
 InputSystem& InputSystem::getInstance()
 {
     if (!instance) {
@@ -17,7 +22,7 @@ InputSystem& InputSystem::getInstance()
 InputSystem& InputSystem::listen(const Window& window)
 {   
     if (!instance) {
-        instance = std::move(std::unique_ptr<InputSystem>(new InputSystem()));
+        instance = std::move(std::unique_ptr<InputSystem>(new InputSystem(window.getGLFWwindow())));
     }
     set_callbacks(window.getGLFWwindow());
 

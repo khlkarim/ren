@@ -6,7 +6,7 @@
 namespace ren::io::events::keyboard
 {
 
-struct KeyInput: public Event
+class KeyInput: public Event
 {
 public:
     KeyInput(
@@ -21,6 +21,8 @@ public:
     int scancode;
     int action;
     int mods;
+
+    static std::optional<KeyInput> poll(GLFWwindow* window);
 };
 
 } 

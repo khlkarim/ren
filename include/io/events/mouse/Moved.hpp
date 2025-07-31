@@ -16,6 +16,8 @@ public:
 
     double xpos;
     double ypos;
+
+    static std::optional<Moved> poll(GLFWwindow* window);
 };
 
 }

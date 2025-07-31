@@ -26,8 +26,12 @@ public:
     template<typename T>
     void on(const std::function<void(const T&)>& callback);
 
+    template<typename T>
+    void if_active(const std::function<void(const T&)>& callback);
+
 private:
     InputSystem() = default;
+    InputSystem(GLFWwindow* window);
     InputSystem(const InputSystem&) = delete;
     InputSystem& operator=(const InputSystem&) = delete;
 
@@ -49,6 +53,7 @@ private:
 
 private:
     static std::unique_ptr<InputSystem> instance;
+    GLFWwindow* window;
     std::unordered_map<std::type_index, std::vector<std::function<void(const Event&)>>> callbacks;
 };
 
@@ -69,4 +74,15 @@ void ren::io::InputSystem::on(const std::function<void(const T&)>& callback) {
     callbacks[typeid(T)].emplace_back([callback](const Event& event) {
         callback(dynamic_cast<const T&>(event));
     });
+}
+
+template<typename T>
+void ren::io::InputSystem::if_active(const std::function<void(const T&)>& callback)
+{
+    std::optional<T> event = T::poll(this->window);
+
+    if(event)
+    {
+        callback(*event);
+    }
 }

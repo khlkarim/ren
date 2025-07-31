@@ -16,6 +16,8 @@ public:
 
     double xoffset;
     double yoffset;
+
+    static std::optional<Scrolled> poll(GLFWwindow* window);
 };
 
 }

@@ -17,7 +17,7 @@
 #include <components/Hierarchy.hpp>
 #include <components/Transform.hpp>
 
-namespace ren::io {
+namespace ren::assets {
 
 class AssetManager
 {

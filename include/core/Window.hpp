@@ -13,29 +13,34 @@ class Window
 public:
     Window(
         const std::string& name, 
-        const int width, 
-        const int height
+        const unsigned int width, 
+        const unsigned int height,
+        const unsigned int fps = 0
     );
     virtual ~Window();
 
     bool isOpen();
     void render(Scene& scene); 
 
-    int getWidth() const;
-    int getHeight() const;
+    unsigned int getWidth() const;
+    unsigned int getHeight() const;
+    unsigned int getTargetFPS() const;
     const std::string& getName() const;
     GLFWwindow* getGLFWwindow() const;
 
-    void setWidth(int width);
-    void setHeight(int height);
+    void setWidth(unsigned int width);
+    void setHeight(unsigned int height);
     void setName(const std::string& name);
+    void setTargetFPS(unsigned int fps);
 
     friend void framebuffer_size_callback(GLFWwindow* window, int width, int height);   
 
 private:
-    int width;
-    int height;
     std::string name;
+    unsigned int width;
+    unsigned int height;
+    unsigned int fps;
+
     GLFWwindow* _window;
 };
 

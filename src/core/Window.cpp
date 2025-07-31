@@ -1,8 +1,13 @@
 #include <core/Window.hpp>
 using ren::Window;
 
-Window::Window(const std::string& name, const int width, const int height) 
+Window::Window(const std::string& name, const unsigned int width, const unsigned int height, const unsigned int fps) 
 {
+    this->name = name;
+    this->width = width;
+    this->height = height;
+    this->fps = fps;
+
     spdlog::info("Window Constructor");
 
     if(!glfwInit()) {
@@ -14,7 +19,7 @@ Window::Window(const std::string& name, const int width, const int height)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     spdlog::info("Initialized GLFW");
     
-    this->_window = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
+    this->_window = glfwCreateWindow(this->width, this->height, this->name.c_str(), NULL, NULL);
     if(!this->_window) {
         spdlog::critical("Failed to create window");
         glfwTerminate();
@@ -38,6 +43,8 @@ Window::Window(const std::string& name, const int width, const int height)
     glfwGetFramebufferSize(this->_window, &framebufferWidth, &framebufferHeight);
     glViewport(0, 0, framebufferWidth, framebufferHeight);   
     spdlog::info("Set GL viewport");
+
+    glfwSwapInterval(1); //vsync
 }
 
 Window::~Window() 
@@ -67,12 +74,16 @@ void Window::render(Scene& scene)
     glfwSwapBuffers(this->_window);
 }
 
-int Window::getWidth() const {
+unsigned int Window::getWidth() const {
     return this->width;
 }
 
-int Window::getHeight() const {
+unsigned int Window::getHeight() const {
     return this->height;
+}
+
+unsigned int Window::getTargetFPS() const {
+    return this->fps;
 }
 
 const std::string& Window::getName() const {
@@ -83,12 +94,12 @@ GLFWwindow* Window::getGLFWwindow() const {
     return this->_window;
 }
 
-void Window::setWidth(int width) {
+void Window::setWidth(unsigned int width) {
     this->width = width;
     glfwSetWindowSize(this->_window, this->width, this->height);
 }
 
-void Window::setHeight(int height) {
+void Window::setHeight(unsigned int height) {
     this->height = height;
     glfwSetWindowSize(this->_window, this->width, this->height);
 }
@@ -96,6 +107,10 @@ void Window::setHeight(int height) {
 void Window::setName(const std::string& name) {
     this->name = name;
     glfwSetWindowTitle(this->_window, this->name.c_str());
+}
+
+void Window::setTargetFPS(unsigned int fps) {
+    this->fps = fps;
 }
 
 void ren::framebuffer_size_callback(GLFWwindow* window, int width, int height) 

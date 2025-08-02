@@ -29,6 +29,8 @@ public:
     template<typename T>
     void if_active(const std::function<void(const T&)>& callback);
 
+    GLFWwindow* getWindow() const;
+
 private:
     InputSystem() = default;
     InputSystem(GLFWwindow* window);

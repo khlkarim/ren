@@ -2,18 +2,11 @@
 #include <io/InputSystem.hpp>
 #include <assets/AssetManager.hpp>
 #include <components/meshes/Sphere.hpp>
+#include <systems/CameraSystem.hpp>
 
 //Scene
 ren::Scene CreateSystem();
 void updateSystem(ren::Scene& scene, const float dt);
-
-//InputSystem
-void initInputSystem(const ren::Window& window);
-
-//Camera
-void updateCamera(ren::Camera& camera, const float dt);
-void updateCameraDirection(ren::Camera& camera, const ren::io::events::mouse::Moved& event, float dt);
-void updateCameraPosition(ren::Camera& camera, const ren::io::events::keyboard::KeyInput& event, float dt);
 
 //Planet
 struct Planet
@@ -30,9 +23,11 @@ void updatePlanet(ren::Entity& instance, const Planet& planet, const float dt);
 int main()
 {
     ren::Window window("Planetary System", 1980, 1080);
-    initInputSystem(window);
+    ren::io::InputSystem::listen(window);
 
     ren::Scene scene(CreateSystem());
+
+    ren::systems::CameraSystem cameraSystem;
 
     double lastTime = glfwGetTime();
     while(window.isOpen()) 
@@ -41,6 +36,7 @@ int main()
         float deltaTime = static_cast<float>(currentTime - lastTime);
         lastTime = currentTime;
 
+        cameraSystem.update(deltaTime, scene.getCamera());
         updateSystem(scene, deltaTime);
         window.render(scene);
     }
@@ -87,9 +83,6 @@ ren::Scene CreateSystem()
 
 void updateSystem(ren::Scene& scene, const float dt)
 {
-    auto& camera = scene.getCamera();
-    updateCamera(camera, dt);
-
     auto& hierarchy = scene.getHierarchy();
     std::vector<Planet> planets = getPlanets();
     
@@ -98,95 +91,6 @@ void updateSystem(ren::Scene& scene, const float dt)
         auto& instance = hierarchy.get(planet.name).value().get();
         updatePlanet(instance, planet, dt);
     }
-}
-
-void updateCamera(ren::Camera& camera, const float dt)
-{
-    auto& inputSystem = ren::io::InputSystem::getInstance();
-
-    inputSystem.if_active<ren::io::events::keyboard::KeyInput>([&camera, dt](const auto& event)
-        {
-            updateCameraPosition(camera, event, dt);
-        });
-
-    inputSystem.if_active<ren::io::events::mouse::Moved>([&camera, dt](const auto& event)
-        {
-            updateCameraDirection(camera, event, dt);
-        });
-}
-
-void initInputSystem(const ren::Window& window)
-{
-    auto& inputSystem = ren::io::InputSystem::listen(window);
-    
-    bool cursorLocked = true;
-    glfwSetInputMode(window.getGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    inputSystem.on<ren::io::events::keyboard::KeyInput>([&window, &cursorLocked](const auto& event)
-        {
-            if(event.key == GLFW_KEY_ESCAPE)
-            {
-                cursorLocked = false;
-                glfwSetInputMode(window.getGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            }
-        });
-    inputSystem.on<ren::io::events::mouse::Clicked>([&window, &cursorLocked](const auto& event)
-        {
-            if(event.action == GLFW_PRESS)
-            {
-                cursorLocked = true;
-                glfwSetInputMode(window.getGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            }
-        });
-}
-
-void updateCameraPosition(ren::Camera& camera, const ren::io::events::keyboard::KeyInput& event, float deltaTime)
-{
-    const float speed = 5.0f;
-
-    glm::vec3 position = camera.getPosition();
-    glm::vec3 up = camera.getUp();
-    glm::vec3 front = camera.getFront();
-    glm::vec3 right = camera.getRight();
-
-    if (event.key == GLFW_KEY_W)
-        position += front * speed * deltaTime;
-    if (event.key == GLFW_KEY_S)
-        position -= front * speed * deltaTime;
-    if (event.key == GLFW_KEY_A)
-        position -= right * speed * deltaTime;
-    if (event.key == GLFW_KEY_D)
-        position += right * speed * deltaTime;
-    if (event.key == GLFW_KEY_SPACE)
-        position += up * speed * deltaTime;
-    if (event.key == GLFW_KEY_LEFT_CONTROL)
-        position -= up * speed * deltaTime;
-
-    camera.setPosition(position);
-}
-
-void updateCameraDirection(ren::Camera& camera, const ren::io::events::mouse::Moved& event, float deltaTime)
-{
-    static bool firstMouse = true;
-    static double lastX, lastY;
-
-    if (firstMouse) {
-        lastX = event.xpos;
-        lastY = event.ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = static_cast<float>(event.xpos - lastX);
-    float yoffset = static_cast<float>(lastY - event.ypos);
-
-    lastX = event.xpos;
-    lastY = event.ypos;
-
-    const float sensitivity = 5.0f;
-    xoffset *= sensitivity * deltaTime;
-    yoffset *= sensitivity * deltaTime;
-
-    camera.setYaw(camera.getYaw() + xoffset);
-    camera.setPitch(camera.getPitch() + yoffset);
 }
 
 std::vector<Planet> getPlanets()

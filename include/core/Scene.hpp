@@ -8,7 +8,7 @@
 #include <core/Entity.hpp>
 #include <utils/error_handler.hpp>
 #include <components/Hierarchy.hpp> 
-#include <systems/RenderSystem.hpp>
+#include <systems/RenderingSystem.hpp>
 
 namespace ren {
 

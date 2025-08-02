@@ -4,7 +4,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <core/Scene.hpp>
-#include <systems/RenderSystem.hpp>
 
 namespace ren {
 

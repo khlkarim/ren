@@ -29,6 +29,11 @@ InputSystem& InputSystem::listen(const Window& window)
     return *instance;
 }
 
+GLFWwindow* InputSystem::getWindow() const
+{
+    return this->window;
+}
+
 void InputSystem::set_callbacks(GLFWwindow* window)
 {
     set_mouse_callbacks(window);

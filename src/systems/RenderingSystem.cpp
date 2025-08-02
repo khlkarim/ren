@@ -1,4 +1,4 @@
-#include <systems/RenderSystem.hpp>
+#include <systems/RenderingSystem.hpp>
 using ren::systems::RenderingSystem;
 
 void RenderingSystem::render(const Camera& camera, const components::Hierarchy& hierarchy) const

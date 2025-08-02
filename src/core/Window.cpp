@@ -43,8 +43,6 @@ Window::Window(const std::string& name, const unsigned int width, const unsigned
     glfwGetFramebufferSize(this->_window, &framebufferWidth, &framebufferHeight);
     glViewport(0, 0, framebufferWidth, framebufferHeight);   
     spdlog::info("Set GL viewport");
-
-    glfwSwapInterval(1); //vsync
 }
 
 Window::~Window() 
@@ -111,6 +109,11 @@ void Window::setName(const std::string& name) {
 
 void Window::setTargetFPS(unsigned int fps) {
     this->fps = fps;
+
+    if(this->fps > 0)
+    {
+        glfwSwapInterval(1000 / this->fps);
+    }
 }
 
 void ren::framebuffer_size_callback(GLFWwindow* window, int width, int height) 

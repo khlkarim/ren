@@ -304,33 +304,6 @@ fixed systems usage (its currently akward)
 input cant happen in multiple windows 
 the lowest level of input is a window you cant go beyond that
 
-the window has an inputSystem
-window.inputSystem.on(ren::io::events::mouse::leftClick, do());
-
-initially all event are being listened to (all callbacks are set to methods of the window that emit into to the inputsystem)
-
-the window has an inputsystem
-initially the window sets all necessary callbacks
-when a window.callback is called it forwards the event to the inputsystem (using inputsystem.emit)
-
 there are 2 types of events 
     keyboard
     mouse
-
-the window creates and bundles the events
-
-i need to fix the camera class
-its messy and redundent
-
-camera:
-    position 
-    target direction (down range)
-        the target and position can be determined by the transform
-        i dont know why we need an Up attribute
-
-        the target determines the pitch and yaw
-        the up determines the roll => both affect the transform (you rotate arround target direction)
-    camera attributes
-
-redesign the window class to have more controll over the rendering 
-maybe make the rendering loop a callback functions

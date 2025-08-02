@@ -5,27 +5,35 @@ using ren::components::Hierarchy;
 
 void Hierarchy::add(const Entity& child) {
     if (children.find(child.getId()) != children.end()) {
-        FATAL("Entity with given id already exist");
+        spdlog::warn("Entity with id: {} already existed: Entity replaced.", child.getId());
     }
     children[child.getId()] = child;
 }
 
-Entity& Hierarchy::get(const std::string& id)
+std::optional<std::reference_wrapper<Entity>> Hierarchy::get(const std::string& id)
 {
     if(this->children.find(id) == this->children.end())
     {
-        FATAL("Entity with given id does not exist");
+        spdlog::warn("Entity with id: {} does not exist.", id);
+        return std::nullopt;
     }
-    return this->children.at(id);
+    else
+    {
+        return this->children.at(id);
+    }
 }
 
-const Entity& Hierarchy::get(const std::string& id) const
+std::optional<std::reference_wrapper<const Entity>> Hierarchy::get(const std::string& id) const
 {
     if(this->children.find(id) == this->children.end())
     {
-        FATAL("Entity with given id does not exist");
+        spdlog::warn("Entity with id: {} does not exist.", id);
+        return std::nullopt;
     }
-    return this->children.at(id);
+    else
+    {
+        return this->children.at(id);
+    }
 }
 
 std::vector<std::string> Hierarchy::getChildren() const

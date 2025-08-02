@@ -48,7 +48,7 @@ int main()
     
     cube.setId("cube-1");
     hierarchy.add(cube);
-    cube.getComponent<ren::components::Transform>().setPosition(glm::vec3(0.0f, 0.0f, 12.0f));
+    cube.getComponent<ren::components::Transform>().value().get().setPosition(glm::vec3(0.0f, 0.0f, 12.0f));
     cube.setId("cube-2");
     hierarchy.add(cube);
     
@@ -69,8 +69,8 @@ int main()
                 if(cursorLocked) updateCameraDirection(camera, event, deltaTime);
             });
 
-        auto& mr1 = scene.getHierarchy().getComponent<ren::components::MeshRenderer>("cube-1");
-        auto& mr2 = scene.getHierarchy().getComponent<ren::components::MeshRenderer>("cube-2");
+        auto& mr1 = scene.getHierarchy().getComponent<ren::components::MeshRenderer>("cube-1").value().get();
+        auto& mr2 = scene.getHierarchy().getComponent<ren::components::MeshRenderer>("cube-2").value().get();
         
         auto& s1 = mr1.getShader();
         auto& s2 = mr2.getShader();

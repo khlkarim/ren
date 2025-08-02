@@ -2,10 +2,6 @@
 #include <components/meshes/Quad.hpp>
 #include <assets/AssetManager.hpp>
 
-// ren::components::Mesh generateMesh();
-// std::vector<ren::components::meshes::Vertex> generateVertices(const unsigned int gridWidth, const unsigned int gridHeight, const unsigned int subdivisionsPerUnit);
-// std::vector<unsigned int> generateIndices(const unsigned int gridWidth, const unsigned int gridHeight, const unsigned int subdivisionsPerUnit);
-
 std::vector<glm::vec3> generateColors(const unsigned int count);
 std::vector<glm::vec3> generateControlPoints(const unsigned int gridWidth, const unsigned int gridHeight, const unsigned int count);
 
@@ -14,6 +10,8 @@ std::vector<glm::vec3> interpolate(const std::vector<glm::vec3>& init, const std
 int main()
 {
     ren::Window window("Voronoi", 1980, 1080);
+    window.setTargetFPS(60);
+
     ren::Scene scene;
 
     ren::assets::AssetManager assetManager;
@@ -35,11 +33,10 @@ int main()
     float lastT = static_cast<float>(glfwGetTime());
     while(window.isOpen())
     {
-
         float currT = static_cast<float>(glfwGetTime());
         float dt = currT - lastT;
         
-        auto& mr = sceneH.getComponent<ren::components::MeshRenderer>("plane");
+        auto& mr = sceneH.getComponent<ren::components::MeshRenderer>("plane").value().get();
         auto& s = mr.getShader();
         
         s.setVec3Array("vertexColors", interpolate(initColors, targetColors, dt/5.0f));

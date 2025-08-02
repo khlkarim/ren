@@ -5,6 +5,8 @@
 int main()
 {
     ren::Window window("ecs", 1980, 1080);
+    window.setTargetFPS(60);
+
     ren::Scene scene;
 
     ren::assets::AssetManager assetManager; 
@@ -27,7 +29,7 @@ int main()
 
     float lastFrame = static_cast<float>(glfwGetTime());
 
-    auto& h = scene.getHierarchy().getComponent<ren::components::Hierarchy>("player1");
+    auto& h = scene.getHierarchy().getComponent<ren::components::Hierarchy>("player1").value().get();
     player.setId("player2");
     h.add(player);
 
@@ -36,8 +38,8 @@ int main()
         float delta = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        auto& t1 = scene.getHierarchy().getComponent<ren::components::Transform>("player1");
-        auto& mr1 = scene.getHierarchy().getComponent<ren::components::MeshRenderer>("player1");
+        auto& t1 = scene.getHierarchy().getComponent<ren::components::Transform>("player1").value().get();
+        auto& mr1 = scene.getHierarchy().getComponent<ren::components::MeshRenderer>("player1").value().get();
         auto& s1 = mr1.getShader();
 
         t1.rotate(50 * delta, glm::vec3(1.0f, 0.0f, 1.0f));
@@ -48,8 +50,8 @@ int main()
             glm::cos(glfwGetTime() - glm::pi<double>()/4) * glm::cos(glfwGetTime() - glm::pi<double>()/4)
         ));
 
-        auto& t2 = h.getComponent<ren::components::Transform>("player2");
-        auto& mr2 = h.getComponent<ren::components::MeshRenderer>("player2");
+        auto& t2 = h.getComponent<ren::components::Transform>("player2").value().get();
+        auto& mr2 = h.getComponent<ren::components::MeshRenderer>("player2").value().get();
         auto& s2 = mr1.getShader();
 
         t2.rotate(50 * delta, glm::vec3(1.0f, 0.0f, 1.0f));

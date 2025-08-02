@@ -10,7 +10,7 @@ void RenderingSystem::render(const Camera& camera, const components::Hierarchy& 
 
     for(const auto& entityId : entities)
     {
-        this->render(hierarchy.get(entityId), projection, view);
+        this->render(*hierarchy.get(entityId), projection, view);
     }
 }
 
@@ -24,14 +24,14 @@ void RenderingSystem::render(
 
     if(entity.has<ren::components::Transform>())
     {
-        auto& transform = entity.getComponent<ren::components::Transform>();
+        auto& transform = entity.getComponent<ren::components::Transform>().value().get();
         currModel *= transform.getModelMatrix();
     }
 
     if(entity.has<ren::components::Mesh, ren::components::MeshRenderer>()) 
     {
-        auto& mesh = entity.getComponent<ren::components::Mesh>();
-        auto& meshRenderer = entity.getComponent<ren::components::MeshRenderer>();
+        auto& mesh = entity.getComponent<ren::components::Mesh>().value().get();
+        auto& meshRenderer = entity.getComponent<ren::components::MeshRenderer>().value().get();
     
         ren::components::shaders::Shader shader = meshRenderer.getShader();
     
@@ -72,12 +72,12 @@ void RenderingSystem::render(
 
     if(entity.has<ren::components::Hierarchy>())
     {
-        auto& hierarchy = entity.getComponent<ren::components::Hierarchy>();
+        auto& hierarchy = entity.getComponent<ren::components::Hierarchy>().value().get();
         std::vector<std::string> entities = hierarchy.getChildren();
 
         for(const auto& entityId : entities)
         {
-            this->render(hierarchy.get(entityId), projection, view, currModel);
+            this->render(hierarchy.get(entityId).value(), projection, view, currModel);
         }
     }
 }

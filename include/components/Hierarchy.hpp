@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <optional>
+#include <spdlog/spdlog.h>
 #include <core/Entity.hpp>
 #include <utils/error_handler.hpp>
 #include <components/Component.hpp>
@@ -14,12 +16,12 @@ class Hierarchy: public Component
 {
 public:
     void add(const Entity& entity);
-    Entity& get(const std::string& id);
-    const Entity& get(const std::string& id) const;
+    std::optional<std::reference_wrapper<Entity>> get(const std::string& id);
+    std::optional<std::reference_wrapper<const Entity>> get(const std::string& id) const;
     void remove(const std::string& id);
 
     template<typename T>
-    T& getComponent(const std::string& id);
+    std::optional<std::reference_wrapper<T>> getComponent(const std::string& id);
 
     template<typename T>
     void setComponent(const std::string& id, const T& component);    
@@ -41,19 +43,26 @@ void ren::components::Hierarchy::setComponent(const std::string& id, const T& co
 {
     if(this->children.find(id) == this->children.end())
     {
-        FATAL("Entity with given id does not exist");
+        spdlog::warn("Cannot set component for Entity with id: {}: Entity does not exist.", id);
     }
-    this->children[id].setComponent(component);
+    else
+    {
+        this->children[id].setComponent(component);
+    }
 }
 
 template<typename T>
-T& ren::components::Hierarchy::getComponent(const std::string& id)
+std::optional<std::reference_wrapper<T>> ren::components::Hierarchy::getComponent(const std::string& id)
 {
     if(this->children.find(id) == this->children.end())
     {
-        FATAL("Entity with given id does not exist");
+        spdlog::warn("Cannot get component for Entity with id: {}: Entity does not exist.", id);
+        return std::nullopt;
     }
-    return this->children[id].getComponent<T>();
+    else 
+    {
+        return this->children[id].getComponent<T>();
+    }
 }
 
 template<typename... ComponentTypes>

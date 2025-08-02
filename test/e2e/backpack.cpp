@@ -6,6 +6,8 @@ void setShader(ren::Entity& entity, ren::components::shaders::Shader& shader);
 int main()
 {
     ren::Window window("Backpack", 1980, 1080);
+    window.setTargetFPS(60);
+
     ren::Scene scene;
 
     ren::assets::AssetManager assetManager;
@@ -23,7 +25,7 @@ int main()
         float delta = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        auto& t = sceneHierarchy.getComponent<ren::components::Transform>(entity.getId());
+        auto& t = sceneHierarchy.getComponent<ren::components::Transform>(entity.getId()).value().get();
         t.rotate(30 * delta, glm::vec3(0.0f, 1.0f, 0.0f));
 
         window.render(scene);
@@ -36,18 +38,18 @@ void setShader(ren::Entity& entity, ren::components::shaders::Shader& shader)
 {
     if(entity.has<ren::components::MeshRenderer>())
     {
-        auto& mr = entity.getComponent<ren::components::MeshRenderer>();
+        auto& mr = entity.getComponent<ren::components::MeshRenderer>().value().get();
         mr.setShader(shader);
     }
 
     if(entity.has<ren::components::Hierarchy>())
     {
-        auto& h = entity.getComponent<ren::components::Hierarchy>();
+        auto& h = entity.getComponent<ren::components::Hierarchy>().value().get();
         std::vector<std::string> children = h.getChildren();
 
         for(const auto& childId : children)
         {
-            setShader(h.get(childId), shader);
+            setShader(h.get(childId).value(), shader);
         }
     }
 }

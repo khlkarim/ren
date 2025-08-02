@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <optional>
 #include <type_traits>
 #include <spdlog/spdlog.h>
 #include <utils/error_handler.hpp>
@@ -29,10 +30,10 @@ public:
     void setComponent(const T& component);
 
     template<typename T>
-    T& getComponent();
+    std::optional<std::reference_wrapper<T>> getComponent();
 
     template<typename T>
-    const T& getComponent() const;
+    std::optional<std::reference_wrapper<const T>> getComponent() const;
 
     template<typename T>
     void deleteComponent();
@@ -52,7 +53,7 @@ void ren::Entity::setComponent(const T& component)
 {
     if(!std::is_base_of<ren::components::Component, T>::value)
     {
-        FATAL("T must derive from Component");
+        FATAL("{} must derive from Component", typeid(T).name());
     }
     
     for (auto& comp : components)
@@ -60,6 +61,11 @@ void ren::Entity::setComponent(const T& component)
         if (dynamic_cast<T*>(comp.get()))
         {
             comp = std::make_unique<T>(component);
+            spdlog::warn(
+                "Entity with id: {} already has component of type: {}: Component replaced.", 
+                this->id, 
+                typeid(T).name()
+            );
             return;
         }
     }
@@ -67,8 +73,13 @@ void ren::Entity::setComponent(const T& component)
 }
 
 template<typename T>
-T& ren::Entity::getComponent()
+std::optional<std::reference_wrapper<T>> ren::Entity::getComponent()
 {
+    if(!std::is_base_of<ren::components::Component, T>::value)
+    {
+        FATAL("{} must derive from Component", typeid(T).name());
+    }
+
     for (const auto& comp : components)
     {
         if (auto ptr = dynamic_cast<T*>(comp.get()))
@@ -77,12 +88,18 @@ T& ren::Entity::getComponent()
         }
     }
 
-    FATAL("Entity has no component of such type: {}", typeid(T).name());
+    spdlog::warn("Entity with id: {} has no component of type: {}.", this->id, typeid(T).name());
+    return std::nullopt;
 }
 
 template<typename T>
-const T& ren::Entity::getComponent() const
+std::optional<std::reference_wrapper<const T>> ren::Entity::getComponent() const
 {
+    if(!std::is_base_of<ren::components::Component, T>::value)
+    {
+        FATAL("{} must derive from Component", typeid(T).name());
+    }
+
     for (const auto& comp : components)
     {
         if (auto ptr = dynamic_cast<T*>(comp.get()))
@@ -91,12 +108,18 @@ const T& ren::Entity::getComponent() const
         }
     }
 
-    FATAL("Entity has no component of such type");
+    spdlog::warn("Entity with id: {} has no component of type: {}.", this->id, typeid(T).name());
+    return std::nullopt;
 }
 
 template<typename T>
 void ren::Entity::deleteComponent()
 {
+    if(!std::is_base_of<ren::components::Component, T>::value)
+    {
+        FATAL("{} must derive from Component", typeid(T).name());
+    }
+
     for(unsigned int i = 0; i<this->components.size(); i++)
     {
         if(dynamic_cast<T*>(this->components[i].get()))
@@ -111,6 +134,11 @@ void ren::Entity::deleteComponent()
 template<typename... ComponentTypes>
 bool ren::Entity::has() const
 {
+    if(!(std::is_base_of<ren::components::Component, ComponentTypes>::value && ...))
+    {
+        FATAL("All types must derive from Component");
+    }
+
     return (... && ([this]() {
         for (const auto& comp : components) {
             if (dynamic_cast<ComponentTypes*>(comp.get())) {

@@ -133,7 +133,7 @@ ren::Entity AssetManager::loadEntity(const std::string& path)
 
 void AssetManager::processNode(Entity& entity, const std::string& directory, const aiScene* scene, aiNode* node)
 {
-    Hierarchy& hierarchy = entity.getComponent<Hierarchy>();
+    auto& hierarchy = entity.getComponent<Hierarchy>().value().get();
 
     for(unsigned int i = 0; i < node->mNumMeshes; i++)
     {

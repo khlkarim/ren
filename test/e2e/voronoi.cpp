@@ -2,6 +2,17 @@
 #include <components/meshes/Quad.hpp>
 #include <assets/AssetManager.hpp>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+__declspec(dllexport) int NvOptimusEnablement = 1;
+__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+
+#ifdef __cplusplus
+}
+#endif
+
 std::vector<glm::vec3> generateColors(const unsigned int count);
 std::vector<glm::vec3> generateControlPoints(const unsigned int gridWidth, const unsigned int gridHeight, const unsigned int count);
 
@@ -10,8 +21,6 @@ std::vector<glm::vec3> interpolate(const std::vector<glm::vec3>& init, const std
 int main()
 {
     ren::Window window("Voronoi", 1980, 1080);
-    window.setTargetFPS(60);
-
     ren::Scene scene;
 
     ren::assets::AssetManager assetManager;

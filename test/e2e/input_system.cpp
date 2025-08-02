@@ -10,8 +10,6 @@ void updateCameraPosition(ren::Camera& camera, const ren::io::events::keyboard::
 int main()
 {
     ren::Window window("Input System Test", 1980, 1080);
-    window.setTargetFPS(60);
-
     auto& inputSystem = ren::io::InputSystem::listen(window);
     
     bool cursorLocked = true;

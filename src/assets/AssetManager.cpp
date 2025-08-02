@@ -289,6 +289,7 @@ unsigned int AssetManager::loadTextureFromImage(const std::string& path, bool ga
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         stbi_image_free(data);
+        spdlog::info("Texture: {} loaded.", path);
     }
     else
     {

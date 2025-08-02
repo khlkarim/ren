@@ -8,13 +8,21 @@ class Sphere : public Mesh
 public:
     Sphere(
         const float radius = 1,
-        const unsigned int segments = 16,
-        const unsigned int rings = 8
+        const unsigned int segments = 32,
+        const unsigned int rings = 32
     );
     virtual ~Sphere();
 
-    std::vector<Vertex> getVertices() const;
-    std::vector<unsigned int> getIndices() const;
+    static std::vector<Vertex> getVertices(
+        const float radius,
+        const unsigned int segments,
+        const unsigned int rings
+    );
+    static std::vector<unsigned int> getIndices(
+        const float radius,
+        const unsigned int segments,
+        const unsigned int rings
+    );
 
 private: 
     float radius;

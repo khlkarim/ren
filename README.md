@@ -307,3 +307,5 @@ the lowest level of input is a window you cant go beyond that
 there are 2 types of events 
     keyboard
     mouse
+
+use textures and skyboxes

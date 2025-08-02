@@ -4,6 +4,10 @@ using ren::components::Component;
 using ren::components::Hierarchy;
 
 void Hierarchy::add(const Entity& child) {
+    if(child.getId().length() == 0)
+    {
+        spdlog::warn("Entity has an empty id.");
+    }
     if (children.find(child.getId()) != children.end()) {
         spdlog::warn("Entity with id: {} already existed: Entity replaced.", child.getId());
     }

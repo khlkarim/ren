@@ -33,7 +33,7 @@ void RenderingSystem::render(
         auto& mesh = entity.getComponent<ren::components::Mesh>().value().get();
         auto& meshRenderer = entity.getComponent<ren::components::MeshRenderer>().value().get();
     
-        ren::components::shaders::Shader shader = meshRenderer.getShader();
+        const auto& shader = meshRenderer.getShader();
     
         shader.use();
     

@@ -5,8 +5,6 @@
 int main()
 {
     ren::Window window("ecs", 1980, 1080);
-    window.setTargetFPS(60);
-
     ren::Scene scene;
 
     ren::assets::AssetManager assetManager; 

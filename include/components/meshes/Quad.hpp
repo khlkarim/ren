@@ -1,4 +1,5 @@
 #pragma once
+
 #include <components/Mesh.hpp>
 
 namespace ren::components::meshes {

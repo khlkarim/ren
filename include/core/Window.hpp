@@ -3,10 +3,10 @@
 #include <string>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <core/Scene.hpp>
 
 namespace ren {
 
+class Scene;
 class Window
 {
 public:

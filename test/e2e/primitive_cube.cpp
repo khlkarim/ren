@@ -1,3 +1,4 @@
+#include <core/Scene.hpp>
 #include <core/Window.hpp>
 #include <components/meshes/Cube.hpp>
 #include <assets/AssetManager.hpp>

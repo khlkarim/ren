@@ -1,4 +1,5 @@
-#include "Cube.hpp"
+#include <spdlog/spdlog.h>
+#include <components/meshes/Cube.hpp>
 using ren::components::meshes::Cube;
 using ren::components::meshes::Vertex;
 

@@ -1,8 +1,9 @@
 #include <core/Scene.hpp>
+#include <systems/RenderingSystem.hpp>
 using ren::Scene;
 using ren::Camera; 
-using ren::Entity; 
 using ren::components::Hierarchy;
+using ren::systems::RenderingSystem;
 
 Scene::Scene()
 {   
@@ -48,6 +49,6 @@ void Scene::setHierarchy(const Hierarchy& hierarchy)
 
 void Scene::render()
 {
-    systems::RenderingSystem renderer;
+    RenderingSystem renderer;
     renderer.render(this->camera, this->hierarchy);
 }

@@ -1,4 +1,7 @@
+#include <spdlog/spdlog.h>
 #include <core/Window.hpp>
+#include <core/Scene.hpp>
+
 using ren::Window;
 
 Window::Window(const std::string& name, const unsigned int width, const unsigned int height, const unsigned int fps) 

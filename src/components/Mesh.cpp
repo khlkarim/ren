@@ -1,3 +1,5 @@
+#include <glad/glad.h>
+#include <spdlog/spdlog.h>
 #include <components/Mesh.hpp>
 
 using ren::components::Mesh;

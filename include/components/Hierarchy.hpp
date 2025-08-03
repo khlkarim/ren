@@ -2,7 +2,6 @@
 
 #include <string>
 #include <vector>
-#include <memory>
 #include <optional>
 #include <spdlog/spdlog.h>
 #include <core/Entity.hpp>

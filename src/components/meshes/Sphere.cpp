@@ -1,4 +1,6 @@
-#include "Sphere.hpp"
+#include <glm/glm.hpp>
+#include <spdlog/spdlog.h>
+#include <components/meshes/Sphere.hpp>
 using ren::components::meshes::Sphere;
 using ren::components::meshes::Vertex;
 

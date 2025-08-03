@@ -1,14 +1,8 @@
 #pragma once
 
 #include <string>
-#include <memory>
-#include <unordered_map>
-#include <spdlog/spdlog.h>
 #include <core/Camera.hpp>
-#include <core/Entity.hpp>
-#include <utils/error_handler.hpp>
 #include <components/Hierarchy.hpp> 
-#include <systems/RenderingSystem.hpp>
 
 namespace ren {
 

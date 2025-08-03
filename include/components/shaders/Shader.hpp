@@ -1,7 +1,8 @@
 #pragma once
-#include <glad/glad.h>
+
+#include <string>
+#include <vector>
 #include <glm/glm.hpp>
-#include <spdlog/spdlog.h>
 
 namespace ren::components::shaders {
 

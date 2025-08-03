@@ -1,4 +1,5 @@
-#include "Quad.hpp"
+#include <spdlog/spdlog.h>
+#include <components/meshes/Quad.hpp>
 using ren::components::meshes::Quad;
 using ren::components::meshes::Vertex;
 

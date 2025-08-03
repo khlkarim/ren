@@ -1,10 +1,8 @@
 #pragma once
 
-#include <spdlog/spdlog.h>
+#include <components/Component.hpp>
 #include <components/shaders/Shader.hpp>
 #include <components/shaders/Texture.hpp>
-#include <components/Component.hpp>
-#include <utils/error_handler.hpp>
 
 namespace ren::components 
 {

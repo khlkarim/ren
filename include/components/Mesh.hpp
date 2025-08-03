@@ -1,9 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <spdlog/spdlog.h>
 #include <components/Component.hpp>
 #include <components/meshes/Vertex.hpp>
 

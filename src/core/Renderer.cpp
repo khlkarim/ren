@@ -4,10 +4,10 @@
 #include <components/Hierarchy.hpp>
 #include <components/Transform.hpp>
 #include <components/MeshRenderer.hpp>
+#include <components/shaders/Shader.hpp>
 
 #include <core/Entity.hpp>
 #include <core/Camera.hpp>
-#include <components/shaders/Shader.hpp>
 
 #include <core/Renderer.hpp>
 using ren::Renderer;

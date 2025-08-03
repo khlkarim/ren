@@ -1,7 +1,6 @@
 {
   "dependencies": [
     "assimp",
-    "boost-uuid",
     "glad",
     "glfw3",
     "glm",

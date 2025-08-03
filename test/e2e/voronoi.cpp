@@ -1,6 +1,9 @@
 #include <core/Scene.hpp>
 #include <core/Window.hpp>
 #include <components/meshes/Quad.hpp>
+#include <components/Mesh.hpp>
+#include <components/Transform.hpp>
+#include <components/MeshRenderer.hpp>
 #include <assets/AssetManager.hpp>
 
 #ifdef __cplusplus

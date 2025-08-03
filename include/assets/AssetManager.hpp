@@ -1,23 +1,22 @@
 #pragma once 
 
-#include <fstream>
-#include <sstream>
-#include <iostream>
+#include <vector>
 #include <optional>
 #include <glad/glad.h>
-#include <utils/stb_image.h>
 #include <assimp/scene.h>
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
-#include <components/Mesh.hpp>
-#include <components/MeshRenderer.hpp>
-#include <components/shaders/Shader.hpp>
-#include <utils/error_handler.hpp>
-#include <core/Entity.hpp>
-#include <components/Hierarchy.hpp>
-#include <components/Transform.hpp>
+#include <components/shaders/Texture.hpp>
 
-namespace ren::assets {
+namespace ren
+{
+    class Entity;
+    namespace components::shaders
+    {
+        class Shader;
+    }
+}
+
+namespace ren::assets 
+{
 
 class AssetManager
 {

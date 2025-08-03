@@ -1,5 +1,6 @@
 #include <io/InputSystem.hpp>
 #include <systems/CameraSystem.hpp>
+#include <io/events/mouse/Clicked.hpp>
 using ren::systems::CameraSystem;
 
 CameraSystem::CameraSystem()

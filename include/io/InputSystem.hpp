@@ -1,18 +1,16 @@
 #pragma once
 
-#include <string>
 #include <vector>
-#include <functional>
-#include <typeindex>
 #include <memory>
+#include <typeindex>
+#include <functional>
 #include <unordered_map>
-#include <core/Window.hpp>
 #include <io/Event.hpp>
-#include <io/events/keyboard/KeyInput.hpp>
-#include <io/events/mouse/Clicked.hpp>
-#include <io/events/mouse/Entered.hpp>
-#include <io/events/mouse/Moved.hpp>
-#include <io/events/mouse/Scrolled.hpp>
+
+namespace ren 
+{
+    class Window;
+}
 
 namespace ren::io
 {

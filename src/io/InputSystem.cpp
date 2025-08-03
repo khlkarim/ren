@@ -1,3 +1,10 @@
+#include <core/Window.hpp>
+#include <io/events/mouse/Moved.hpp>
+#include <io/events/mouse/Clicked.hpp>
+#include <io/events/mouse/Entered.hpp>
+#include <io/events/mouse/Scrolled.hpp>
+#include <io/events/keyboard/KeyInput.hpp>
+
 #include <io/InputSystem.hpp>
 using ren::Window;
 using ren::io::Event;

@@ -1,4 +1,22 @@
-#include "AssetManager.hpp"
+#include <fstream>
+#include <sstream>
+#include <iostream>
+
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
+
+#include <components/Mesh.hpp>
+#include <components/Hierarchy.hpp>
+#include <components/Transform.hpp>
+#include <components/MeshRenderer.hpp>
+
+#include <utils/stb_image.h>
+#include <utils/error_handler.hpp>
+
+#include <core/Entity.hpp>
+#include <components/shaders/Shader.hpp>
+
+#include <assets/AssetManager.hpp>
 using ren::Entity;
 using ren::assets::AssetManager;
 using ren::components::Mesh;

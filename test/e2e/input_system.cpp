@@ -3,6 +3,9 @@
 #include <assets/AssetManager.hpp>
 #include <io/InputSystem.hpp>
 #include <components/meshes/Cube.hpp>
+#include <components/Mesh.hpp>
+#include <components/Transform.hpp>
+#include <components/MeshRenderer.hpp>
 #include <systems/CameraSystem.hpp>
 
 int main()

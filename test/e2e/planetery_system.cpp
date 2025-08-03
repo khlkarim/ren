@@ -3,6 +3,9 @@
 #include <io/InputSystem.hpp>
 #include <assets/AssetManager.hpp>
 #include <components/meshes/Sphere.hpp>
+#include <components/Mesh.hpp>
+#include <components/Transform.hpp>
+#include <components/MeshRenderer.hpp>
 #include <systems/CameraSystem.hpp>
 
 //Scene

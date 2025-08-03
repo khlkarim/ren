@@ -1,5 +1,8 @@
 #include <core/Scene.hpp>
 #include <core/Window.hpp>
+#include <components/Mesh.hpp>
+#include <components/Transform.hpp>
+#include <components/MeshRenderer.hpp>
 #include <assets/AssetManager.hpp>
 
 void setShader(ren::Entity& entity, ren::components::shaders::Shader& shader);

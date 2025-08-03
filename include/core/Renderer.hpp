@@ -2,18 +2,16 @@
 
 #include <glm/glm.hpp>
 
-namespace ren {
-    class Entity;
-    class Camera;
-    namespace components {
-        class Hierarchy;
-    }
-}
-
-namespace ren::systems
+namespace ren
 {
 
-class RenderingSystem
+class Entity;
+class Camera;
+namespace components {
+    class Hierarchy;
+}
+
+class Renderer
 {
 public:
     void render(

@@ -3,7 +3,7 @@
 #include <io/devices/Mouse.hpp>
 #include <io/devices/Keyboard.hpp>
 #include <assets/AssetManager.hpp>
-#include <components/meshes/Sphere.hpp>
+#include <components/meshes/Cylinder.hpp>
 #include <components/Mesh.hpp>
 #include <components/Transform.hpp>
 #include <components/MeshRenderer.hpp>
@@ -64,7 +64,7 @@ ren::Scene CreateSystem()
     
     ren::Entity planet;
     planet.setComponent<ren::components::Transform>(ren::components::Transform());
-    planet.setComponent<ren::components::Mesh>(ren::components::meshes::Sphere());
+    planet.setComponent<ren::components::Mesh>(ren::components::meshes::Cylinder(1.0f, 10.0f));
 
     std::vector<Planet> planets = getPlanets();
     

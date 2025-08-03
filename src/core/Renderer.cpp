@@ -9,10 +9,10 @@
 #include <core/Camera.hpp>
 #include <components/shaders/Shader.hpp>
 
-#include <systems/RenderingSystem.hpp>
-using ren::systems::RenderingSystem;
+#include <core/Renderer.hpp>
+using ren::Renderer;
 
-void RenderingSystem::render(const Camera& camera, const components::Hierarchy& hierarchy) const
+void Renderer::render(const Camera& camera, const components::Hierarchy& hierarchy) const
 {
     glm::mat4 view = camera.getViewMatrix();
     glm::mat4 projection = camera.getProjectionMatrix();
@@ -25,7 +25,7 @@ void RenderingSystem::render(const Camera& camera, const components::Hierarchy& 
     }
 }
 
-void RenderingSystem::render(
+void Renderer::render(
     const Entity& entity,
     const glm::mat4& projection,
     const glm::mat4& view,

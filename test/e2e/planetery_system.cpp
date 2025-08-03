@@ -8,6 +8,7 @@
 #include <components/Transform.hpp>
 #include <components/MeshRenderer.hpp>
 #include <systems/CameraSystem.hpp>
+#include <systems/SystemManager.hpp>
 
 //Scene
 ren::Scene CreateSystem();
@@ -32,8 +33,8 @@ int main()
     ren::io::devices::Keyboard::listen(window);
 
     ren::Scene scene(CreateSystem());
-
-    ren::systems::CameraSystem cameraSystem;
+    ren::systems::SystemManager systemManager;
+    systemManager.add<ren::systems::CameraSystem>();
 
     double lastTime = glfwGetTime();
     while(window.isOpen()) 
@@ -42,8 +43,8 @@ int main()
         float deltaTime = static_cast<float>(currentTime - lastTime);
         lastTime = currentTime;
 
-        cameraSystem.update(deltaTime, scene.getCamera());
         updateSystem(scene, deltaTime);
+        systemManager.update(deltaTime, scene);
         window.render(scene);
     }
 

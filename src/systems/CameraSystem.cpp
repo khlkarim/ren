@@ -1,8 +1,12 @@
 #include <spdlog/spdlog.h>
+#include <core/Scene.hpp>
+#include <core/Camera.hpp>
 #include <io/devices/Mouse.hpp>
 #include <io/devices/Keyboard.hpp>
-#include <systems/CameraSystem.hpp>
+#include <io/events/mouse/Moved.hpp>
 #include <io/events/mouse/Clicked.hpp>
+#include <io/events/keyboard/KeyInput.hpp>
+#include <systems/CameraSystem.hpp>
 using ren::systems::CameraSystem;
 
 CameraSystem::CameraSystem()
@@ -31,8 +35,10 @@ CameraSystem::CameraSystem()
         });
 }
 
-void CameraSystem::update(const float dt, Camera& camera)
-{
+void CameraSystem::update(const float dt, Scene& scene)
+{   
+    auto& camera = scene.getCamera();
+
     this->updatePosition(dt, camera);
     if(this->cursorLocked) this->updateDirection(dt, camera);
 }
@@ -40,10 +46,25 @@ void CameraSystem::update(const float dt, Camera& camera)
 void CameraSystem::updateDirection(const float dt, Camera& camera)
 {
     auto& mouse = ren::io::devices::Mouse::getInstance();
+    auto& eventOpt =  mouse.poll<ren::io::events::mouse::Moved>();
 
-    float xoffset = static_cast<float>(mouse.getDeltaX());
-    float yoffset = static_cast<float>(-mouse.getDeltaY());
-    mouse.consumeDelta();
+    if(!eventOpt) return;
+    auto& event = eventOpt.value();
+
+    static bool firstMouse = true;
+    static double lastX, lastY;
+
+    if (firstMouse) {
+        lastX = event.xpos;
+        lastY = event.ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = static_cast<float>(event.xpos - lastX);
+    float yoffset = static_cast<float>(lastY - event.ypos);
+
+    lastX = event.xpos;
+    lastY = event.ypos;
 
     const float sensitivity = 5.0f;
     xoffset *= sensitivity * dt;
@@ -84,4 +105,9 @@ void CameraSystem::updatePosition(const float dt, Camera& camera)
 
     position += moveDir * speed * dt;
     camera.setPosition(position);
+}
+
+std::unique_ptr<ren::systems::System> CameraSystem::clone() const
+{
+    return std::make_unique<CameraSystem>();
 }

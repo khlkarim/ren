@@ -8,6 +8,7 @@
 #include <components/Transform.hpp>
 #include <components/MeshRenderer.hpp>
 #include <systems/CameraSystem.hpp>
+#include <systems/SystemManager.hpp>
 
 int main()
 {
@@ -15,12 +16,12 @@ int main()
     ren::io::devices::Mouse::listen(window);
     ren::io::devices::Keyboard::listen(window);
     
-    ren::systems::CameraSystem cameraSystem;
-
     ren::assets::AssetManager assetManager; 
     auto shader = assetManager.loadShader("assets\\shaders\\lighting\\lighting.vert", "assets\\shaders\\lighting\\lighting.frag");
 
     ren::Scene scene;
+    ren::systems::SystemManager systemManager;
+    systemManager.add<ren::systems::CameraSystem>();
 
     ren::Entity cube;
     cube.setComponent<ren::components::Transform>(ren::components::Transform());
@@ -43,8 +44,6 @@ int main()
         float deltaTime = static_cast<float>(currentTime - lastTime);
         lastTime = currentTime;
 
-        cameraSystem.update(deltaTime, scene.getCamera());
-
         auto& mr1 = scene.getHierarchy().getComponent<ren::components::MeshRenderer>("cube-1").value().get();
         auto& mr2 = scene.getHierarchy().getComponent<ren::components::MeshRenderer>("cube-2").value().get();
         
@@ -65,6 +64,7 @@ int main()
             glm::cos(glfwGetTime() - glm::pi<double>()/4) * glm::cos(glfwGetTime() - glm::pi<double>()/4)
         ));
 
+        systemManager.update(deltaTime, scene);
         window.render(scene);
     }
 

@@ -1,17 +1,21 @@
 #pragma once
 
-#include <core/Camera.hpp>
-#include <io/events/mouse/Moved.hpp>
-#include <io/events/keyboard/KeyInput.hpp>
+#include <systems/System.hpp>
+
+namespace ren
+{
+    class Camera;
+}
 
 namespace ren::systems
 {
 
-class CameraSystem
+class CameraSystem: public System
 {
 public:
     CameraSystem();
-    void update(const float dt, Camera& camera);
+    void update(const float dt, Scene& scene);
+    std::unique_ptr<System> clone() const;
 
 private:
     void updatePosition(const float dt, Camera& camera);

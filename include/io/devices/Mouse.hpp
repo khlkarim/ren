@@ -37,7 +37,6 @@ public:
     double getYPos() const;
     double getDeltaX() const;
     double getDeltaY() const;
-
     void consumeDelta();
 
 private:

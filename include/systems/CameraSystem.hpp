@@ -14,8 +14,8 @@ public:
     void update(const float dt, Camera& camera);
 
 private:
-    void updateDirection(const float dt, Camera& camera, const ren::io::events::mouse::Moved& event);
-    void updatePosition(const float dt, Camera& camera, const ren::io::events::keyboard::KeyInput& event);
+    void updatePosition(const float dt, Camera& camera);
+    void updateDirection(const float dt, Camera& camera);
 
 private:
     bool cursorLocked;

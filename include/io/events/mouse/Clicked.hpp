@@ -1,6 +1,6 @@
 #pragma once
 
-#include <io/Event.hpp>
+#include <io/events/Event.hpp>
 
 namespace ren::io::events::mouse
 {
@@ -8,6 +8,7 @@ namespace ren::io::events::mouse
 class Clicked: public Event
 {
 public:
+    Clicked() = default;
     Clicked(
         GLFWwindow* window,
         int button,

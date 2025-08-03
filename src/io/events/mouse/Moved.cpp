@@ -1,3 +1,4 @@
+#include <spdlog/spdlog.h>
 #include <io/events/mouse/Moved.hpp>
 using ren::io::events::mouse::Moved;
 

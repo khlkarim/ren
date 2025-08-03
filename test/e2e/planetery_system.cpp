@@ -1,6 +1,7 @@
 #include <core/Scene.hpp>
 #include <core/Window.hpp>
-#include <io/InputSystem.hpp>
+#include <io/devices/Mouse.hpp>
+#include <io/devices/Keyboard.hpp>
 #include <assets/AssetManager.hpp>
 #include <components/meshes/Sphere.hpp>
 #include <components/Mesh.hpp>
@@ -27,7 +28,8 @@ void updatePlanet(ren::Entity& instance, const Planet& planet, const float dt);
 int main()
 {
     ren::Window window("Planetary System", 1980, 1080);
-    ren::io::InputSystem::listen(window);
+    ren::io::devices::Mouse::listen(window);
+    ren::io::devices::Keyboard::listen(window);
 
     ren::Scene scene(CreateSystem());
 

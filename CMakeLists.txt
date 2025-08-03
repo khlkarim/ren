@@ -18,6 +18,7 @@ target_include_directories(REN
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${CMAKE_CURRENT_SOURCE_DIR}/include/io
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/io/devices
         ${CMAKE_CURRENT_SOURCE_DIR}/include/io/events
         ${CMAKE_CURRENT_SOURCE_DIR}/include/io/events/mouse
         ${CMAKE_CURRENT_SOURCE_DIR}/include/io/events/keyboard

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <io/Event.hpp>
+#include <io/events/Event.hpp>
 
 namespace ren::io::events::mouse
 {

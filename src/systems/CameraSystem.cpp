@@ -1,16 +1,19 @@
-#include <io/InputSystem.hpp>
+#include <spdlog/spdlog.h>
+#include <io/devices/Mouse.hpp>
+#include <io/devices/Keyboard.hpp>
 #include <systems/CameraSystem.hpp>
 #include <io/events/mouse/Clicked.hpp>
 using ren::systems::CameraSystem;
 
 CameraSystem::CameraSystem()
 {
-    auto& inputSystem = ren::io::InputSystem::getInstance();
-    GLFWwindow* window = inputSystem.getWindow();
+    auto& mouse = ren::io::devices::Mouse::getInstance();
+    auto& keyboard = ren::io::devices::Keyboard::getInstance();
+    GLFWwindow* window = mouse.getWindow();
 
     this->cursorLocked = true;
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    inputSystem.on<ren::io::events::keyboard::KeyInput>([window, this](const auto& event)
+    keyboard.on<ren::io::events::keyboard::KeyInput>([window, this](const auto& event)
         {
             if(event.key == GLFW_KEY_ESCAPE)
             {
@@ -18,7 +21,7 @@ CameraSystem::CameraSystem()
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             }
         });
-    inputSystem.on<ren::io::events::mouse::Clicked>([window, this](const auto& event)
+    mouse.on<ren::io::events::mouse::Clicked>([window, this](const auto& event)
         {            
             if(event.action == GLFW_PRESS)
             {
@@ -30,35 +33,17 @@ CameraSystem::CameraSystem()
 
 void CameraSystem::update(const float dt, Camera& camera)
 {
-    auto& inputSystem = ren::io::InputSystem::getInstance();
-
-    inputSystem.if_active<ren::io::events::keyboard::KeyInput>([dt, &camera, this](const auto& event)
-        {
-            this->updatePosition(dt, camera, event);
-        });
-
-    inputSystem.if_active<ren::io::events::mouse::Moved>([dt, &camera, this](const auto& event)
-        {
-            if(this->cursorLocked) this->updateDirection(dt, camera, event);
-        });
+    this->updatePosition(dt, camera);
+    if(this->cursorLocked) this->updateDirection(dt, camera);
 }
 
-void CameraSystem::updateDirection(const float dt, Camera& camera, const ren::io::events::mouse::Moved& event)
+void CameraSystem::updateDirection(const float dt, Camera& camera)
 {
-    static bool firstMouse = true;
-    static double lastX, lastY;
+    auto& mouse = ren::io::devices::Mouse::getInstance();
 
-    if (firstMouse) {
-        lastX = event.xpos;
-        lastY = event.ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = static_cast<float>(event.xpos - lastX);
-    float yoffset = static_cast<float>(lastY - event.ypos);
-
-    lastX = event.xpos;
-    lastY = event.ypos;
+    float xoffset = static_cast<float>(mouse.getDeltaX());
+    float yoffset = static_cast<float>(-mouse.getDeltaY());
+    mouse.consumeDelta();
 
     const float sensitivity = 5.0f;
     xoffset *= sensitivity * dt;
@@ -68,8 +53,10 @@ void CameraSystem::updateDirection(const float dt, Camera& camera, const ren::io
     camera.setPitch(camera.getPitch() + yoffset);
 }
 
-void CameraSystem::updatePosition(const float dt, Camera& camera, const ren::io::events::keyboard::KeyInput& event)
+void CameraSystem::updatePosition(const float dt, Camera& camera)
 {
+    auto& keyboard = ren::io::devices::Keyboard::getInstance();
+
     const float speed = 5.0f;
 
     glm::vec3 position = camera.getPosition();
@@ -77,18 +64,24 @@ void CameraSystem::updatePosition(const float dt, Camera& camera, const ren::io:
     glm::vec3 front = camera.getFront();
     glm::vec3 right = camera.getRight();
 
-    if (event.key == GLFW_KEY_W)
-        position += front * speed * dt;
-    if (event.key == GLFW_KEY_S)
-        position -= front * speed * dt;
-    if (event.key == GLFW_KEY_A)
-        position -= right * speed * dt;
-    if (event.key == GLFW_KEY_D)
-        position += right * speed * dt;
-    if (event.key == GLFW_KEY_SPACE)
-        position += up * speed * dt;
-    if (event.key == GLFW_KEY_LEFT_CONTROL)
-        position -= up * speed * dt;
+    glm::vec3 moveDir(0.0f);
 
+    if (keyboard.isPressed(GLFW_KEY_W))
+        moveDir += front;
+    if (keyboard.isPressed(GLFW_KEY_S))
+        moveDir -= front;
+    if (keyboard.isPressed(GLFW_KEY_A))
+        moveDir -= right;
+    if (keyboard.isPressed(GLFW_KEY_D))
+        moveDir += right;
+    if (keyboard.isPressed(GLFW_KEY_SPACE))
+        moveDir += up;
+    if (keyboard.isPressed(GLFW_KEY_LEFT_CONTROL))
+        moveDir -= up;
+
+    if (glm::length(moveDir) > 0.0f)
+        moveDir = glm::normalize(moveDir);
+
+    position += moveDir * speed * dt;
     camera.setPosition(position);
 }

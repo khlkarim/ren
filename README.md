@@ -309,3 +309,7 @@ there are 2 types of events
     mouse
 
 use textures and skyboxes
+
+inputsystem.mouse.rightbutton.is_pressed
+inputsystem.keyboard.key_a.pressed
+                          .released

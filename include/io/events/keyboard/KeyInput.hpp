@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <io/Event.hpp>
+#include <io/events/Event.hpp>
 
 namespace ren::io::events::keyboard
 {
@@ -9,6 +9,7 @@ namespace ren::io::events::keyboard
 class KeyInput: public Event
 {
 public:
+    KeyInput() = default;
     KeyInput(
         GLFWwindow* window,
         int key,

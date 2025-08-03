@@ -1,7 +1,8 @@
 #include <core/Scene.hpp>
 #include <core/Window.hpp>
 #include <assets/AssetManager.hpp>
-#include <io/InputSystem.hpp>
+#include <io/devices/Mouse.hpp>
+#include <io/devices/Keyboard.hpp>
 #include <components/meshes/Cube.hpp>
 #include <components/Mesh.hpp>
 #include <components/Transform.hpp>
@@ -11,7 +12,8 @@
 int main()
 {
     ren::Window window("Input System Test", 1980, 1080);
-    ren::io::InputSystem::listen(window);
+    ren::io::devices::Mouse::listen(window);
+    ren::io::devices::Keyboard::listen(window);
     
     ren::systems::CameraSystem cameraSystem;
 

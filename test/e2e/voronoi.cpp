@@ -1,10 +1,7 @@
-#include <core/Scene.hpp>
-#include <core/Window.hpp>
-#include <components/meshes/Quad.hpp>
-#include <components/Mesh.hpp>
-#include <components/Transform.hpp>
-#include <components/MeshRenderer.hpp>
-#include <assets/AssetManager.hpp>
+#include <ren/core.hpp>
+#include <ren/assets.hpp>
+#include <ren/ecs.hpp>
+#include <ren/renderer.hpp>
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,15 +21,15 @@ std::vector<glm::vec3> interpolate(const std::vector<glm::vec3>& init, const std
 
 int main()
 {
-    ren::Window window("Voronoi", 1980, 1080);
-    ren::Scene scene;
+    ren::core::Window window("Voronoi", 1980, 1080);
+    ren::core::Scene scene;
 
     ren::assets::AssetManager assetManager;
     auto shader = assetManager.loadShader("assets\\shaders\\voronoi\\voronoi.vert", "assets\\shaders\\voronoi\\voronoi.frag");
 
-    ren::Entity plane("plane");
-    plane.setComponent<ren::components::Mesh>(ren::components::meshes::Quad(10, 5, 250, 250));
-    plane.setComponent<ren::components::MeshRenderer>(ren::components::MeshRenderer(shader, {}));
+    ren::ecs::entities::Entity plane("plane");
+    plane.setComponent<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Quad(10, 5, 250, 250));
+    plane.setComponent<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
 
     auto& sceneH = scene.getHierarchy();
     sceneH.add(plane);
@@ -43,13 +40,16 @@ int main()
     std::vector<glm::vec3> targetColors = generateColors(20);
     std::vector<glm::vec3> targetPositions = generateControlPoints(10, 10, 20);
     
+    ren::renderer::Renderer renderer;
+    renderer.setRenderTarget(window.getGLFWwindow());
+
     float lastT = static_cast<float>(glfwGetTime());
     while(window.isOpen())
     {
         float currT = static_cast<float>(glfwGetTime());
         float dt = currT - lastT;
         
-        auto& mr = sceneH.getComponent<ren::components::MeshRenderer>("plane").value().get();
+        auto& mr = sceneH.getComponent<ren::ecs::components::MeshRenderer>("plane").value().get();
         auto& s = mr.getShader();
         
         s.setVec3Array("vertexColors", interpolate(initColors, targetColors, dt/5.0f));
@@ -66,7 +66,7 @@ int main()
             targetPositions = generateControlPoints(10, 10, 20);
         }
 
-        window.render(scene);
+        renderer.render(scene);
     }
 
     return 0;

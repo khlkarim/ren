@@ -1,0 +1,1 @@
+#include <ren/assets/AssetManager.hpp>

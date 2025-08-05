@@ -1,18 +1,13 @@
-#include <core/Scene.hpp>
-#include <core/Window.hpp>
-#include <io/devices/Mouse.hpp>
-#include <io/devices/Keyboard.hpp>
-#include <assets/AssetManager.hpp>
-#include <components/meshes/Cylinder.hpp>
-#include <components/Mesh.hpp>
-#include <components/Transform.hpp>
-#include <components/MeshRenderer.hpp>
-#include <systems/CameraSystem.hpp>
-#include <systems/SystemManager.hpp>
+#include <ren/core.hpp>
+#include <ren/assets.hpp>
+#include <ren/ecs.hpp>
+#include <ren/renderer.hpp>
+#include <ren/io/devices/Mouse.hpp>
+#include <ren/io/devices/Keyboard.hpp>
 
 //Scene
-ren::Scene CreateSystem();
-void updateSystem(ren::Scene& scene, const float dt);
+ren::core::Scene CreateSystem();
+void updateSystem(ren::core::Scene& scene, const float dt);
 
 //Planet
 struct Planet
@@ -24,17 +19,19 @@ struct Planet
     float relativeRotSpeed;
 };
 std::vector<Planet> getPlanets();
-void updatePlanet(ren::Entity& instance, const Planet& planet, const float dt);
+void updatePlanet(ren::ecs::entities::Entity& instance, const Planet& planet, const float dt);
 
 int main()
 {
-    ren::Window window("Planetary System", 1980, 1080);
+    ren::core::Window window("Planetary System", 1980, 1080);
     ren::io::devices::Mouse::listen(window);
     ren::io::devices::Keyboard::listen(window);
 
-    ren::Scene scene(CreateSystem());
-    ren::systems::SystemManager systemManager;
-    systemManager.add<ren::systems::CameraSystem>();
+    ren::core::Scene scene(CreateSystem());
+
+    ren::renderer::Renderer renderer;
+    ren::renderer::CameraSystem cameraSystem;
+    renderer.setRenderTarget(window.getGLFWwindow());
 
     double lastTime = glfwGetTime();
     while(window.isOpen()) 
@@ -44,16 +41,16 @@ int main()
         lastTime = currentTime;
 
         updateSystem(scene, deltaTime);
-        systemManager.update(deltaTime, scene);
-        window.render(scene);
+        cameraSystem.update(deltaTime, renderer.getCamera());
+        renderer.render(scene);
     }
 
     return 0;
 }
 
-ren::Scene CreateSystem()
+ren::core::Scene CreateSystem()
 {
-    ren::Scene scene;    
+    ren::core::Scene scene;    
     auto& hierarchy = scene.getHierarchy();
 
     ren::assets::AssetManager assetManager;
@@ -62,22 +59,22 @@ ren::Scene CreateSystem()
         "assets\\shaders\\planetary_system\\planetary.frag"
     );
     
-    ren::Entity planet;
-    planet.setComponent<ren::components::Transform>(ren::components::Transform());
-    planet.setComponent<ren::components::Mesh>(ren::components::meshes::Cylinder(1.0f, 10.0f));
+    ren::ecs::entities::Entity planet;
+    planet.setComponent<ren::ecs::components::Transform>(ren::ecs::components::Transform());
+    planet.setComponent<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Sphere());
 
     std::vector<Planet> planets = getPlanets();
     
-    auto& t = planet.getComponent<ren::components::Transform>().value().get();
+    auto& t = planet.getComponent<ren::ecs::components::Transform>().value().get();
 
-    ren::components::shaders::Texture earthTexture;
+    ren::ecs::components::shaders::Texture earthTexture;
     earthTexture.type = "texture_diffuse";
 
     for(const auto& p : planets)
     {
         earthTexture.path = "assets\\textures\\planetary_system\\" + p.name + ".jpg";
         earthTexture.id = assetManager.loadTextureFromImage(earthTexture.path);
-        planet.setComponent<ren::components::MeshRenderer>(ren::components::MeshRenderer(shader, {earthTexture}));
+        planet.setComponent<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {earthTexture}));
         t.setPosition(p.initPos);
     
         planet.setId(p.name);
@@ -88,7 +85,7 @@ ren::Scene CreateSystem()
     return scene;
 }
 
-void updateSystem(ren::Scene& scene, const float dt)
+void updateSystem(ren::core::Scene& scene, const float dt)
 {
     auto& hierarchy = scene.getHierarchy();
     std::vector<Planet> planets = getPlanets();
@@ -141,9 +138,9 @@ std::vector<Planet> getPlanets()
     };
 }
 
-void updatePlanet(ren::Entity& instance, const Planet& planet, const float dt)
+void updatePlanet(ren::ecs::entities::Entity& instance, const Planet& planet, const float dt)
 {
-    auto& t = instance.getComponent<ren::components::Transform>().value().get();
+    auto& t = instance.getComponent<ren::ecs::components::Transform>().value().get();
     auto position = t.getPosition();
     auto right = glm::normalize(glm::cross(position, glm::vec3(0.0f, 1.0f, 0.0f)));
 

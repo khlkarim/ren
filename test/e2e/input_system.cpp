@@ -1,42 +1,37 @@
-#include <core/Scene.hpp>
-#include <core/Window.hpp>
-#include <assets/AssetManager.hpp>
-#include <io/devices/Mouse.hpp>
-#include <io/devices/Keyboard.hpp>
-#include <components/meshes/Cube.hpp>
-#include <components/Mesh.hpp>
-#include <components/Transform.hpp>
-#include <components/MeshRenderer.hpp>
-#include <systems/CameraSystem.hpp>
-#include <systems/SystemManager.hpp>
+#include <ren/core.hpp>
+#include <ren/assets.hpp>
+#include <ren/ecs.hpp>
+#include <ren/renderer.hpp>
+#include <ren/io/devices/Mouse.hpp>
+#include <ren/io/devices/Keyboard.hpp>
 
 int main()
 {
-    ren::Window window("Input System Test", 1980, 1080);
+    ren::core::Window window("Input System Test", 1980, 1080);
     ren::io::devices::Mouse::listen(window);
     ren::io::devices::Keyboard::listen(window);
     
     ren::assets::AssetManager assetManager; 
     auto shader = assetManager.loadShader("assets\\shaders\\lighting\\lighting.vert", "assets\\shaders\\lighting\\lighting.frag");
 
-    ren::Scene scene;
-    ren::systems::SystemManager systemManager;
-    systemManager.add<ren::systems::CameraSystem>();
+    ren::core::Scene scene;
 
-    ren::Entity cube;
-    cube.setComponent<ren::components::Transform>(ren::components::Transform());
-    cube.setComponent<ren::components::Mesh>(ren::components::meshes::Cube());
-    cube.setComponent<ren::components::MeshRenderer>(ren::components::MeshRenderer(shader, {}));
+    ren::ecs::entities::Entity cube;
+    cube.setComponent<ren::ecs::components::Transform>(ren::ecs::components::Transform());
+    cube.setComponent<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Cube());
+    cube.setComponent<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
 
-    auto& camera = scene.getCamera();
     auto& hierarchy = scene.getHierarchy();
-    
     cube.setId("cube-1");
     hierarchy.add(cube);
-    cube.getComponent<ren::components::Transform>().value().get().setPosition(glm::vec3(0.0f, 0.0f, 12.0f));
+    cube.getComponent<ren::ecs::components::Transform>().value().get().setPosition(glm::vec3(0.0f, 0.0f, 12.0f));
     cube.setId("cube-2");
     hierarchy.add(cube);
     
+    ren::renderer::CameraSystem cameraSystem;
+    ren::renderer::Renderer renderer;
+    renderer.setRenderTarget(window.getGLFWwindow());
+
     double lastTime = glfwGetTime();
     while(window.isOpen()) 
     {
@@ -44,8 +39,8 @@ int main()
         float deltaTime = static_cast<float>(currentTime - lastTime);
         lastTime = currentTime;
 
-        auto& mr1 = scene.getHierarchy().getComponent<ren::components::MeshRenderer>("cube-1").value().get();
-        auto& mr2 = scene.getHierarchy().getComponent<ren::components::MeshRenderer>("cube-2").value().get();
+        auto& mr1 = scene.getHierarchy().getComponent<ren::ecs::components::MeshRenderer>("cube-1").value().get();
+        auto& mr2 = scene.getHierarchy().getComponent<ren::ecs::components::MeshRenderer>("cube-2").value().get();
         
         auto& s1 = mr1.getShader();
         auto& s2 = mr2.getShader();
@@ -64,8 +59,8 @@ int main()
             glm::cos(glfwGetTime() - glm::pi<double>()/4) * glm::cos(glfwGetTime() - glm::pi<double>()/4)
         ));
 
-        systemManager.update(deltaTime, scene);
-        window.render(scene);
+        cameraSystem.update(deltaTime, renderer.getCamera());
+        renderer.render(scene);
     }
 
     return 0;

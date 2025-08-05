@@ -1,47 +1,47 @@
-#include <core/Scene.hpp>
-#include <core/Window.hpp>
-#include <components/meshes/Cube.hpp>
-#include <components/Mesh.hpp>
-#include <components/Transform.hpp>
-#include <components/MeshRenderer.hpp>
-#include <assets/AssetManager.hpp>
+#include <ren/core.hpp>
+#include <ren/assets.hpp>
+#include <ren/ecs.hpp>
+#include <ren/renderer.hpp>
 
 int main()
 {
-    ren::Window window("ecs", 1980, 1080);
-    ren::Scene scene;
+    ren::core::Window window("ecs", 1980, 1080);
+    ren::core::Scene scene;
 
     ren::assets::AssetManager assetManager; 
-    ren::components::shaders::Shader shader = assetManager.loadShader("assets\\shaders\\lighting\\lighting.vert", "assets\\shaders\\lighting\\lighting.frag");
+    ren::ecs::components::shaders::Shader shader = assetManager.loadShader("assets\\shaders\\lighting\\lighting.vert", "assets\\shaders\\lighting\\lighting.frag");
 
-    ren::Entity player;
+    ren::ecs::entities::Entity player;
     
-    ren::components::meshes::Cube cube;
-    ren::components::Transform transform;
-    ren::components::Hierarchy hierarchy;
-    ren::components::MeshRenderer meshRenderer(shader, {});
+    ren::ecs::components::meshes::Cube cube;
+    ren::ecs::components::Transform transform;
+    ren::ecs::components::Hierarchy hierarchy;
+    ren::ecs::components::MeshRenderer meshRenderer(shader, {});
     
-    player.setComponent<ren::components::Mesh>(cube);
-    player.setComponent<ren::components::Transform>(transform);
-    player.setComponent<ren::components::MeshRenderer>(meshRenderer);
-    player.setComponent<ren::components::Hierarchy>(hierarchy);
+    player.setComponent<ren::ecs::components::Mesh>(cube);
+    player.setComponent<ren::ecs::components::Transform>(transform);
+    player.setComponent<ren::ecs::components::MeshRenderer>(meshRenderer);
+    player.setComponent<ren::ecs::components::Hierarchy>(hierarchy);
     
     player.setId("player1");
     scene.getHierarchy().add(player);
 
     float lastFrame = static_cast<float>(glfwGetTime());
 
-    auto& h = scene.getHierarchy().getComponent<ren::components::Hierarchy>("player1").value().get();
+    auto& h = scene.getHierarchy().getComponent<ren::ecs::components::Hierarchy>("player1").value().get();
     player.setId("player2");
     h.add(player);
+
+    ren::renderer::Renderer renderer;
+    renderer.setRenderTarget(window.getGLFWwindow());
 
     while(window.isOpen()) {
         float currentFrame = static_cast<float>(glfwGetTime());
         float delta = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        auto& t1 = scene.getHierarchy().getComponent<ren::components::Transform>("player1").value().get();
-        auto& mr1 = scene.getHierarchy().getComponent<ren::components::MeshRenderer>("player1").value().get();
+        auto& t1 = scene.getHierarchy().getComponent<ren::ecs::components::Transform>("player1").value().get();
+        auto& mr1 = scene.getHierarchy().getComponent<ren::ecs::components::MeshRenderer>("player1").value().get();
         auto& s1 = mr1.getShader();
 
         t1.rotate(50 * delta, glm::vec3(1.0f, 0.0f, 1.0f));
@@ -52,8 +52,8 @@ int main()
             glm::cos(glfwGetTime() - glm::pi<double>()/4) * glm::cos(glfwGetTime() - glm::pi<double>()/4)
         ));
 
-        auto& t2 = h.getComponent<ren::components::Transform>("player2").value().get();
-        auto& mr2 = h.getComponent<ren::components::MeshRenderer>("player2").value().get();
+        auto& t2 = h.getComponent<ren::ecs::components::Transform>("player2").value().get();
+        auto& mr2 = h.getComponent<ren::ecs::components::MeshRenderer>("player2").value().get();
         auto& s2 = mr1.getShader();
 
         t2.rotate(50 * delta, glm::vec3(1.0f, 0.0f, 1.0f));
@@ -65,7 +65,7 @@ int main()
             glm::cos(glfwGetTime() - glm::pi<double>()/4) * glm::cos(glfwGetTime() - glm::pi<double>()/4)
         ));
         
-        window.render(scene);
+        renderer.render(scene);
     }
 
     return 0;

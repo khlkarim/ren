@@ -1,15 +1,12 @@
-#include <core/Scene.hpp>
-#include <core/Window.hpp>
-#include <assets/AssetManager.hpp>
-#include <components/Mesh.hpp>
-#include <components/Transform.hpp>
-#include <components/MeshRenderer.hpp>
-#include <components/meshes/Sphere.hpp>
+#include <ren/core.hpp>
+#include <ren/assets.hpp>
+#include <ren/ecs.hpp>
+#include <ren/renderer.hpp>
 
 int main()
 {
-    ren::Window window("Sphere", 1980, 1080);
-    ren::Scene scene;
+    ren::core::Window window("Sphere", 1980, 1080);
+    ren::core::Scene scene;
 
     ren::assets::AssetManager assetManager;
     auto shader = assetManager.loadShader(
@@ -17,16 +14,19 @@ int main()
         "assets\\shaders\\default\\default.frag"
     );
 
-    ren::Entity ball("ball");
-    ball.setComponent<ren::components::Mesh>(ren::components::meshes::Sphere());
-    ball.setComponent<ren::components::MeshRenderer>(ren::components::MeshRenderer(shader, {}));
+    ren::ecs::entities::Entity ball("ball");
+    ball.setComponent<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Sphere());
+    ball.setComponent<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
 
     auto& h = scene.getHierarchy();
     h.add(ball);
 
+    ren::renderer::Renderer renderer;
+    renderer.setRenderTarget(window.getGLFWwindow());
+
     while(window.isOpen())
     {
-        window.render(scene);
+        renderer.render(scene);
     }
 
     return 0;

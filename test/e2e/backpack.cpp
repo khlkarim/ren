@@ -1,25 +1,26 @@
-#include <core/Scene.hpp>
-#include <core/Window.hpp>
-#include <components/Mesh.hpp>
-#include <components/Transform.hpp>
-#include <components/MeshRenderer.hpp>
-#include <assets/AssetManager.hpp>
+#include <ren/core.hpp>
+#include <ren/ecs.hpp>
+#include <ren/assets.hpp>
+#include <ren/renderer.hpp>
 
-void setShader(ren::Entity& entity, ren::components::shaders::Shader& shader);
+void setShader(ren::ecs::entities::Entity& entity, ren::ecs::components::shaders::Shader& shader);
 
 int main()
 {
-    ren::Window window("Backpack", 1980, 1080);
-    ren::Scene scene;
+    ren::core::Window window("Backpack", 1980, 1080);
+    ren::core::Scene scene;
 
     ren::assets::AssetManager assetManager;
-    ren::Entity entity(assetManager.loadEntity("assets\\models\\backpack\\backpack.obj"));
+    auto entity = assetManager.loadEntity("assets\\models\\backpack\\backpack.obj");
 
-    entity.setComponent<ren::components::Transform>(ren::components::Transform());
+    entity.setComponent<ren::ecs::components::Transform>(ren::ecs::components::Transform());
     setShader(entity, assetManager.loadShader("assets\\shaders\\backpack\\backpack.vert", "assets\\shaders\\backpack\\backpack.frag"));
 
     auto& sceneHierarchy = scene.getHierarchy();
     sceneHierarchy.add(entity);
+
+    ren::renderer::Renderer  renderer;
+    renderer.setRenderTarget(window.getGLFWwindow());
 
     float lastFrame = static_cast<float>(glfwGetTime());
     while(window.isOpen()) {
@@ -27,26 +28,26 @@ int main()
         float delta = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        auto& t = sceneHierarchy.getComponent<ren::components::Transform>(entity.getId()).value().get();
+        auto& t = sceneHierarchy.getComponent<ren::ecs::components::Transform>(entity.getId()).value().get();
         t.rotate(30 * delta, glm::vec3(0.0f, 1.0f, 0.0f));
 
-        window.render(scene);
+        renderer.render(scene);
     }
 
     return 0;    
 }
 
-void setShader(ren::Entity& entity, ren::components::shaders::Shader& shader)
+void setShader(ren::ecs::entities::Entity& entity, ren::ecs::components::shaders::Shader& shader)
 {
-    if(entity.has<ren::components::MeshRenderer>())
+    if(entity.has<ren::ecs::components::MeshRenderer>())
     {
-        auto& mr = entity.getComponent<ren::components::MeshRenderer>().value().get();
+        auto& mr = entity.getComponent<ren::ecs::components::MeshRenderer>().value().get();
         mr.setShader(shader);
     }
 
-    if(entity.has<ren::components::Hierarchy>())
+    if(entity.has<ren::ecs::components::Hierarchy>())
     {
-        auto& h = entity.getComponent<ren::components::Hierarchy>().value().get();
+        auto& h = entity.getComponent<ren::ecs::components::Hierarchy>().value().get();
         std::vector<std::string> children = h.getChildren();
 
         for(const auto& childId : children)

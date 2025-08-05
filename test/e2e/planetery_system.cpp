@@ -2,8 +2,7 @@
 #include <ren/assets.hpp>
 #include <ren/ecs.hpp>
 #include <ren/renderer.hpp>
-#include <ren/io/devices/Mouse.hpp>
-#include <ren/io/devices/Keyboard.hpp>
+#include <ren/io.hpp>
 
 //Scene
 ren::core::Scene CreateSystem();

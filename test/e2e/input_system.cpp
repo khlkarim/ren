@@ -1,9 +1,8 @@
 #include <ren/core.hpp>
 #include <ren/assets.hpp>
 #include <ren/ecs.hpp>
+#include <ren/io.hpp>
 #include <ren/renderer.hpp>
-#include <ren/io/devices/Mouse.hpp>
-#include <ren/io/devices/Keyboard.hpp>
 
 int main()
 {

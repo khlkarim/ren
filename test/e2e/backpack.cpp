@@ -13,7 +13,7 @@ int main()
     ren::assets::AssetManager assetManager;
     auto entity = assetManager.loadEntity("assets\\models\\backpack\\backpack.obj");
 
-    entity.setComponent<ren::ecs::components::Transform>(ren::ecs::components::Transform());
+    entity.getComponentManager().set<ren::ecs::components::Transform>(ren::ecs::components::Transform());
     setShader(entity, assetManager.loadShader("assets\\shaders\\backpack\\backpack.vert", "assets\\shaders\\backpack\\backpack.frag"));
 
     auto& sceneHierarchy = scene.getEntityManager();
@@ -39,15 +39,15 @@ int main()
 
 void setShader(ren::ecs::entities::Entity& entity, ren::ecs::components::shaders::Shader& shader)
 {
-    if(entity.has<ren::ecs::components::MeshRenderer>())
+    if(entity.getComponentManager().has<ren::ecs::components::MeshRenderer>())
     {
-        auto& mr = entity.getComponent<ren::ecs::components::MeshRenderer>().value().get();
+        auto& mr = entity.getComponentManager().get<ren::ecs::components::MeshRenderer>().value().get();
         mr.setShader(shader);
     }
 
-    if(entity.has<ren::ecs::components::Hierarchy>())
+    if(entity.getComponentManager().has<ren::ecs::components::Hierarchy>())
     {
-        auto& h = entity.getComponent<ren::ecs::components::Hierarchy>().value().get();
+        auto& h = entity.getComponentManager().get<ren::ecs::components::Hierarchy>().value().get();
         std::vector<std::string> children = h.getChildren();
 
         for(const auto& childId : children)

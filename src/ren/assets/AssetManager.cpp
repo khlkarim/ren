@@ -140,7 +140,7 @@ Entity AssetManager::loadEntity(const std::string& path)
     }
     
     Entity entity(scene->mRootNode->mName.C_Str());
-    entity.setComponent<Hierarchy>(Hierarchy());
+    entity.getComponentManager().set<Hierarchy>(Hierarchy());
     spdlog::info("Created Entity with id: {}", scene->mRootNode->mName.C_Str());
 
     const std::string directory = path.substr(0, path.find_last_of('\\')) + '\\';
@@ -151,7 +151,7 @@ Entity AssetManager::loadEntity(const std::string& path)
 
 void AssetManager::processNode(Entity& entity, const std::string& directory, const aiScene* scene, aiNode* node)
 {
-    auto& hierarchy = entity.getComponent<Hierarchy>().value().get();
+    auto& hierarchy = entity.getComponentManager().get<Hierarchy>().value().get();
 
     for(unsigned int i = 0; i < node->mNumMeshes; i++)
     {
@@ -168,7 +168,7 @@ void AssetManager::processNode(Entity& entity, const std::string& directory, con
     for(unsigned int i = 0; i < node->mNumChildren; i++)
     {
         Entity child(node->mChildren[i]->mName.C_Str());
-        child.setComponent<Hierarchy>(Hierarchy());
+        child.getComponentManager().set<Hierarchy>(Hierarchy());
         spdlog::info("Created Entity with id: {}", node->mChildren[i]->mName.C_Str());
 
         processNode(child, directory, scene, node->mChildren[i]);
@@ -236,8 +236,8 @@ void AssetManager::processMesh(Entity& entity, const std::string& directory, con
     std::vector<Texture> heightMaps = loadMaterialTextures(directory, "texture_height", material, aiTextureType_AMBIENT);
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
     
-    entity.setComponent<Mesh>(Mesh(vertices, indices));
-    entity.setComponent<MeshRenderer>(MeshRenderer(
+    entity.getComponentManager().set<Mesh>(Mesh(vertices, indices));
+    entity.getComponentManager().set<MeshRenderer>(MeshRenderer(
         this->loadShader("assets\\shaders\\default\\default.vert", "assets\\shaders\\default\\default.frag"), 
         textures
     ));

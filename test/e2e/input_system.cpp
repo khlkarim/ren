@@ -16,14 +16,14 @@ int main()
     ren::core::Scene scene;
 
     ren::ecs::entities::Entity cube;
-    cube.setComponent<ren::ecs::components::Transform>(ren::ecs::components::Transform());
-    cube.setComponent<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Cube());
-    cube.setComponent<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
+    cube.getComponentManager().set<ren::ecs::components::Transform>(ren::ecs::components::Transform());
+    cube.getComponentManager().set<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Cube());
+    cube.getComponentManager().set<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
 
     auto& hierarchy = scene.getEntityManager();
     cube.setId("cube-1");
     hierarchy.add(cube);
-    cube.getComponent<ren::ecs::components::Transform>().value().get().setPosition(glm::vec3(0.0f, 0.0f, 12.0f));
+    cube.getComponentManager().get<ren::ecs::components::Transform>().value().get().setPosition(glm::vec3(0.0f, 0.0f, 12.0f));
     cube.setId("cube-2");
     hierarchy.add(cube);
     

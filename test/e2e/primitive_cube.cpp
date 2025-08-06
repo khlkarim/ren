@@ -18,10 +18,10 @@ int main()
     ren::ecs::components::Hierarchy hierarchy;
     ren::ecs::components::MeshRenderer meshRenderer(shader, {});
     
-    player.setComponent<ren::ecs::components::Mesh>(cube);
-    player.setComponent<ren::ecs::components::Transform>(transform);
-    player.setComponent<ren::ecs::components::MeshRenderer>(meshRenderer);
-    player.setComponent<ren::ecs::components::Hierarchy>(hierarchy);
+    player.getComponentManager().set<ren::ecs::components::Mesh>(cube);
+    player.getComponentManager().set<ren::ecs::components::Transform>(transform);
+    player.getComponentManager().set<ren::ecs::components::MeshRenderer>(meshRenderer);
+    player.getComponentManager().set<ren::ecs::components::Hierarchy>(hierarchy);
     
     player.setId("player1");
     scene.getEntityManager().add(player);

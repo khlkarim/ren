@@ -46,7 +46,7 @@ void ren::ecs::components::Hierarchy::setComponent(const std::string& id, const 
     }
     else
     {
-        this->children[id].setComponent(component);
+        this->children[id].getComponentManager().set(component);
     }
 }
 
@@ -60,7 +60,7 @@ std::optional<std::reference_wrapper<T>> ren::ecs::components::Hierarchy::getCom
     }
     else 
     {
-        return this->children[id].getComponent<T>();
+        return this->children[id].getComponentManager().get<T>();
     }
 }
 

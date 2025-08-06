@@ -59,12 +59,12 @@ ren::core::Scene CreateSystem()
     );
     
     ren::ecs::entities::Entity planet;
-    planet.setComponent<ren::ecs::components::Transform>(ren::ecs::components::Transform());
-    planet.setComponent<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Sphere());
+    planet.getComponentManager().set<ren::ecs::components::Transform>(ren::ecs::components::Transform());
+    planet.getComponentManager().set<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Sphere());
 
     std::vector<Planet> planets = getPlanets();
     
-    auto& t = planet.getComponent<ren::ecs::components::Transform>().value().get();
+    auto& t = planet.getComponentManager().get<ren::ecs::components::Transform>().value().get();
 
     ren::ecs::components::shaders::Texture earthTexture;
     earthTexture.type = "texture_diffuse";
@@ -73,7 +73,7 @@ ren::core::Scene CreateSystem()
     {
         earthTexture.path = "assets\\textures\\planetary_system\\" + p.name + ".jpg";
         earthTexture.id = assetManager.loadTextureFromImage(earthTexture.path);
-        planet.setComponent<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {earthTexture}));
+        planet.getComponentManager().set<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {earthTexture}));
         t.setPosition(p.initPos);
     
         planet.setId(p.name);
@@ -139,7 +139,7 @@ std::vector<Planet> getPlanets()
 
 void updatePlanet(ren::ecs::entities::Entity& instance, const Planet& planet, const float dt)
 {
-    auto& t = instance.getComponent<ren::ecs::components::Transform>().value().get();
+    auto& t = instance.getComponentManager().get<ren::ecs::components::Transform>().value().get();
     auto position = t.getPosition();
     auto right = glm::normalize(glm::cross(position, glm::vec3(0.0f, 1.0f, 0.0f)));
 

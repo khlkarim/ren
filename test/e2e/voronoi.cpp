@@ -28,8 +28,8 @@ int main()
     auto shader = assetManager.loadShader("assets\\shaders\\voronoi\\voronoi.vert", "assets\\shaders\\voronoi\\voronoi.frag");
 
     ren::ecs::entities::Entity plane("plane");
-    plane.setComponent<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Quad(10, 5, 250, 250));
-    plane.setComponent<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
+    plane.getComponentManager().set<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Quad(10, 5, 250, 250));
+    plane.getComponentManager().set<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
 
     auto& sceneH = scene.getEntityManager();
     sceneH.add(plane);

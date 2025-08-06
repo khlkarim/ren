@@ -15,8 +15,8 @@ int main()
     );
 
     ren::ecs::entities::Entity ball("ball");
-    ball.setComponent<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Sphere());
-    ball.setComponent<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
+    ball.getComponentManager().set<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Sphere());
+    ball.getComponentManager().set<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
 
     auto& h = scene.getEntityManager();
     h.add(ball);

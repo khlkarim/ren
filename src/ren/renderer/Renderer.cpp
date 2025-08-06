@@ -41,16 +41,16 @@ void Renderer::render(
 ) const {
     glm::mat4 currModel = model;
 
-    if(entity.has<ren::ecs::components::Transform>())
+    if(entity.getComponentManager().has<ren::ecs::components::Transform>())
     {
-        auto& transform = entity.getComponent<ren::ecs::components::Transform>().value().get();
+        auto& transform = entity.getComponentManager().get<ren::ecs::components::Transform>().value().get();
         currModel *= transform.getModelMatrix();
     }
 
-    if(entity.has<ren::ecs::components::Mesh, ren::ecs::components::MeshRenderer>()) 
+    if(entity.getComponentManager().has<ren::ecs::components::Mesh, ren::ecs::components::MeshRenderer>()) 
     {
-        auto& mesh = entity.getComponent<ren::ecs::components::Mesh>().value().get();
-        auto& meshRenderer = entity.getComponent<ren::ecs::components::MeshRenderer>().value().get();
+        auto& mesh = entity.getComponentManager().get<ren::ecs::components::Mesh>().value().get();
+        auto& meshRenderer = entity.getComponentManager().get<ren::ecs::components::MeshRenderer>().value().get();
     
         const auto& shader = meshRenderer.getShader();
     
@@ -89,9 +89,9 @@ void Renderer::render(
         glBindVertexArray(0);
     }
 
-    if(entity.has<ren::ecs::components::Hierarchy>())
+    if(entity.getComponentManager().has<ren::ecs::components::Hierarchy>())
     {
-        auto& hierarchy = entity.getComponent<ren::ecs::components::Hierarchy>().value().get();
+        auto& hierarchy = entity.getComponentManager().get<ren::ecs::components::Hierarchy>().value().get();
         std::vector<std::string> entities = hierarchy.getChildren();
 
         for(const auto& entityId : entities)

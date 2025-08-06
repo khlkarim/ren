@@ -27,8 +27,8 @@ int main()
     cube.setId("cube-2");
     hierarchy.add(cube);
     
-    ren::renderer::CameraSystem cameraSystem;
     ren::renderer::Renderer renderer;
+    ren::renderer::CameraSystem cameraSystem;
     renderer.setRenderTarget(window.getGLFWwindow());
 
     double lastTime = glfwGetTime();

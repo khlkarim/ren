@@ -4,7 +4,8 @@
 #include <memory>
 #include "ecs/systems/System.hpp"
 
-namespace ren::systems {
+namespace ren::ecs::systems 
+{
 
 class SystemManager 
 {
@@ -20,21 +21,22 @@ public:
     template<typename T>
     void remove();
 
-    void update(const float dt, core::Scene& scene);
+    void update(const float dt, entities::Entity& entity);
+    void update(const float dt, entities::EntityManager& entityManager);
 
 private:
-    std::vector<std::unique_ptr<systems::System>> systems;
+    std::vector<std::unique_ptr<System>> systems;
 };
 
 }
 
 template<typename T>
-void ren::systems::SystemManager::add() {
+void ren::ecs::systems::SystemManager::add() {
     systems.push_back(std::make_unique<T>());
 }
 
 template<typename T>
-void ren::systems::SystemManager::remove() {
+void ren::ecs::systems::SystemManager::remove() {
     systems.erase(
         std::remove_if(systems.begin(), systems.end(),
             [](const std::unique_ptr<systems::System>& sys) {

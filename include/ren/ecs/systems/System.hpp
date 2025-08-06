@@ -2,15 +2,19 @@
 
 #include <memory>
 
-namespace ren::core { class Scene; }
+namespace ren::ecs::entities { 
+    class Entity; 
+    class EntityManager; 
+}
 
-namespace ren::systems
+namespace ren::ecs::systems
 {
 
 class System
 {
 public:
-    virtual void update(const float dt, core::Scene& scene) = 0;
+    virtual void update(const float dt, entities::Entity& entity) = 0;
+    virtual void update(const float dt, entities::EntityManager& entityManager) = 0;
     virtual std::unique_ptr<System> clone() const = 0;
 };
 

@@ -1,5 +1,5 @@
 #include <glad/glad.h>
-#include <ren/ecs/components/shaders/Shader.hpp>
+#include "ecs/components/shaders/Shader.hpp"
 using ren::ecs::components::shaders::Shader;
 
 unsigned int Shader::getId() const

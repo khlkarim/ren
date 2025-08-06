@@ -7,8 +7,8 @@
 #include <functional>
 #include <unordered_map>
 #include <GLFW/glfw3.h>
-#include <ren/io/events/Event.hpp>
-#include <ren/io/events/mouse/Clicked.hpp>
+#include "io/events/Event.hpp"
+#include "io/events/mouse/Clicked.hpp"
 
 namespace ren::core { class Window; }
 

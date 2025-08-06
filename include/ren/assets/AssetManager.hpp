@@ -4,7 +4,7 @@
 #include <optional>
 #include <glad/glad.h>
 #include <assimp/scene.h>
-#include <ren/ecs/components/shaders/Texture.hpp>
+#include "ecs/components/shaders/Texture.hpp"
 
 namespace ren::ecs::entities { class Entity; }
 namespace ren::ecs::components::shaders { class Shader; }

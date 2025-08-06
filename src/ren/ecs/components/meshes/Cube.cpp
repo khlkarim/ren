@@ -1,5 +1,5 @@
 #include <spdlog/spdlog.h>
-#include <ren/ecs/components/meshes/Cube.hpp>
+#include "ecs/components/meshes/Cube.hpp"
 using ren::ecs::components::meshes::Cube;
 using ren::ecs::components::meshes::Vertex;
 

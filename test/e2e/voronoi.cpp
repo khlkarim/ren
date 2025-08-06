@@ -1,7 +1,7 @@
-#include <ren/core.hpp>
-#include <ren/assets.hpp>
-#include <ren/ecs.hpp>
-#include <ren/renderer.hpp>
+#include "ren/core.hpp"
+#include "ren/assets.hpp"
+#include "ren/ecs.hpp"
+#include "ren/renderer.hpp"
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,7 +31,7 @@ int main()
     plane.setComponent<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Quad(10, 5, 250, 250));
     plane.setComponent<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
 
-    auto& sceneH = scene.getHierarchy();
+    auto& sceneH = scene.getEntityManager();
     sceneH.add(plane);
 
     std::vector<glm::vec3> initColors = generateColors(20);

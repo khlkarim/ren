@@ -1,5 +1,5 @@
 #include <spdlog/spdlog.h>
-#include <ren/io/events/mouse/Moved.hpp>
+#include "io/events/mouse/Moved.hpp"
 using ren::io::events::mouse::Moved;
 
 std::optional<Moved> Moved::poll(GLFWwindow* window)

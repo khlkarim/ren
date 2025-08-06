@@ -1,8 +1,8 @@
-#include <ren/core.hpp>
-#include <ren/assets.hpp>
-#include <ren/ecs.hpp>
-#include <ren/renderer.hpp>
-#include <ren/io.hpp>
+#include "ren/core.hpp"
+#include "ren/assets.hpp"
+#include "ren/ecs.hpp"
+#include "ren/renderer.hpp"
+#include "ren/io.hpp"
 
 //Scene
 ren::core::Scene CreateSystem();
@@ -50,7 +50,7 @@ int main()
 ren::core::Scene CreateSystem()
 {
     ren::core::Scene scene;    
-    auto& hierarchy = scene.getHierarchy();
+    auto& hierarchy = scene.getEntityManager();
 
     ren::assets::AssetManager assetManager;
     auto shader = assetManager.loadShader(
@@ -86,7 +86,7 @@ ren::core::Scene CreateSystem()
 
 void updateSystem(ren::core::Scene& scene, const float dt)
 {
-    auto& hierarchy = scene.getHierarchy();
+    auto& hierarchy = scene.getEntityManager();
     std::vector<Planet> planets = getPlanets();
     
     for(const auto& planet : planets)

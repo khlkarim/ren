@@ -1,7 +1,7 @@
 #include <spdlog/spdlog.h>
-#include <ren/core/Window.hpp>
-#include <ren/io/events/keyboard/KeyInput.hpp>
-#include <ren/io/devices/Keyboard.hpp>
+#include "core/Window.hpp"
+#include "io/events/keyboard/KeyInput.hpp"
+#include "io/devices/Keyboard.hpp"
 using ren::core::Window;
 using ren::io::events::Event;
 using ren::io::devices::Keyboard;

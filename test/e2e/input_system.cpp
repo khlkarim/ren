@@ -1,8 +1,8 @@
-#include <ren/core.hpp>
-#include <ren/assets.hpp>
-#include <ren/ecs.hpp>
-#include <ren/io.hpp>
-#include <ren/renderer.hpp>
+#include "ren/core.hpp"
+#include "ren/assets.hpp"
+#include "ren/ecs.hpp"
+#include "ren/io.hpp"
+#include "ren/renderer.hpp"
 
 int main()
 {
@@ -20,7 +20,7 @@ int main()
     cube.setComponent<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Cube());
     cube.setComponent<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
 
-    auto& hierarchy = scene.getHierarchy();
+    auto& hierarchy = scene.getEntityManager();
     cube.setId("cube-1");
     hierarchy.add(cube);
     cube.getComponent<ren::ecs::components::Transform>().value().get().setPosition(glm::vec3(0.0f, 0.0f, 12.0f));
@@ -38,8 +38,8 @@ int main()
         float deltaTime = static_cast<float>(currentTime - lastTime);
         lastTime = currentTime;
 
-        auto& mr1 = scene.getHierarchy().getComponent<ren::ecs::components::MeshRenderer>("cube-1").value().get();
-        auto& mr2 = scene.getHierarchy().getComponent<ren::ecs::components::MeshRenderer>("cube-2").value().get();
+        auto& mr1 = scene.getEntityManager().getComponent<ren::ecs::components::MeshRenderer>("cube-1").value().get();
+        auto& mr2 = scene.getEntityManager().getComponent<ren::ecs::components::MeshRenderer>("cube-2").value().get();
         
         auto& s1 = mr1.getShader();
         auto& s2 = mr2.getShader();

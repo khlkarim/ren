@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ren/ecs/components/Mesh.hpp>
+#include "ecs/components/Mesh.hpp"
 
 namespace ren::ecs::components::meshes 
 {

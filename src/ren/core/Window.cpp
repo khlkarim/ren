@@ -1,6 +1,6 @@
 #include <spdlog/spdlog.h>
-#include <ren/core/Window.hpp>
-#include <ren/core/Scene.hpp>
+#include "core/Scene.hpp"
+#include "core/Window.hpp"
 
 using ren::core::Window;
 

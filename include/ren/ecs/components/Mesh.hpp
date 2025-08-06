@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include <ren/ecs/components/Component.hpp>
-#include <ren/ecs/components/meshes/Vertex.hpp>
+#include "ecs/components/Component.hpp"
+#include "ecs/components/meshes/Vertex.hpp"
 
 namespace ren::ecs::components
 {

@@ -1,12 +1,11 @@
 #include <spdlog/spdlog.h>
-#include <ren/renderer/Camera.hpp>
-#include <ren/io/devices/Mouse.hpp>
-#include <ren/io/devices/Keyboard.hpp>
-#include <ren/io/events/mouse/Moved.hpp>
-#include <ren/io/events/mouse/Clicked.hpp>
-#include <ren/io/events/keyboard/KeyInput.hpp>
-#include <ren/renderer/Camera.hpp>
-#include <ren/renderer/CameraSystem.hpp>
+#include "io/devices/Mouse.hpp"
+#include "io/devices/Keyboard.hpp"
+#include "io/events/mouse/Moved.hpp"
+#include "io/events/mouse/Clicked.hpp"
+#include "io/events/keyboard/KeyInput.hpp"
+#include "renderer/Camera.hpp"
+#include "renderer/CameraSystem.hpp"
 using ren::renderer::Camera;
 using ren::renderer::CameraSystem;
 

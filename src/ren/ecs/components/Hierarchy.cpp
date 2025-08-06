@@ -1,4 +1,4 @@
-#include <ren/ecs/components/Hierarchy.hpp>
+#include "ecs/components/Hierarchy.hpp"
 using ren::ecs::entities::Entity;
 using ren::ecs::components::Component;
 using ren::ecs::components::Hierarchy;

@@ -1,4 +1,4 @@
-#include <ren/io/events/mouse/Scrolled.hpp>
+#include "io/events/mouse/Scrolled.hpp"
 using ren::io::events::mouse::Scrolled;
 
 std::optional<Scrolled> Scrolled::poll(GLFWwindow* window)

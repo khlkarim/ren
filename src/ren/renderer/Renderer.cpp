@@ -1,15 +1,15 @@
 #include <glad/glad.h>
 
-#include <ren/ecs/components/Mesh.hpp>
-#include <ren/ecs/components/Hierarchy.hpp>
-#include <ren/ecs/components/Transform.hpp>
-#include <ren/ecs/components/MeshRenderer.hpp>
-#include <ren/ecs/components/shaders/Shader.hpp>
+#include "ecs/components/Mesh.hpp"
+#include "ecs/components/Hierarchy.hpp"
+#include "ecs/components/Transform.hpp"
+#include "ecs/components/MeshRenderer.hpp"
+#include "ecs/components/shaders/Shader.hpp"
 
-#include <ren/renderer/Camera.hpp>
-#include <ren/ecs/entities/Entity.hpp>
+#include "renderer/Camera.hpp"
+#include "ecs/entities/Entity.hpp"
 
-#include <ren/renderer/Renderer.hpp>
+#include "renderer/Renderer.hpp"
 using ren::renderer::Renderer;
 using ren::renderer::Camera;
 using ren::ecs::entities::Entity;
@@ -21,8 +21,8 @@ void Renderer::render(const core::Scene& scene) const
     glm::mat4 view = this->camera.getViewMatrix();
     glm::mat4 projection = this->camera.getProjectionMatrix();
     
-    auto& hierarchy = scene.getHierarchy();
-    std::vector<std::string> entities = hierarchy.getChildren();
+    auto& hierarchy = scene.getEntityManager();
+    std::vector<std::string> entities = hierarchy.getEntityIds();
     
     for(const auto& entityId : entities)
     {

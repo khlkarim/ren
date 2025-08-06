@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ren/ecs/components/Component.hpp>
-#include <ren/ecs/components/shaders/Shader.hpp>
-#include <ren/ecs/components/shaders/Texture.hpp>
+#include "ecs/components/Component.hpp"
+#include "ecs/components/shaders/Shader.hpp"
+#include "ecs/components/shaders/Texture.hpp"
 
 namespace ren::ecs::components 
 {

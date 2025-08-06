@@ -1,6 +1,6 @@
-#include <ren/core/Scene.hpp>
+#include "core/Scene.hpp"
 using ren::core::Scene;
-using ren::ecs::components::Hierarchy;
+using ren::ecs::entities::EntityManager;
 
 Scene::Scene()
 {   
@@ -12,18 +12,18 @@ Scene::~Scene()
     spdlog::info("Scene Destructor");
 }
 
-Hierarchy& Scene::getHierarchy()
+EntityManager& Scene::getEntityManager()
 {
-    return this->hierarchy;
+    return this->entityManager;
 }
 
-const Hierarchy& Scene::getHierarchy() const
+const EntityManager& Scene::getEntityManager() const
 {
-    return this->hierarchy;
+    return this->entityManager;
 }
 
-void Scene::setHierarchy(const Hierarchy& hierarchy)
+void Scene::setEntityManager(const EntityManager& entityManager)
 {
-    this->hierarchy = hierarchy;
-    spdlog::info("Hierarchy set");
+    this->entityManager = entityManager;
+    spdlog::info("EntityManager set");
 }

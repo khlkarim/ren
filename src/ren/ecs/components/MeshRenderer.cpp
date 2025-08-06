@@ -1,4 +1,4 @@
-#include <ren/ecs/components/MeshRenderer.hpp>
+#include "ecs/components/MeshRenderer.hpp"
 using ren::ecs::components::Component;
 using ren::ecs::components::MeshRenderer;
 using namespace ren::ecs::components::shaders;

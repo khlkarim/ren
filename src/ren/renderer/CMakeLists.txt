@@ -5,5 +5,5 @@ file(GLOB_RECURSE RENDERER_SOURCES
 
 add_library(renderer STATIC ${RENDERER_SOURCES})
 
-target_include_directories(renderer PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(renderer PUBLIC ${CMAKE_SOURCE_DIR}/include/ren)
 target_link_libraries(renderer PUBLIC core io)

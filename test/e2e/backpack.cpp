@@ -1,7 +1,7 @@
-#include <ren/core.hpp>
-#include <ren/ecs.hpp>
-#include <ren/assets.hpp>
-#include <ren/renderer.hpp>
+#include "ren/core.hpp"
+#include "ren/ecs.hpp"
+#include "ren/assets.hpp"
+#include "ren/renderer.hpp"
 
 void setShader(ren::ecs::entities::Entity& entity, ren::ecs::components::shaders::Shader& shader);
 
@@ -16,7 +16,7 @@ int main()
     entity.setComponent<ren::ecs::components::Transform>(ren::ecs::components::Transform());
     setShader(entity, assetManager.loadShader("assets\\shaders\\backpack\\backpack.vert", "assets\\shaders\\backpack\\backpack.frag"));
 
-    auto& sceneHierarchy = scene.getHierarchy();
+    auto& sceneHierarchy = scene.getEntityManager();
     sceneHierarchy.add(entity);
 
     ren::renderer::Renderer  renderer;

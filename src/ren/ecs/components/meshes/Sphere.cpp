@@ -1,6 +1,6 @@
 #include <glm/glm.hpp>
 #include <spdlog/spdlog.h>
-#include <ren/ecs/components/meshes/Sphere.hpp>
+#include "ecs/components/meshes/Sphere.hpp"
 using ren::ecs::components::meshes::Sphere;
 using ren::ecs::components::meshes::Vertex;
 

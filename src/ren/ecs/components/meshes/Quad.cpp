@@ -1,5 +1,5 @@
 #include <spdlog/spdlog.h>
-#include <ren/ecs/components/meshes/Quad.hpp>
+#include "ecs/components/meshes/Quad.hpp"
 using ren::ecs::components::meshes::Quad;
 using ren::ecs::components::meshes::Vertex;
 

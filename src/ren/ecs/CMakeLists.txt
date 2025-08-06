@@ -5,5 +5,5 @@ file(GLOB_RECURSE ECS_SOURCES
 
 add_library(ecs STATIC ${ECS_SOURCES})
 
-target_include_directories(ecs PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(ecs PUBLIC ${CMAKE_SOURCE_DIR}/include/ren)
 target_link_libraries(ecs PUBLIC glad::glad utils)

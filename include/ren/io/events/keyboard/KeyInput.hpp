@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <ren/io/events/Event.hpp>
+#include "io/events/Event.hpp"
 
 namespace ren::io::events::keyboard
 {

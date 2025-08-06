@@ -1,7 +1,7 @@
-#include <ren/core.hpp>
-#include <ren/assets.hpp>
-#include <ren/ecs.hpp>
-#include <ren/renderer.hpp>
+#include "ren/core.hpp"
+#include "ren/assets.hpp"
+#include "ren/ecs.hpp"
+#include "ren/renderer.hpp"
 
 int main()
 {
@@ -18,7 +18,7 @@ int main()
     ball.setComponent<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Sphere());
     ball.setComponent<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
 
-    auto& h = scene.getHierarchy();
+    auto& h = scene.getEntityManager();
     h.add(ball);
 
     ren::renderer::Renderer renderer;

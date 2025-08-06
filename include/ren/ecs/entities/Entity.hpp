@@ -6,8 +6,8 @@
 #include <optional>
 #include <type_traits>
 #include <spdlog/spdlog.h>
-#include <ren/utils/error_handler.hpp>
-#include <ren/ecs/components/Component.hpp>
+#include "utils/error_handler.hpp"
+#include "ecs/components/Component.hpp"
 
 namespace ren::ecs::entities
 {

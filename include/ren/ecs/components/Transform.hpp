@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
-#include <ren/ecs/components/Component.hpp>
+#include "ecs/components/Component.hpp"
 
 namespace ren::ecs::components 
 {

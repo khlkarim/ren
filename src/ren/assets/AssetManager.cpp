@@ -5,18 +5,18 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
-#include <ren/ecs/components/Mesh.hpp>
-#include <ren/ecs/components/Hierarchy.hpp>
-#include <ren/ecs/components/Transform.hpp>
-#include <ren/ecs/components/MeshRenderer.hpp>
+#include "ecs/components/Mesh.hpp"
+#include "ecs/components/Hierarchy.hpp"
+#include "ecs/components/Transform.hpp"
+#include "ecs/components/MeshRenderer.hpp"
 
-#include <ren/utils/stb_image.h>
-#include <ren/utils/error_handler.hpp>
+#include "utils/stb_image.h"
+#include "utils/error_handler.hpp"
 
-#include <ren/ecs/entities/Entity.hpp>
-#include <ren/ecs/components/shaders/Shader.hpp>
+#include "ecs/entities/Entity.hpp"
+#include "ecs/components/shaders/Shader.hpp"
 
-#include <ren/assets/AssetManager.hpp>
+#include "assets/AssetManager.hpp"
 using ren::assets::AssetManager;
 using ren::ecs::entities::Entity;
 using ren::ecs::components::Mesh;

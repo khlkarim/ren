@@ -4,9 +4,9 @@
 #include <vector>
 #include <optional>
 #include <spdlog/spdlog.h>
-#include <ren/ecs/entities/Entity.hpp>
-#include <ren/utils/error_handler.hpp>
-#include <ren/ecs/components/Component.hpp>
+#include "ecs/entities/Entity.hpp"
+#include "utils/error_handler.hpp"
+#include "ecs/components/Component.hpp"
 
 namespace ren::ecs::components
 {

@@ -1,4 +1,4 @@
-#include <ren/io/events/mouse/Clicked.hpp>
+#include "io/events/mouse/Clicked.hpp"
 using ren::io::events::mouse::Clicked;
 
 std::optional<Clicked> Clicked::poll(GLFWwindow* window)

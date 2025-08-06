@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <memory>
-#include <ren/ecs/systems/System.hpp>
+#include "ecs/systems/System.hpp"
 
 namespace ren::systems {
 

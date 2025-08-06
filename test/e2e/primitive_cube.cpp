@@ -1,7 +1,7 @@
-#include <ren/core.hpp>
-#include <ren/assets.hpp>
-#include <ren/ecs.hpp>
-#include <ren/renderer.hpp>
+#include "ren/core.hpp"
+#include "ren/assets.hpp"
+#include "ren/ecs.hpp"
+#include "ren/renderer.hpp"
 
 int main()
 {
@@ -24,11 +24,11 @@ int main()
     player.setComponent<ren::ecs::components::Hierarchy>(hierarchy);
     
     player.setId("player1");
-    scene.getHierarchy().add(player);
+    scene.getEntityManager().add(player);
 
     float lastFrame = static_cast<float>(glfwGetTime());
 
-    auto& h = scene.getHierarchy().getComponent<ren::ecs::components::Hierarchy>("player1").value().get();
+    auto& h = scene.getEntityManager().getComponent<ren::ecs::components::Hierarchy>("player1").value().get();
     player.setId("player2");
     h.add(player);
 
@@ -40,8 +40,8 @@ int main()
         float delta = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        auto& t1 = scene.getHierarchy().getComponent<ren::ecs::components::Transform>("player1").value().get();
-        auto& mr1 = scene.getHierarchy().getComponent<ren::ecs::components::MeshRenderer>("player1").value().get();
+        auto& t1 = scene.getEntityManager().getComponent<ren::ecs::components::Transform>("player1").value().get();
+        auto& mr1 = scene.getEntityManager().getComponent<ren::ecs::components::MeshRenderer>("player1").value().get();
         auto& s1 = mr1.getShader();
 
         t1.rotate(50 * delta, glm::vec3(1.0f, 0.0f, 1.0f));

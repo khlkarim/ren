@@ -1,9 +1,9 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <ren/core/Scene.hpp>
-#include <ren/core/Window.hpp>
-#include <ren/renderer/Camera.hpp>
+#include "core/Scene.hpp"
+#include "core/Window.hpp"
+#include "renderer/Camera.hpp"
 
 namespace ren::ecs::entities { class Entity; }
 namespace ren::ecs::components { class Hierarchy; }

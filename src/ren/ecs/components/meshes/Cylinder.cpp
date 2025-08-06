@@ -1,6 +1,6 @@
 #include <glm/glm.hpp>
 #include <spdlog/spdlog.h>
-#include <ren/ecs/components/meshes/Cylinder.hpp>
+#include "ecs/components/meshes/Cylinder.hpp"
 using ren::ecs::components::meshes::Cylinder;
 using ren::ecs::components::meshes::Vertex;
 

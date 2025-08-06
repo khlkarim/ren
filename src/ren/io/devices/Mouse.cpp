@@ -1,9 +1,9 @@
-#include <ren/core/Window.hpp>
-#include <ren/io/events/mouse/Moved.hpp>
-#include <ren/io/events/mouse/Clicked.hpp>
-#include <ren/io/events/mouse/Entered.hpp>
-#include <ren/io/events/mouse/Scrolled.hpp>
-#include <ren/io/devices/Mouse.hpp>
+#include "core/Window.hpp"
+#include "io/events/mouse/Moved.hpp"
+#include "io/events/mouse/Clicked.hpp"
+#include "io/events/mouse/Entered.hpp"
+#include "io/events/mouse/Scrolled.hpp"
+#include "io/devices/Mouse.hpp"
 using ren::core::Window;
 using ren::io::events::Event;
 using ren::io::devices::Mouse;

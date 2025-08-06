@@ -1,6 +1,6 @@
 #include <glad/glad.h>
 #include <spdlog/spdlog.h>
-#include <ren/ecs/components/Mesh.hpp>
+#include "ecs/components/Mesh.hpp"
 
 using ren::ecs::components::Mesh;
 using ren::ecs::components::Component;

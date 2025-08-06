@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <ren/ecs/components/Hierarchy.hpp> 
+#include "ecs/entities/EntityManager.hpp"
 
 namespace ren::core
 {
@@ -12,12 +12,12 @@ public:
     Scene();
     virtual ~Scene();
 
-    ecs::components::Hierarchy& getHierarchy();
-    const ecs::components::Hierarchy& getHierarchy() const;
-    void setHierarchy(const ecs::components::Hierarchy& hierarchy);
+    ecs::entities::EntityManager& getEntityManager();
+    const ecs::entities::EntityManager& getEntityManager() const;
+    void setEntityManager(const ecs::entities::EntityManager& EntityManager);
 
 private:
-    ecs::components::Hierarchy hierarchy;
+    ecs::entities::EntityManager entityManager;
 };
 
 }

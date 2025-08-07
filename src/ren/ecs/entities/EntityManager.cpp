@@ -30,7 +30,6 @@ std::optional<std::reference_wrapper<const Entity>> EntityManager::get(const std
 {
     if(this->entities.find(id) == this->entities.end())
     {
-        spdlog::warn("Entity with id: {} does not exist.", id);
         return std::nullopt;
     }
     else

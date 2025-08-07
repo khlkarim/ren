@@ -58,27 +58,49 @@ int main()
 
 void initializeScene(ren::core::Scene& scene)
 {
-    ren::assets::AssetManager assetManager;
-    auto shader = assetManager.loadShader("assets\\shaders\\planetary_system\\planetary.vert", "assets\\shaders\\planetary_system\\planetary.frag");
-    unsigned int textureId = assetManager.loadTextureFromImage("assets\\textures\\planetary_system\\Earth.jpg");
+    std::vector<std::string> faces = {
+        "assets\\textures\\skybox\\sky_36\\pz.png",
+        "assets\\textures\\skybox\\sky_36\\nz.png",
+        "assets\\textures\\skybox\\sky_36\\py.png",
+        "assets\\textures\\skybox\\sky_36\\ny.png",
+        "assets\\textures\\skybox\\sky_36\\nx.png",
+        "assets\\textures\\skybox\\sky_36\\px.png"
+    };
 
-    ren::ecs::components::shaders::Texture texture;
-    texture.id = textureId;
-    texture.path = "assets\\textures\\Earth.jpg";
-    texture.type = "texture_diffuse";
+    ren::assets::AssetManager assetManager;
+    auto ballShader = assetManager.loadShader("assets\\shaders\\planetary_system\\planetary.vert", "assets\\shaders\\planetary_system\\planetary.frag");
+    auto skyboxShader = assetManager.loadShader("assets\\shaders\\skybox\\skybox.vert", "assets\\shaders\\skybox\\skybox.frag");
+    unsigned int cubemapId = assetManager.loadCubemap(faces);
+    unsigned int ballTextureId = assetManager.loadTextureFromImage("assets\\textures\\planetary_system\\Earth.jpg");
+
+    ren::ecs::components::shaders::Texture ballTexture;
+    ballTexture.id = ballTextureId;
+    ballTexture.path = "assets\\textures\\Earth.jpg";
+    ballTexture.type = "texture_diffuse";
+
+    ren::ecs::components::shaders::Texture skyboxTexture;
+    skyboxTexture.id = cubemapId;
+    skyboxTexture.path = "assets\\textures\\skybox\\stars\\";
+    skyboxTexture.type = "texture_cubemap";
 
     auto& entityManager = scene.getEntityManager();
     auto& systemManager = scene.getSystemManager();
 
     ren::ecs::entities::Entity ball("ball");
-    auto& componentManager = ball.getComponentManager();
+    ren::ecs::entities::Entity skybox("skybox");
+    auto& ballComponentManager = ball.getComponentManager();
+    auto& skyboxComponentManager = skybox.getComponentManager();
 
-    componentManager.set(ren::ecs::components::Transform());
-    componentManager.add<ren::physics::components::RigidBody>();
-    componentManager.add<ren::ecs::components::meshes::Sphere>();
-    componentManager.set<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {texture}));
+    ballComponentManager.set(ren::ecs::components::Transform());
+    ballComponentManager.add<ren::physics::components::RigidBody>();
+    ballComponentManager.add<ren::ecs::components::meshes::Sphere>();
+    ballComponentManager.set(ren::ecs::components::MeshRenderer(ballShader, {ballTexture}));
+
+    skyboxComponentManager.add<ren::ecs::components::meshes::Cube>();
+    skyboxComponentManager.set(ren::ecs::components::MeshRenderer(skyboxShader, {skyboxTexture}));
 
     entityManager.add(ball);
+    entityManager.add(skybox);
 
     ren::physics::systems::PhysicsSystem physicsSystem;
     systemManager.set(physicsSystem);

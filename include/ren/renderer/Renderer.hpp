@@ -21,6 +21,11 @@ public:
         const glm::mat4& view = glm::mat4(1.0f),
         const glm::mat4& model = glm::mat4(1.0f)
     ) const;
+    void renderSkybox(
+        const ren::ecs::entities::Entity& skybox,
+        const glm::mat4& projection = glm::mat4(1.0f),
+        const glm::mat4& view = glm::mat4(1.0f)
+    ) const;
 
     Camera& getCamera();
     const Camera& getCamera() const;

@@ -16,6 +16,7 @@ class AssetManager
 {
 public:
     ecs::entities::Entity loadEntity(const std::string& path);
+    unsigned int loadCubemap(const std::vector<std::string>& faces);
     unsigned int loadTextureFromImage(const std::string& path, bool gamma = false);
     ecs::components::shaders::Shader loadShader(const std::string& vertexShader, const std::string& fragShader);
 

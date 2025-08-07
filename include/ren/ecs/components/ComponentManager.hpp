@@ -22,6 +22,9 @@ public:
     ComponentManager& operator=(const ComponentManager& other);    
 
     template<typename T>
+    void add();
+
+    template<typename T>
     void set(const T& component);
 
     template<typename T>
@@ -40,6 +43,29 @@ private:
     std::vector<std::unique_ptr<ren::ecs::components::Component>> components;
 };
 
+}
+
+template<typename T>
+void ren::ecs::components::ComponentManager::add()
+{
+    if(!std::is_base_of<ren::ecs::components::Component, T>::value)
+    {
+        FATAL("{} must derive from Component", typeid(T).name());
+    }
+    
+    for (auto& comp : components)
+    {
+        if (dynamic_cast<T*>(comp.get()))
+        {
+            comp = std::make_unique<T>();
+            spdlog::warn(
+                "Entity already has component of type: {}: Component replaced.", 
+                typeid(T).name()
+            );
+            return;
+        }
+    }
+    components.push_back(std::make_unique<T>());
 }
 
 template<typename T>

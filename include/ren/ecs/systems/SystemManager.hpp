@@ -19,9 +19,11 @@ public:
     void add();
 
     template<typename T>
+    void set(const T& system);
+
+    template<typename T>
     void remove();
 
-    void update(const float dt, entities::Entity& entity);
     void update(const float dt, entities::EntityManager& entityManager);
 
 private:
@@ -33,6 +35,11 @@ private:
 template<typename T>
 void ren::ecs::systems::SystemManager::add() {
     systems.push_back(std::make_unique<T>());
+}
+
+template<typename T>
+void ren::ecs::systems::SystemManager::set(const T& system) {
+    systems.push_back(std::make_unique<T>(system));
 }
 
 template<typename T>

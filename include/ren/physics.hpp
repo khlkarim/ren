@@ -1,0 +1,6 @@
+#include "ren/physics/components/Collider.hpp"
+#include "ren/physics/components/RigidBody.hpp"
+#include "ren/physics/components/colliders/BoxCollider.hpp"
+#include "ren/physics/components/colliders/SphereCollider.hpp"
+#include "ren/physics/components/colliders/MeshCollider.hpp"
+#include "ren/physics/systems/PhysicsSystem.hpp"

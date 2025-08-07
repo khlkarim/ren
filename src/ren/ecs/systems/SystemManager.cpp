@@ -22,14 +22,6 @@ SystemManager& SystemManager::operator=(const SystemManager& other)
     return *this;
 }
 
-void SystemManager::update(const float dt, entities::Entity& entity)
-{
-    for(const auto& system: this->systems)
-    {
-        system->update(dt, entity);
-    }
-}
-
 void SystemManager::update(const float dt, entities::EntityManager& entityManager)
 {
     for(const auto& system: this->systems)

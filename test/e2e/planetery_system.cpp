@@ -50,7 +50,7 @@ int main()
 ren::core::Scene CreateSystem()
 {
     ren::core::Scene scene;    
-    auto& hierarchy = scene.getEntityManager();
+    auto& entityManager = scene.getEntityManager();
 
     ren::assets::AssetManager assetManager;
     auto shader = assetManager.loadShader(
@@ -59,12 +59,14 @@ ren::core::Scene CreateSystem()
     );
     
     ren::ecs::entities::Entity planet;
-    planet.getComponentManager().set<ren::ecs::components::Transform>(ren::ecs::components::Transform());
-    planet.getComponentManager().set<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Sphere());
+    auto& componentManager = planet.getComponentManager();
+
+    componentManager.add<ren::ecs::components::Transform>();
+    componentManager.add<ren::ecs::components::meshes::Sphere>();
 
     std::vector<Planet> planets = getPlanets();
     
-    auto& t = planet.getComponentManager().get<ren::ecs::components::Transform>().value().get();
+    auto& t = componentManager.get<ren::ecs::components::Transform>().value().get();
 
     ren::ecs::components::shaders::Texture earthTexture;
     earthTexture.type = "texture_diffuse";
@@ -73,12 +75,11 @@ ren::core::Scene CreateSystem()
     {
         earthTexture.path = "assets\\textures\\planetary_system\\" + p.name + ".jpg";
         earthTexture.id = assetManager.loadTextureFromImage(earthTexture.path);
-        planet.getComponentManager().set<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {earthTexture}));
+        componentManager.set(ren::ecs::components::MeshRenderer(shader, {earthTexture}));
         t.setPosition(p.initPos);
     
         planet.setId(p.name);
-        hierarchy.add(planet);
-
+        entityManager.add(planet);
     }
 
     return scene;
@@ -86,12 +87,12 @@ ren::core::Scene CreateSystem()
 
 void updateSystem(ren::core::Scene& scene, const float dt)
 {
-    auto& hierarchy = scene.getEntityManager();
+    auto& entityManager = scene.getEntityManager();
     std::vector<Planet> planets = getPlanets();
     
     for(const auto& planet : planets)
     {
-        auto& instance = hierarchy.get(planet.name).value().get();
+        auto& instance = entityManager.get(planet.name).value().get();
         updatePlanet(instance, planet, dt);
     }
 }

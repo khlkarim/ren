@@ -86,3 +86,36 @@ std::vector<unsigned int> Sphere::getIndices(
 
     return indices;
 }
+
+float Sphere::getRadius() const {
+    return radius;
+}
+
+void Sphere::setRadius(float radius) {
+    this->radius = radius;
+    this->vertices = getVertices(radius, segments, rings);
+    this->indices = getIndices(radius, segments, rings);
+    this->reinit();
+}
+
+unsigned int Sphere::getSegments() const {
+    return segments;
+}
+
+void Sphere::setSegments(unsigned int segments) {
+    this->segments = segments;
+    this->vertices = getVertices(radius, segments, rings);
+    this->indices = getIndices(radius, segments, rings);
+    this->reinit();
+}
+
+unsigned int Sphere::getRings() const {
+    return rings;
+}
+
+void Sphere::setRings(unsigned int rings) {
+    this->rings = rings;
+    this->vertices = getVertices(radius, segments, rings);
+    this->indices = getIndices(radius, segments, rings);
+    this->reinit();
+}

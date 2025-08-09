@@ -3,20 +3,8 @@
 #include "ren/ecs.hpp"
 #include "ren/renderer.hpp"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-__declspec(dllexport) int NvOptimusEnablement = 1;
-__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
-
-#ifdef __cplusplus
-}
-#endif
-
 std::vector<glm::vec3> generateColors(const unsigned int count);
 std::vector<glm::vec3> generateControlPoints(const unsigned int gridWidth, const unsigned int gridHeight, const unsigned int count);
-
 std::vector<glm::vec3> interpolate(const std::vector<glm::vec3>& init, const std::vector<glm::vec3>& target, const float p);
 
 int main()
@@ -25,14 +13,19 @@ int main()
     ren::core::Scene scene;
 
     ren::assets::AssetManager assetManager;
-    auto shader = assetManager.loadShader("assets\\shaders\\voronoi\\voronoi.vert", "assets\\shaders\\voronoi\\voronoi.frag");
+    auto shader = assetManager.loadShader(
+        "assets\\shaders\\voronoi\\voronoi.vert", 
+        "assets\\shaders\\voronoi\\voronoi.frag"
+    );
 
     ren::ecs::entities::Entity plane("plane");
-    plane.getComponentManager().set<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Quad(10, 5, 250, 250));
-    plane.getComponentManager().set<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
 
-    auto& sceneH = scene.getEntityManager();
-    sceneH.add(plane);
+    auto& componentManager = plane.getComponentManager();
+    componentManager.set(ren::ecs::components::MeshRenderer(shader, {}));
+    componentManager.set(ren::ecs::components::meshes::Quad(10, 5, 250, 250));
+
+    auto& entityManager = scene.getEntityManager();
+    entityManager.add(plane);
 
     std::vector<glm::vec3> initColors = generateColors(20);
     std::vector<glm::vec3> initPositions = generateControlPoints(10, 10, 20);
@@ -49,7 +42,7 @@ int main()
         float currT = static_cast<float>(glfwGetTime());
         float dt = currT - lastT;
         
-        auto& mr = sceneH.getComponent<ren::ecs::components::MeshRenderer>("plane").value().get();
+        auto& mr = entityManager.getComponent<ren::ecs::components::MeshRenderer>("plane").value().get();
         auto& s = mr.getShader();
         
         s.setVec3Array("vertexColors", interpolate(initColors, targetColors, dt/5.0f));

@@ -13,6 +13,15 @@ public:
         const unsigned int rings = 32
     );
     virtual ~Sphere();
+    
+    float getRadius() const;
+    void setRadius(float radius);
+
+    unsigned int getSegments() const;
+    void setSegments(unsigned int segments);
+
+    unsigned int getRings() const;
+    void setRings(unsigned int rings);
 
     static std::vector<Vertex> getVertices(
         const float radius,

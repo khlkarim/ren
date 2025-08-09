@@ -15,6 +15,16 @@ public:
     );
     virtual ~Cylinder();
 
+    float getRadius() const;
+    float getHeight() const;
+    unsigned int getSegments() const;
+    unsigned int getStacks() const;
+
+    void setRadius(float r);
+    void setHeight(float h);
+    void setSegments(unsigned int s);
+    void setStacks(unsigned int s);
+
     static std::vector<Vertex> getVertices(
         const float radius,
         const float height,

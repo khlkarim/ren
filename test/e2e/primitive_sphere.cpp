@@ -15,11 +15,13 @@ int main()
     );
 
     ren::ecs::entities::Entity ball("ball");
-    ball.getComponentManager().set<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Sphere());
-    ball.getComponentManager().set<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
 
-    auto& h = scene.getEntityManager();
-    h.add(ball);
+    auto& componentManager = ball.getComponentManager();
+    componentManager.add<ren::ecs::components::meshes::Sphere>();
+    componentManager.set(ren::ecs::components::MeshRenderer(shader, {}));
+
+    auto& entityManager = scene.getEntityManager();
+    entityManager.add(ball);
 
     ren::renderer::Renderer renderer;
     renderer.setRenderTarget(window.getGLFWwindow());

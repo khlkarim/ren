@@ -76,6 +76,11 @@ glm::mat4 Transform::getModelMatrix() const
     return model;
 }
 
+glm::mat4 Transform::getRotationMatrix() const
+{
+    return glm::mat4_cast(this->_rotation);
+}
+
 std::unique_ptr<Component> Transform::clone() const {
     return std::make_unique<Transform>(*this);
 }

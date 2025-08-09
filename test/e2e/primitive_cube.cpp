@@ -9,39 +9,39 @@ int main()
     ren::core::Scene scene;
 
     ren::assets::AssetManager assetManager; 
-    ren::ecs::components::shaders::Shader shader = assetManager.loadShader("assets\\shaders\\lighting\\lighting.vert", "assets\\shaders\\lighting\\lighting.frag");
+    auto& shader = assetManager.loadShader(
+        "assets\\shaders\\lighting\\lighting.vert", 
+        "assets\\shaders\\lighting\\lighting.frag"
+    );
 
     ren::ecs::entities::Entity player;
+    auto& componentManager = player.getComponentManager();
     
-    ren::ecs::components::meshes::Cube cube;
-    ren::ecs::components::Transform transform;
-    ren::ecs::components::Hierarchy hierarchy;
-    ren::ecs::components::MeshRenderer meshRenderer(shader, {});
+    componentManager.add<ren::ecs::components::meshes::Cube>();
+    componentManager.add<ren::ecs::components::Transform>();
+    componentManager.add<ren::ecs::components::Hierarchy>();
+    componentManager.set(ren::ecs::components::MeshRenderer(shader, {}));
     
-    player.getComponentManager().set<ren::ecs::components::Mesh>(cube);
-    player.getComponentManager().set<ren::ecs::components::Transform>(transform);
-    player.getComponentManager().set<ren::ecs::components::MeshRenderer>(meshRenderer);
-    player.getComponentManager().set<ren::ecs::components::Hierarchy>(hierarchy);
+    auto& entityManager = scene.getEntityManager();
     
     player.setId("player1");
-    scene.getEntityManager().add(player);
+    entityManager.add(player);
 
-    float lastFrame = static_cast<float>(glfwGetTime());
-
-    auto& h = scene.getEntityManager().getComponent<ren::ecs::components::Hierarchy>("player1").value().get();
+    auto& h = entityManager.getComponent<ren::ecs::components::Hierarchy>("player1").value().get();
     player.setId("player2");
     h.add(player);
-
+    
     ren::renderer::Renderer renderer;
     renderer.setRenderTarget(window.getGLFWwindow());
-
+    
+    float lastFrame = static_cast<float>(glfwGetTime());
     while(window.isOpen()) {
         float currentFrame = static_cast<float>(glfwGetTime());
         float delta = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        auto& t1 = scene.getEntityManager().getComponent<ren::ecs::components::Transform>("player1").value().get();
-        auto& mr1 = scene.getEntityManager().getComponent<ren::ecs::components::MeshRenderer>("player1").value().get();
+        auto& t1 = entityManager.getComponent<ren::ecs::components::Transform>("player1").value().get();
+        auto& mr1 = entityManager.getComponent<ren::ecs::components::MeshRenderer>("player1").value().get();
         auto& s1 = mr1.getShader();
 
         t1.rotate(50 * delta, glm::vec3(1.0f, 0.0f, 1.0f));

@@ -51,26 +51,44 @@ unsigned int Cube::getDepthSegments() const {
 
 void Cube::setWidth(float width) {
     this->width = width;
+    this->vertices = getVertices(width, height, depth, widthSegments, heightSegments, depthSegments);
+    this->indices = getIndices(width, height, depth, widthSegments, heightSegments, depthSegments);
+    reinit();
 }
 
 void Cube::setHeight(float height) {
     this->height = height;
+    this->vertices = getVertices(width, height, depth, widthSegments, heightSegments, depthSegments);
+    this->indices = getIndices(width, height, depth, widthSegments, heightSegments, depthSegments);
+    reinit();
 }
 
 void Cube::setDepth(float depth) {
     this->depth = depth;
+    this->vertices = getVertices(width, height, depth, widthSegments, heightSegments, depthSegments);
+    this->indices = getIndices(width, height, depth, widthSegments, heightSegments, depthSegments);
+    reinit();
 }
 
 void Cube::setWidthSegments(unsigned int widthSegments) {
     this->widthSegments = widthSegments;
+    this->vertices = getVertices(width, height, depth, widthSegments, heightSegments, depthSegments);
+    this->indices = getIndices(width, height, depth, widthSegments, heightSegments, depthSegments);
+    reinit();
 }
 
 void Cube::setHeightSegments(unsigned int heightSegments) {
     this->heightSegments = heightSegments;
+    this->vertices = getVertices(width, height, depth, widthSegments, heightSegments, depthSegments);
+    this->indices = getIndices(width, height, depth, widthSegments, heightSegments, depthSegments);
+    reinit();
 }
 
 void Cube::setDepthSegments(unsigned int depthSegments) {
     this->depthSegments = depthSegments;
+    this->vertices = getVertices(width, height, depth, widthSegments, heightSegments, depthSegments);
+    this->indices = getIndices(width, height, depth, widthSegments, heightSegments, depthSegments);
+    reinit();
 }
 
 std::vector<Vertex> Cube::getVertices(

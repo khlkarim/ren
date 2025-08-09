@@ -10,16 +10,19 @@ class Collider : public ecs::components::Component
 public:
     enum class Type {
         Box,
+        Plane,
         Sphere,
-        Mesh
+        Count
     };
     virtual ~Collider() = default;
     
-    virtual Type getType() const = 0;
+    Type getType() const;
+
     const bool getIsTrigger() const;
     void setIsTrigger(bool isTrigger);
 
 protected:
+    Type type;
     bool isTrigger = false;
 };
 

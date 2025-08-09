@@ -1,60 +1,95 @@
 #include <vector>
 #include <string>
-#include <unordered_set>
+
 #include "ecs/entities/EntityManager.hpp"
+#include "ecs/components/Transform.hpp"
 #include "physics/components/Collider.hpp"
+#include "physics/components/RigidBody.hpp"
+#include "physics/systems/dynamics/Solver.hpp"
+#include "physics/systems/collision/ManifoldPoints.hpp"
+#include "physics/systems/collision/resolution/Solver.hpp"
+#include "physics/systems/collision/detection/dispatchTable.hpp"
 #include "physics/systems/PhysicsSystem.hpp"
-using ren::ecs::systems::System;
-using ren::ecs::components::Transform;
-using ren::physics::systems::PhysicsSystem;
-using ren::physics::components::Collider;
-using ren::physics::components::RigidBody;
+
+namespace ren {
+namespace physics {
+namespace systems {
 
 void PhysicsSystem::update(const float dt, ecs::entities::EntityManager& entityManager)
 {
-    std::vector<std::string> entitiesWithCollider = entityManager.getEntitiesWith<Collider>();
-    std::vector<std::string> entitiesWithRigidbody = entityManager.getEntitiesWith<RigidBody>();
+    handleCollisions(dt, entityManager);
+    updateDynamics(dt, entityManager);
+}
 
-    std::unordered_set<std::string> entitySet(entitiesWithCollider.begin(), entitiesWithCollider.end());
-    entitySet.insert(entitiesWithRigidbody.begin(), entitiesWithRigidbody.end());
-    std::vector<std::string> entities(entitySet.begin(), entitySet.end());
+void PhysicsSystem::handleCollisions(const float dt, ecs::entities::EntityManager& entityManager)
+{
+    collision::resolution::Solver collisionSolver;
+    std::vector<std::string> entitiesWithCollider = entityManager.getEntitiesWith<components::Collider>();
 
-    for(const auto& entityId : entitiesWithRigidbody)
+    for(size_t i = 0; i < entitiesWithCollider.size(); i++)
     {
-        auto& transform = entityManager.getComponent<Transform>(entityId).value().get();
-        auto& rigidBody = entityManager.getComponent<RigidBody>(entityId).value().get();
+        for(size_t j = i + 1; j < entitiesWithCollider.size(); j++)
+        {
+            auto& e1 = entityManager.get(entitiesWithCollider[i]).value().get();
+            auto& e2 = entityManager.get(entitiesWithCollider[j]).value().get();
 
-        this->apply(dt, rigidBody, transform);
+            auto& cm1 = e1.getComponentManager();
+            auto& cm2 = e2.getComponentManager();
+
+            using ecs::components::Transform;
+            using components::Collider;
+            using components::RigidBody;
+
+            if (!cm1.has<Transform, Collider>() || !cm2.has<Transform, Collider>()) {
+                continue;
+            }
+
+            auto& c1 = cm1.get<Collider>().value().get();
+            auto& c2 = cm2.get<Collider>().value().get();
+            auto& t1 = cm1.get<Transform>().value().get();
+            auto& t2 = cm2.get<Transform>().value().get();
+
+            auto& manifoldPointsOpt = collision::detection::dispatchTable
+                [static_cast<int>(c1.getType())]
+                [static_cast<int>(c2.getType())]
+                (c1, t1, c2, t2);
+
+            if(manifoldPointsOpt && cm1.has<RigidBody>() && cm2.has<RigidBody>())
+            {
+                auto& r1 = cm1.get<RigidBody>().value().get();
+                auto& r2 = cm2.get<RigidBody>().value().get();
+
+                collisionSolver.solve(dt, r1, r2, manifoldPointsOpt.value());
+            }
+        }
     }
 }
 
-std::unique_ptr<System> PhysicsSystem::clone() const
+void PhysicsSystem::updateDynamics(const float dt, ecs::entities::EntityManager& entityManager)
+{
+    dynamics::Solver dynamicsSolver;
+    std::vector<std::string> entitiesWithRigidbody = 
+        entityManager.getEntitiesWith<components::RigidBody>();
+
+    for(const auto& entityId : entitiesWithRigidbody)
+    {
+        auto transformOpt = entityManager.getComponent<ecs::components::Transform>(entityId);
+        auto rigidBodyOpt = entityManager.getComponent<components::RigidBody>(entityId);
+        
+        if (transformOpt && rigidBodyOpt) {
+            auto& transform = transformOpt.value().get();
+            auto& rigidBody = rigidBodyOpt.value().get();
+            
+            dynamicsSolver.solve(dt, rigidBody, transform);
+        }
+    }
+}
+
+std::unique_ptr<ecs::systems::System> PhysicsSystem::clone() const
 {
     return std::make_unique<PhysicsSystem>(*this);
 }
 
-void PhysicsSystem::apply(const float dt, RigidBody& rigidBody, Transform& transform)
-{
-    if (rigidBody.getType() != RigidBody::Type::Dynamic || rigidBody.getMass() <= 0.0f)
-        return;
-
-    glm::vec3 velocity = rigidBody.getVelocity();
-    velocity += (dt * rigidBody.getForce()) / rigidBody.getMass();
-    rigidBody.setVelocity(velocity);
-
-    glm::vec3 angularVelocity = rigidBody.getAngularVelocity();
-    angularVelocity += (dt * rigidBody.getTorque()) / rigidBody.getInertia();
-    rigidBody.setAngularVelocity(angularVelocity);
-
-    rigidBody.clearForces();
-    rigidBody.clearTorques();
-
-    glm::vec3 position = transform.getPosition();
-    transform.setPosition(position + dt * velocity);
-
-    glm::quat rotation = transform.getRotation();
-    glm::quat omega(0.0f, angularVelocity);
-    glm::quat dq = 0.5f * omega * rotation;
-    rotation += dq * dt;
-    transform.setRotation(glm::normalize(rotation));
+}
+}
 }

@@ -13,11 +13,16 @@ int main()
     ren::assets::AssetManager assetManager;
     auto entity = assetManager.loadEntity("assets\\models\\backpack\\backpack.obj");
 
-    entity.getComponentManager().set<ren::ecs::components::Transform>(ren::ecs::components::Transform());
-    setShader(entity, assetManager.loadShader("assets\\shaders\\backpack\\backpack.vert", "assets\\shaders\\backpack\\backpack.frag"));
+    auto& componentManager = entity.getComponentManager();
+    componentManager.add<ren::ecs::components::Transform>();
+    
+    setShader(entity, assetManager.loadShader(
+        "assets\\shaders\\backpack\\backpack.vert", 
+        "assets\\shaders\\backpack\\backpack.frag"
+    ));
 
-    auto& sceneHierarchy = scene.getEntityManager();
-    sceneHierarchy.add(entity);
+    auto& entityManager = scene.getEntityManager();
+    entityManager.add(entity);
 
     ren::renderer::Renderer  renderer;
     renderer.setRenderTarget(window.getGLFWwindow());
@@ -28,7 +33,7 @@ int main()
         float delta = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        auto& t = sceneHierarchy.getComponent<ren::ecs::components::Transform>(entity.getId()).value().get();
+        auto& t = entityManager.getComponent<ren::ecs::components::Transform>(entity.getId()).value().get();
         t.rotate(30 * delta, glm::vec3(0.0f, 1.0f, 0.0f));
 
         renderer.render(scene);
@@ -39,15 +44,17 @@ int main()
 
 void setShader(ren::ecs::entities::Entity& entity, ren::ecs::components::shaders::Shader& shader)
 {
-    if(entity.getComponentManager().has<ren::ecs::components::MeshRenderer>())
+    auto& componentManager = entity.getComponentManager();
+
+    if(componentManager.has<ren::ecs::components::MeshRenderer>())
     {
-        auto& mr = entity.getComponentManager().get<ren::ecs::components::MeshRenderer>().value().get();
+        auto& mr = componentManager.get<ren::ecs::components::MeshRenderer>().value().get();
         mr.setShader(shader);
     }
 
-    if(entity.getComponentManager().has<ren::ecs::components::Hierarchy>())
+    if(componentManager.has<ren::ecs::components::Hierarchy>())
     {
-        auto& h = entity.getComponentManager().get<ren::ecs::components::Hierarchy>().value().get();
+        auto& h = componentManager.get<ren::ecs::components::Hierarchy>().value().get();
         std::vector<std::string> children = h.getChildren();
 
         for(const auto& childId : children)

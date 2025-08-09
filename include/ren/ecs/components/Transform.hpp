@@ -27,6 +27,7 @@ public:
     const glm::vec3& getScale() const;
 
     glm::mat4 getModelMatrix() const;
+    glm::mat4 getRotationMatrix() const;
 
     std::unique_ptr<Component> clone() const override;
 

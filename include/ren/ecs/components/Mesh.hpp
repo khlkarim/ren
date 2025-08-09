@@ -27,11 +27,11 @@ public:
     
     std::unique_ptr<Component> clone() const override;
 
-private:
+protected:
     void init();
     void reinit();
 
-private:
+protected:
     unsigned int VAO, VBO, EBO;
     std::vector<meshes::Vertex> vertices;
     std::vector<unsigned int> indices;

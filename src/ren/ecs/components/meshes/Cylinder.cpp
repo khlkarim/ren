@@ -89,3 +89,47 @@ std::vector<unsigned int> Cylinder::getIndices(
 
     return indices;
 }
+
+float Cylinder::getRadius() const {
+    return radius;
+}
+
+float Cylinder::getHeight() const {
+    return height;
+}
+
+unsigned int Cylinder::getSegments() const {
+    return segments;
+}
+
+unsigned int Cylinder::getStacks() const {
+    return stacks;
+}
+
+void Cylinder::setRadius(float r) {
+    radius = r;
+    vertices = getVertices(radius, height, segments, stacks);
+    indices = getIndices(radius, height, segments, stacks);
+    reinit();
+}
+
+void Cylinder::setHeight(float h) {
+    height = h;
+    vertices = getVertices(radius, height, segments, stacks);
+    indices = getIndices(radius, height, segments, stacks);
+    reinit();
+}
+
+void Cylinder::setSegments(unsigned int s) {
+    segments = s;
+    vertices = getVertices(radius, height, segments, stacks);
+    indices = getIndices(radius, height, segments, stacks);
+    reinit();
+}
+
+void Cylinder::setStacks(unsigned int s) {
+    stacks = s;
+    vertices = getVertices(radius, height, segments, stacks);
+    indices = getIndices(radius, height, segments, stacks);
+    reinit();
+}

@@ -40,18 +40,30 @@ unsigned int Quad::getHeightSegments() const {
 
 void Quad::setWidth(float width) {
     this->width = width;
+    this->vertices = getVertices(width, height, widthSegments, heightSegments);
+    this->indices = getIndices(width, height, widthSegments, heightSegments);
+    reinit();
 }
 
 void Quad::setHeight(float height) {
     this->height = height;
+    this->vertices = getVertices(width, height, widthSegments, heightSegments);
+    this->indices = getIndices(width, height, widthSegments, heightSegments);
+    reinit();
 }
 
 void Quad::setWidthSegments(unsigned int widthSegments) {
     this->widthSegments = widthSegments;
+    this->vertices = getVertices(width, height, widthSegments, heightSegments);
+    this->indices = getIndices(width, height, widthSegments, heightSegments);
+    reinit();
 }
 
 void Quad::setHeightSegments(unsigned int heightSegments) {
     this->heightSegments = heightSegments;
+    this->vertices = getVertices(width, height, widthSegments, heightSegments);
+    this->indices = getIndices(width, height, widthSegments, heightSegments);
+    reinit();
 }
 
 std::vector<Vertex> Quad::getVertices(

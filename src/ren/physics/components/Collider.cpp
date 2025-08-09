@@ -9,3 +9,7 @@ const bool Collider::getIsTrigger() const {
 void Collider::setIsTrigger(bool isTrigger) {
     this->isTrigger = isTrigger;
 }
+
+Collider::Type Collider::getType() const {
+    return this->type;
+}

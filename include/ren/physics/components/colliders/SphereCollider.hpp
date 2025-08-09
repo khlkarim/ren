@@ -1,7 +1,7 @@
 #pragma once
 
 #include "physics/components/Collider.hpp"
-#include "ecs/components/meshes/Sphere.hpp"
+#include "physics/components/colliders/geometry/Sphere.hpp"
 
 namespace ren::physics::components::colliders
 {
@@ -9,19 +9,16 @@ namespace ren::physics::components::colliders
 class SphereCollider : public Collider
 {
 public:
-    SphereCollider() = default;
-    SphereCollider(const ecs::components::meshes::Sphere& geometry);
+    SphereCollider();
+    SphereCollider(const geometry::Sphere& geometry);
 
-    Type getType() const;
-
-    const ecs::components::meshes::Sphere& getGeometry() const;
-    void setGeometry(const ecs::components::meshes::Sphere& geom);
+    const geometry::Sphere& getGeometry() const;
+    void setGeometry(const geometry::Sphere& geometry);
 
     std::unique_ptr<ecs::components::Component> clone() const;
 
 private:
-    Type type;
-    ecs::components::meshes::Sphere geometry;
+    geometry::Sphere geometry;
 };
 
 }

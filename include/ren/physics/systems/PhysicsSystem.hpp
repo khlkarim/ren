@@ -1,8 +1,6 @@
 #pragma once
 
 #include "ecs/systems/System.hpp"
-#include "ecs/components/Transform.hpp"
-#include "physics/components/RigidBody.hpp"
 
 namespace ren::physics::systems
 {
@@ -14,7 +12,8 @@ public:
     std::unique_ptr<System> clone() const;
 
 private:
-    void apply(const float dt, components::RigidBody& rigidBody, ecs::components::Transform& transform);
+    void handleCollisions(const float dt, ecs::entities::EntityManager& entityManager);
+    void updateDynamics(const float dt, ecs::entities::EntityManager& entityManager);
 };
 
 }

@@ -1,7 +1,13 @@
 #include "physics/components/colliders/SphereCollider.hpp"
 using ren::ecs::components::Component;
-using ren::ecs::components::meshes::Sphere;
 using ren::physics::components::colliders::SphereCollider;
+using ren::physics::components::colliders::geometry::Sphere;
+
+SphereCollider::SphereCollider()
+{
+    this->type = Type::Sphere;
+    this->geometry = Sphere();
+}
 
 SphereCollider::SphereCollider(const Sphere& geometry)
 {

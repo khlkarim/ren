@@ -29,24 +29,12 @@ int main()
     ren::renderer::CameraSystem cameraSystem;
     renderer.setRenderTarget(window.getGLFWwindow());
 
-    auto& entityManager = scene.getEntityManager();
-    auto& rigidBody = entityManager.getComponent<ren::physics::components::RigidBody>("ball").value().get();
-
     float lastFrame = static_cast<float>(glfwGetTime());
     while(window.isOpen())
     {   
         float currentFrame = static_cast<float>(glfwGetTime());
         float deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-
-        static float timeAccumulator = 0.0f;
-        timeAccumulator += deltaTime;
-        if (timeAccumulator >= 1.0f) {
-            int randomIndex = rand() % directions.size();
-            rigidBody.setVelocity(directions[randomIndex]);
-            rigidBody.setAngularVelocity(directions[randomIndex]);
-            timeAccumulator = 0.0f;
-        }
 
         cameraSystem.update(deltaTime, renderer.getCamera());
         scene.update(deltaTime);
@@ -68,9 +56,18 @@ void initializeScene(ren::core::Scene& scene)
     };
 
     ren::assets::AssetManager assetManager;
-    auto ballShader = assetManager.loadShader("assets\\shaders\\planetary_system\\planetary.vert", "assets\\shaders\\planetary_system\\planetary.frag");
-    auto skyboxShader = assetManager.loadShader("assets\\shaders\\skybox\\skybox.vert", "assets\\shaders\\skybox\\skybox.frag");
+
+    auto ballShader = assetManager.loadShader(
+        "assets\\shaders\\planetary_system\\planetary.vert", 
+        "assets\\shaders\\planetary_system\\planetary.frag"
+    );
+    auto skyboxShader = assetManager.loadShader(
+        "assets\\shaders\\skybox\\skybox.vert", 
+        "assets\\shaders\\skybox\\skybox.frag"
+    );
+    
     unsigned int cubemapId = assetManager.loadCubemap(faces);
+    unsigned int sunTextureId = assetManager.loadTextureFromImage("assets\\textures\\planetary_system\\Sun.jpg");
     unsigned int ballTextureId = assetManager.loadTextureFromImage("assets\\textures\\planetary_system\\Earth.jpg");
 
     ren::ecs::components::shaders::Texture ballTexture;
@@ -86,20 +83,39 @@ void initializeScene(ren::core::Scene& scene)
     auto& entityManager = scene.getEntityManager();
     auto& systemManager = scene.getSystemManager();
 
-    ren::ecs::entities::Entity ball("ball");
+    ren::ecs::entities::Entity ball("ball1");
     ren::ecs::entities::Entity skybox("skybox");
-    auto& ballComponentManager = ball.getComponentManager();
-    auto& skyboxComponentManager = skybox.getComponentManager();
+    auto& bcm = ball.getComponentManager();
+    auto& scm = skybox.getComponentManager();
 
-    ballComponentManager.set(ren::ecs::components::Transform());
-    ballComponentManager.add<ren::physics::components::RigidBody>();
-    ballComponentManager.add<ren::ecs::components::meshes::Sphere>();
-    ballComponentManager.set(ren::ecs::components::MeshRenderer(ballShader, {ballTexture}));
+    bcm.set(ren::ecs::components::Transform());
+    bcm.add<ren::physics::components::RigidBody>();
+    bcm.add<ren::ecs::components::meshes::Sphere>();
+    bcm.set(ren::ecs::components::MeshRenderer(ballShader, {ballTexture}));
 
-    skyboxComponentManager.add<ren::ecs::components::meshes::Cube>();
-    skyboxComponentManager.set(ren::ecs::components::MeshRenderer(skyboxShader, {skyboxTexture}));
+    scm.add<ren::ecs::components::meshes::Cube>();
+    scm.set(ren::ecs::components::MeshRenderer(skyboxShader, {skyboxTexture}));
 
+    bcm.get<ren::ecs::components::Transform>().value().get().setPosition(glm::vec3(-10.0f, -0.5f, 0.0f));
+    bcm.add<ren::physics::components::colliders::SphereCollider>();
+    // bcm.get<ren::physics::components::RigidBody>().value().get().setVelocity(glm::vec3(1.0f, 0.0f, 0.0f));
+    bcm.get<ren::physics::components::RigidBody>().value().get().setMass(0.0f);
     entityManager.add(ball);
+
+    ball.setId("ball2");
+    bcm.get<ren::ecs::components::Transform>().value().get().setPosition(glm::vec3(10.0f, 0.0f, 0.0f));
+    // bcm.get<ren::physics::components::RigidBody>().value().get().setVelocity(glm::vec3(-1.0f, 0.0f, 0.0f));
+    entityManager.add(ball);
+
+    ball.setId("ball3");
+    bcm.get<ren::ecs::components::Transform>().value().get().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    bcm.get<ren::physics::components::RigidBody>().value().get().setVelocity(glm::vec3(-5.0f, 0.0f, 0.0f));
+    bcm.get<ren::physics::components::RigidBody>().value().get().setMass(1.0f);
+
+    ballTexture.id = sunTextureId;
+    bcm.get<ren::ecs::components::MeshRenderer>().value().get().setTextures({ballTexture});
+    entityManager.add(ball);
+
     entityManager.add(skybox);
 
     ren::physics::systems::PhysicsSystem physicsSystem;

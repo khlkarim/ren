@@ -313,3 +313,7 @@ use textures and skyboxes
 inputsystem.mouse.rightbutton.is_pressed
 inputsystem.keyboard.key_a.pressed
                           .released
+
+a physcis engine defines the position of entities as a function of time
+entities has physics properties
+entities can interact and have relationships (joints and constraints)

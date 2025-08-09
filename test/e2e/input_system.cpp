@@ -11,21 +11,28 @@ int main()
     ren::io::devices::Keyboard::listen(window);
     
     ren::assets::AssetManager assetManager; 
-    auto shader = assetManager.loadShader("assets\\shaders\\lighting\\lighting.vert", "assets\\shaders\\lighting\\lighting.frag");
+    auto shader = assetManager.loadShader(
+        "assets\\shaders\\lighting\\lighting.vert", 
+        "assets\\shaders\\lighting\\lighting.frag"
+    );
 
     ren::core::Scene scene;
 
     ren::ecs::entities::Entity cube;
-    cube.getComponentManager().set<ren::ecs::components::Transform>(ren::ecs::components::Transform());
-    cube.getComponentManager().set<ren::ecs::components::Mesh>(ren::ecs::components::meshes::Cube());
-    cube.getComponentManager().set<ren::ecs::components::MeshRenderer>(ren::ecs::components::MeshRenderer(shader, {}));
+    auto& componentManager = cube.getComponentManager();
 
-    auto& hierarchy = scene.getEntityManager();
+    componentManager.add<ren::ecs::components::Transform>();
+    componentManager.add<ren::ecs::components::meshes::Cube>();
+    componentManager.set(ren::ecs::components::MeshRenderer(shader, {}));
+
+    auto& entityManager = scene.getEntityManager();
+    
     cube.setId("cube-1");
-    hierarchy.add(cube);
-    cube.getComponentManager().get<ren::ecs::components::Transform>().value().get().setPosition(glm::vec3(0.0f, 0.0f, 12.0f));
+    entityManager.add(cube);
+
+    componentManager.get<ren::ecs::components::Transform>().value().get().setPosition(glm::vec3(0.0f, 0.0f, 12.0f));
     cube.setId("cube-2");
-    hierarchy.add(cube);
+    entityManager.add(cube);
     
     ren::renderer::Renderer renderer;
     ren::renderer::CameraSystem cameraSystem;
@@ -38,8 +45,8 @@ int main()
         float deltaTime = static_cast<float>(currentTime - lastTime);
         lastTime = currentTime;
 
-        auto& mr1 = scene.getEntityManager().getComponent<ren::ecs::components::MeshRenderer>("cube-1").value().get();
-        auto& mr2 = scene.getEntityManager().getComponent<ren::ecs::components::MeshRenderer>("cube-2").value().get();
+        auto& mr1 = entityManager.getComponent<ren::ecs::components::MeshRenderer>("cube-1").value().get();
+        auto& mr2 = entityManager.getComponent<ren::ecs::components::MeshRenderer>("cube-2").value().get();
         
         auto& s1 = mr1.getShader();
         auto& s2 = mr2.getShader();

@@ -1,31 +1,32 @@
 #include "physics/components/colliders/PlaneCollider.hpp"
-using ren::ecs::components::Component;
-using ren::physics::components::colliders::PlaneCollider;
-using ren::physics::components::colliders::geometry::Plane;
+
+namespace ren::physics::components::colliders {
 
 PlaneCollider::PlaneCollider()
+    : m_geometry{}
 {
-    this->type = Type::Plane;
-    this->geometry = Plane();
+    m_type = Type::Plane;
 }
 
-PlaneCollider::PlaneCollider(const Plane& geometry)
+PlaneCollider::PlaneCollider(const geometry::Plane& geometry)
+    : m_geometry{geometry}
 {
-    this->type = Type::Plane;
-    this->geometry = geometry;
+    m_type = Type::Plane;
 }
 
-std::unique_ptr<Component> PlaneCollider::clone() const
+std::unique_ptr<ecs::components::Component> PlaneCollider::clone() const
 {
     return std::make_unique<PlaneCollider>(*this);
 }
 
-const Plane& PlaneCollider::getGeometry() const
+const geometry::Plane& PlaneCollider::getGeometry() const
 {
-    return this->geometry;
+    return m_geometry;
 }
 
-void PlaneCollider::setGeometry(const Plane& geometry)
+void PlaneCollider::setGeometry(const geometry::Plane& geometry)
 {
-    this->geometry = geometry;
+    m_geometry = geometry;
+}
+
 }

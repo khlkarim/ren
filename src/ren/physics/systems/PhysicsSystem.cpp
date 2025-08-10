@@ -11,17 +11,15 @@
 #include "physics/systems/collision/detection/dispatchTable.hpp"
 #include "physics/systems/PhysicsSystem.hpp"
 
-namespace ren {
-namespace physics {
-namespace systems {
+namespace ren::physics::systems {
 
-void PhysicsSystem::update(const float dt, ecs::entities::EntityManager& entityManager)
+void PhysicsSystem::update(float dt, ecs::entities::EntityManager& entityManager)
 {
     handleCollisions(dt, entityManager);
     updateDynamics(dt, entityManager);
 }
 
-void PhysicsSystem::handleCollisions(const float dt, ecs::entities::EntityManager& entityManager)
+void PhysicsSystem::handleCollisions(float dt, ecs::entities::EntityManager& entityManager)
 {
     collision::resolution::Solver collisionSolver;
     std::vector<std::string> entitiesWithCollider = entityManager.getEntitiesWith<components::Collider>();
@@ -65,7 +63,7 @@ void PhysicsSystem::handleCollisions(const float dt, ecs::entities::EntityManage
     }
 }
 
-void PhysicsSystem::updateDynamics(const float dt, ecs::entities::EntityManager& entityManager)
+void PhysicsSystem::updateDynamics(float dt, ecs::entities::EntityManager& entityManager)
 {
     dynamics::Solver dynamicsSolver;
     std::vector<std::string> entitiesWithRigidbody = 
@@ -90,6 +88,4 @@ std::unique_ptr<ecs::systems::System> PhysicsSystem::clone() const
     return std::make_unique<PhysicsSystem>(*this);
 }
 
-}
-}
 }

@@ -11,6 +11,15 @@ namespace ren::physics::components::colliders {
 
 namespace ren::physics::systems::collision::detection::broad {
 
+constexpr float EPSILON = 1e-6f;
+
+// Helper function to create a simple contact manifold
+ManifoldPoints createSingleContactManifold(
+    const glm::vec3& position, 
+    const glm::vec3& normal,
+    float penetration
+);
+
 std::optional<ManifoldPoints> AABB(
     const components::colliders::BoxCollider&,
     const ecs::components::Transform&,

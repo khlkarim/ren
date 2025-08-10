@@ -40,10 +40,10 @@ void Solver::solve(
 
         // Apply impulse
         const glm::vec3 impulse = j * contact.normal;
-        
+
         r1.setVelocity(r1.getVelocity() - r1.getInvMass() * impulse);
         r2.setVelocity(r2.getVelocity() + r2.getInvMass() * impulse);
     }
 }
 
-} // namespace ren::physics::systems::collision::resolution
+} 

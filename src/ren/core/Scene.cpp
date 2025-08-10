@@ -1,51 +1,40 @@
 #include "core/Scene.hpp"
-using ren::core::Scene;
-using ren::ecs::entities::EntityManager;
-using ren::ecs::systems::SystemManager;
 
-Scene::Scene()
-{   
-    spdlog::info("Scene Constructor");
+namespace ren::core {
+
+ecs::entities::EntityManager& Scene::getEntityManager()
+{
+    return m_entityManager;
 }
 
-Scene::~Scene()
+const ecs::entities::EntityManager& Scene::getEntityManager() const
 {
-    spdlog::info("Scene Destructor");
+    return m_entityManager;
 }
 
-EntityManager& Scene::getEntityManager()
+void Scene::setEntityManager(const ecs::entities::EntityManager& entityManager)
 {
-    return this->entityManager;
+    m_entityManager = entityManager;
 }
 
-const EntityManager& Scene::getEntityManager() const
+ecs::systems::SystemManager& Scene::getSystemManager()
 {
-    return this->entityManager;
+    return m_systemManager;
 }
 
-void Scene::setEntityManager(const EntityManager& entityManager)
+const ecs::systems::SystemManager& Scene::getSystemManager() const
 {
-    this->entityManager = entityManager;
-    spdlog::info("EntityManager set");
+    return m_systemManager;
 }
 
-SystemManager& Scene::getSystemManager()
+void Scene::setSystemManager(const ecs::systems::SystemManager& systemManager)
 {
-    return this->systemManager;
-}
-
-const SystemManager& Scene::getSystemManager() const
-{
-    return this->systemManager;
-}
-
-void Scene::setSystemManager(const SystemManager& systemManager)
-{
-    this->systemManager = systemManager;
-    spdlog::info("SystemManager set");
+    m_systemManager = systemManager;
 }
 
 void Scene::update(const float dt)
 {
-    this->systemManager.update(dt, this->entityManager);
+    m_systemManager.update(dt, m_entityManager);
+}
+
 }

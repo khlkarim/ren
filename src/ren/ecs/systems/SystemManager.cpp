@@ -1,11 +1,12 @@
 #include "ecs/systems/SystemManager.hpp"
-using ren::ecs::systems::SystemManager;
+
+namespace ren::ecs::systems {
 
 SystemManager::SystemManager(const SystemManager& other)
 {
-    for(const auto& system: other.systems)
+    for (const auto& system : other.m_systems)
     {
-        this->systems.push_back(system->clone());
+        m_systems.push_back(system->clone());
     }
 }
 
@@ -13,19 +14,21 @@ SystemManager& SystemManager::operator=(const SystemManager& other)
 {
     if (this != &other)
     {
-        this->systems.clear();
-        for (const auto& system : other.systems)
+        m_systems.clear();
+        for (const auto& system : other.m_systems)
         {
-            this->systems.push_back(system->clone());
+            m_systems.push_back(system->clone());
         }
     }
     return *this;
 }
 
-void SystemManager::update(const float dt, entities::EntityManager& entityManager)
+void SystemManager::update(float dt, entities::EntityManager& entityManager)
 {
-    for(const auto& system: this->systems)
+    for (const auto& system : m_systems)
     {
         system->update(dt, entityManager);
     }
+}
+
 }

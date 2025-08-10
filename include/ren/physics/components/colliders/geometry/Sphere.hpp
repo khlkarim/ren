@@ -4,7 +4,7 @@ namespace ren::physics::components::colliders::geometry {
 
 class Sphere {
 public:
-    Sphere(float radius = 1.0f);
+    explicit Sphere(float radius = 1.0f);
 
     float getRadius() const;
     void setRadius(float radius);

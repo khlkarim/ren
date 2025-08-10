@@ -69,4 +69,11 @@ namespace ren::physics::systems::collision::detection {
         /* Sphere*/  { TestSphereBox,        TestSpherePlane,         TestSphereSphere }
     }};
 
+    // Helper function to log collision test errors
+    void LogWrongCollisionTest(
+        const char* testName, 
+        const components::Collider& c1, 
+        const components::Collider& c2
+    );
+
 }

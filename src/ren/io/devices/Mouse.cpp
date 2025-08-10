@@ -30,9 +30,9 @@ Mouse& Mouse::getInstance()
 Mouse& Mouse::listen(const Window& window)
 {   
     if (!instance) {
-        instance = std::move(std::unique_ptr<Mouse>(new Mouse(window.getGLFWwindow())));
+        instance = std::move(std::unique_ptr<Mouse>(new Mouse(window.getGlfwWindow())));
     }
-    set_callbacks(window.getGLFWwindow());
+    set_callbacks(window.getGlfwWindow());
 
     return *instance;
 }

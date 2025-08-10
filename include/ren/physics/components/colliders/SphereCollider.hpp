@@ -10,7 +10,7 @@ class SphereCollider : public Collider
 {
 public:
     SphereCollider();
-    SphereCollider(const geometry::Sphere& geometry);
+    explicit SphereCollider(const geometry::Sphere& geometry);
 
     const geometry::Sphere& getGeometry() const;
     void setGeometry(const geometry::Sphere& geometry);
@@ -18,7 +18,7 @@ public:
     std::unique_ptr<ecs::components::Component> clone() const;
 
 private:
-    geometry::Sphere geometry;
+    geometry::Sphere m_geometry;
 };
 
 }

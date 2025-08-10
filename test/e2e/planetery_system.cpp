@@ -4,101 +4,56 @@
 #include "ren/renderer.hpp"
 #include "ren/io.hpp"
 
-//Scene
-ren::core::Scene CreateSystem();
-void updateSystem(ren::core::Scene& scene, const float dt);
+// Forward declarations
+namespace planetary_system {
 
-//Planet
-struct Planet
-{
+// Planet data structure
+struct Planet {
     std::string name;
-    glm::vec3 initPos;
-    glm::vec3 rotAxis;
-    float absoluteRotSpeed;
-    float relativeRotSpeed;
+    glm::vec3 initial_position;
+    glm::vec3 rotation_axis;
+    float absolute_rotation_speed;
+    float relative_rotation_speed;
 };
-std::vector<Planet> getPlanets();
-void updatePlanet(ren::ecs::entities::Entity& instance, const Planet& planet, const float dt);
 
-int main()
-{
+// Function declarations
+std::vector<Planet> get_planets();
+ren::core::Scene create_system();
+void update_system(ren::core::Scene& scene, float delta_time);
+void update_planet(ren::ecs::entities::Entity& entity, const Planet& planet, float delta_time);
+
+} // namespace planetary_system
+
+int main() {
+    // Window initialization
     ren::core::Window window("Planetary System", 1980, 1080);
     ren::io::devices::Mouse::listen(window);
     ren::io::devices::Keyboard::listen(window);
 
-    ren::core::Scene scene(CreateSystem());
-
+    // Scene and renderer setup
+    ren::core::Scene scene = planetary_system::create_system();
     ren::renderer::Renderer renderer;
-    ren::renderer::CameraSystem cameraSystem;
-    renderer.setRenderTarget(window.getGLFWwindow());
+    ren::renderer::CameraSystem camera_system;
+    renderer.setRenderTarget(window.getGlfwWindow());
 
-    double lastTime = glfwGetTime();
-    while(window.isOpen()) 
-    {
-        double currentTime = glfwGetTime();
-        float deltaTime = static_cast<float>(currentTime - lastTime);
-        lastTime = currentTime;
+    // Main loop
+    double last_time = glfwGetTime();
+    while(window.isOpen()) {
+        double current_time = glfwGetTime();
+        float delta_time = static_cast<float>(current_time - last_time);
+        last_time = current_time;
 
-        updateSystem(scene, deltaTime);
-        cameraSystem.update(deltaTime, renderer.getCamera());
+        planetary_system::update_system(scene, delta_time);
+        camera_system.update(delta_time, renderer.getCamera());
         renderer.render(scene);
     }
 
     return 0;
 }
 
-ren::core::Scene CreateSystem()
-{
-    ren::core::Scene scene;    
-    auto& entityManager = scene.getEntityManager();
+namespace planetary_system {
 
-    ren::assets::AssetManager assetManager;
-    auto shader = assetManager.loadShader(
-        "assets\\shaders\\planetary_system\\planetary.vert", 
-        "assets\\shaders\\planetary_system\\planetary.frag"
-    );
-    
-    ren::ecs::entities::Entity planet;
-    auto& componentManager = planet.getComponentManager();
-
-    componentManager.add<ren::ecs::components::Transform>();
-    componentManager.add<ren::ecs::components::meshes::Sphere>();
-
-    std::vector<Planet> planets = getPlanets();
-    
-    auto& t = componentManager.get<ren::ecs::components::Transform>().value().get();
-
-    ren::ecs::components::shaders::Texture earthTexture;
-    earthTexture.type = "texture_diffuse";
-
-    for(const auto& p : planets)
-    {
-        earthTexture.path = "assets\\textures\\planetary_system\\" + p.name + ".jpg";
-        earthTexture.id = assetManager.loadTextureFromImage(earthTexture.path);
-        componentManager.set(ren::ecs::components::MeshRenderer(shader, {earthTexture}));
-        t.setPosition(p.initPos);
-    
-        planet.setId(p.name);
-        entityManager.add(planet);
-    }
-
-    return scene;
-}
-
-void updateSystem(ren::core::Scene& scene, const float dt)
-{
-    auto& entityManager = scene.getEntityManager();
-    std::vector<Planet> planets = getPlanets();
-    
-    for(const auto& planet : planets)
-    {
-        auto& instance = entityManager.get(planet.name).value().get();
-        updatePlanet(instance, planet, dt);
-    }
-}
-
-std::vector<Planet> getPlanets()
-{
+std::vector<Planet> get_planets() {
     return {
         {
             "Sun",
@@ -122,7 +77,7 @@ std::vector<Planet> getPlanets()
             80.0f
         },
         {
-            "Uranas",
+            "Uranus", // Fixed typo in name
             glm::vec3(6.0f, 0.0f, 6.0f),
             glm::normalize(glm::cross(glm::vec3(6.0f), glm::vec3(1.0f, 0.0f, 0.0f))),
             40.0f,
@@ -138,22 +93,79 @@ std::vector<Planet> getPlanets()
     };
 }
 
-void updatePlanet(ren::ecs::entities::Entity& instance, const Planet& planet, const float dt)
-{
-    auto& t = instance.getComponentManager().get<ren::ecs::components::Transform>().value().get();
-    auto position = t.getPosition();
+ren::core::Scene create_system() {
+    ren::core::Scene scene;    
+    auto& entity_manager = scene.getEntityManager();
+
+    // Load shader
+    ren::assets::AssetManager asset_manager;
+    auto shader = asset_manager.loadShader(
+        "assets\\shaders\\planetary_system\\planetary.vert", 
+        "assets\\shaders\\planetary_system\\planetary.frag"
+    );
+    
+    // Create planet template
+    ren::ecs::entities::Entity planet_template;
+    auto& component_manager = planet_template.getComponentManager();
+    component_manager.add<ren::ecs::components::Transform>();
+    component_manager.add<ren::ecs::components::meshes::Sphere>();
+
+    // Create planet entities
+    std::vector<Planet> planets = get_planets();
+    auto& transform = component_manager.get<ren::ecs::components::Transform>().value().get();
+
+    ren::ecs::components::shaders::Texture texture;
+    texture.type = "texture_diffuse";
+
+    for(const auto& planet_data : planets) {
+        // Set planet texture
+        texture.path = "assets\\textures\\planetary_system\\" + planet_data.name + ".jpg";
+        texture.id = asset_manager.loadTextureFromImage(texture.path);
+        component_manager.set(ren::ecs::components::MeshRenderer(shader, {texture}));
+        
+        // Set initial position
+        transform.setPosition(planet_data.initial_position);
+    
+        // Add entity to scene
+        planet_template.setId(planet_data.name);
+        entity_manager.add(planet_template);
+    }
+
+    return scene;
+}
+
+void update_system(ren::core::Scene& scene, float delta_time) {
+    auto& entity_manager = scene.getEntityManager();
+    std::vector<Planet> planets = get_planets();
+    
+    for(const auto& planet_data : planets) {
+        auto& planet_entity = entity_manager.get(planet_data.name).value().get();
+        update_planet(planet_entity, planet_data, delta_time);
+    }
+}
+
+void update_planet(ren::ecs::entities::Entity& entity, const Planet& planet, float delta_time) {
+    auto& transform = entity.getComponentManager().get<ren::ecs::components::Transform>().value().get();
+    auto position = transform.getPosition();
     auto right = glm::normalize(glm::cross(position, glm::vec3(0.0f, 1.0f, 0.0f)));
 
-    if(position != glm::vec3(0.0f))
-    {
-        t.rotate(planet.relativeRotSpeed * dt, glm::normalize(glm::cross(position, right)));
-    }
-    else
-    {
-        t.rotate(planet.relativeRotSpeed * dt, glm::vec3(0.0f, 1.0f, 0.0f));
+    // Handle planet rotation
+    if(position != glm::vec3(0.0f)) {
+        // Planets orbit around the sun
+        transform.rotate(planet.relative_rotation_speed * delta_time, glm::normalize(glm::cross(position, right)));
+    } else {
+        // Sun rotates around itself
+        transform.rotate(planet.relative_rotation_speed * delta_time, glm::vec3(0.0f, 1.0f, 0.0f));
     }
 
-    glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(planet.absoluteRotSpeed) * dt, planet.rotAxis);
+    // Update planet position in orbit
+    glm::mat4 rotation = glm::rotate(
+        glm::mat4(1.0f), 
+        glm::radians(planet.absolute_rotation_speed) * delta_time, 
+        planet.rotation_axis
+    );
     position = glm::vec3(rotation * glm::vec4(position, 1.0f));
-    t.setPosition(position);
+    transform.setPosition(position);
 }
+
+} // namespace planetary_system

@@ -1,9 +1,10 @@
 #include "renderer/Camera.hpp"
-using ren::renderer::Camera;
+
+namespace ren::renderer {
 
 Camera::Camera(
-    glm::vec3 position,
-    glm::vec3 up,
+    const glm::vec3& position,
+    const glm::vec3& up,
     float yaw,
     float pitch,
     float fov,
@@ -12,95 +13,103 @@ Camera::Camera(
     float farPlane,
     ProjectionType projectionType
 )
-    : position(position),
-      worldUp(up),
-      yaw(yaw),
-      pitch(pitch),
-      fov(fov),
-      aspectRatio(aspectRatio),
-      nearPlane(nearPlane),
-      farPlane(farPlane),
-      projectionType(projectionType)
+    : m_position(position),
+      m_worldUp(up),
+      m_yaw(yaw),
+      m_pitch(pitch),
+      m_fov(fov),
+      m_aspectRatio(aspectRatio),
+      m_nearPlane(nearPlane),
+      m_farPlane(farPlane),
+      m_projectionType(projectionType),
+      m_front(0.0f, 0.0f, -1.0f)
 {
-    front = glm::vec3(0.0f, 0.0f, -1.0f);
     updateCameraVectors();
 }
 
-void Camera::setPosition(const glm::vec3& pos) {
-    position = pos;
+// Position and orientation setters
+void Camera::setPosition(const glm::vec3& position) {
+    m_position = position;
 }
 
-void Camera::setUp(const glm::vec3& upVec) {
-    worldUp = upVec;
+void Camera::setUp(const glm::vec3& up) {
+    m_worldUp = up;
     updateCameraVectors();
 }
 
-void Camera::setYaw(float y) {
-    yaw = y;
+void Camera::setYaw(float yaw) {
+    m_yaw = yaw;
     updateCameraVectors();
 }
 
-void Camera::setPitch(float p) {
-    pitch = glm::clamp(p, -89.0f, 89.0f);
+void Camera::setPitch(float pitch) {
+    m_pitch = glm::clamp(pitch, -89.0f, 89.0f);
     updateCameraVectors();
 }
 
-void Camera::setFOV(float f) {
-    fov = glm::clamp(f, 1.0f, 90.0f);
+// Projection parameters setters
+void Camera::setFov(float fov) {
+    m_fov = glm::clamp(fov, 1.0f, 90.0f);
 }
 
-void Camera::setAspectRatio(float ratio) {
-    aspectRatio = ratio;
+void Camera::setAspectRatio(float aspectRatio) {
+    m_aspectRatio = aspectRatio;
 }
 
-void Camera::setNearPlane(float nearZ) {
-    nearPlane = nearZ;
+void Camera::setNearPlane(float nearPlane) {
+    m_nearPlane = nearPlane;
 }
 
-void Camera::setFarPlane(float farZ) {
-    farPlane = farZ;
+void Camera::setFarPlane(float farPlane) {
+    m_farPlane = farPlane;
 }
 
 void Camera::setProjectionType(ProjectionType type) {
-    projectionType = type;
+    m_projectionType = type;
 }
 
-const glm::vec3& Camera::getPosition() const { return position; }
-const glm::vec3& Camera::getFront() const { return front; }
-const glm::vec3& Camera::getUp() const { return up; }
-const glm::vec3& Camera::getRight() const { return right; }
-const glm::vec3& Camera::getWorldUp() const { return worldUp; }
+// Position and orientation getters
+const glm::vec3& Camera::getPosition() const { return m_position; }
+const glm::vec3& Camera::getFront() const { return m_front; }
+const glm::vec3& Camera::getUp() const { return m_up; }
+const glm::vec3& Camera::getRight() const { return m_right; }
+const glm::vec3& Camera::getWorldUp() const { return m_worldUp; }
+float Camera::getYaw() const { return m_yaw; }
+float Camera::getPitch() const { return m_pitch; }
 
-float Camera::getYaw() const { return yaw; }
-float Camera::getPitch() const { return pitch; }
+// Projection parameters getters
+float Camera::getFov() const { return m_fov; }
+float Camera::getAspectRatio() const { return m_aspectRatio; }
+float Camera::getNearPlane() const { return m_nearPlane; }
+float Camera::getFarPlane() const { return m_farPlane; }
+Camera::ProjectionType Camera::getProjectionType() const { return m_projectionType; }
 
-float Camera::getFOV() const { return fov; }
-float Camera::getAspectRatio() const { return aspectRatio; }
-float Camera::getNearPlane() const { return nearPlane; }
-float Camera::getFarPlane() const { return farPlane; }
-Camera::ProjectionType Camera::getProjectionType() const { return projectionType; }
-
+// Matrix calculations
 glm::mat4 Camera::getViewMatrix() const {
-    return glm::lookAt(position, position + front, up);
+    return glm::lookAt(m_position, m_position + m_front, m_up);
 }
 
 glm::mat4 Camera::getProjectionMatrix() const {
-    if (projectionType == ProjectionType::Perspective) {
-        return glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
+    if (m_projectionType == ProjectionType::Perspective) {
+        return glm::perspective(glm::radians(m_fov), m_aspectRatio, m_nearPlane, m_farPlane);
     } else {
         float orthoHeight = 1.0f;
-        float orthoWidth = orthoHeight * aspectRatio;
-        return glm::ortho(-orthoWidth, orthoWidth, -orthoHeight, orthoHeight, nearPlane, farPlane);
+        float orthoWidth = orthoHeight * m_aspectRatio;
+        return glm::ortho(-orthoWidth, orthoWidth, -orthoHeight, orthoHeight, m_nearPlane, m_farPlane);
     }
 }
 
 void Camera::updateCameraVectors() {
+    // Calculate the new front vector
     glm::vec3 newFront;
-    newFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    newFront.y = sin(glm::radians(pitch));
-    newFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front = glm::normalize(newFront);
+    newFront.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+    newFront.y = sin(glm::radians(m_pitch));
+    newFront.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+    m_front = glm::normalize(newFront);
 
-    right = glm::normalize(glm::cross(front, worldUp));
-    up = glm::normalize(glm::cross(right, front));
+    // Recalculate the right and up vectors
+    m_right = glm::normalize(glm::cross(m_front, m_worldUp));
+    m_up = glm::normalize(glm::cross(m_right, m_front));
 }
+
+} 

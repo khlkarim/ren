@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
 #include <memory>
+#include <vector>
+#include <algorithm>
 #include "ecs/systems/System.hpp"
 
 namespace ren::ecs::systems 
@@ -24,31 +25,31 @@ public:
     template<typename T>
     void remove();
 
-    void update(const float dt, entities::EntityManager& entityManager);
+    void update(float dt, entities::EntityManager& entityManager);
 
 private:
-    std::vector<std::unique_ptr<System>> systems;
+    std::vector<std::unique_ptr<System>> m_systems;
 };
 
+template<typename T>
+void SystemManager::add() {
+    m_systems.push_back(std::make_unique<T>());
 }
 
 template<typename T>
-void ren::ecs::systems::SystemManager::add() {
-    systems.push_back(std::make_unique<T>());
+void SystemManager::set(const T& system) {
+    m_systems.push_back(std::make_unique<T>(system));
 }
 
 template<typename T>
-void ren::ecs::systems::SystemManager::set(const T& system) {
-    systems.push_back(std::make_unique<T>(system));
-}
-
-template<typename T>
-void ren::ecs::systems::SystemManager::remove() {
-    systems.erase(
-        std::remove_if(systems.begin(), systems.end(),
-            [](const std::unique_ptr<systems::System>& sys) {
-                return dynamic_cast<T*>(sys.get()) != nullptr;
+void SystemManager::remove() {
+    m_systems.erase(
+        std::remove_if(m_systems.begin(), m_systems.end(),
+            [](const std::unique_ptr<System>& system) {
+                return dynamic_cast<T*>(system.get()) != nullptr;
             }),
-        systems.end()
+        m_systems.end()
     );
 }
+
+} 

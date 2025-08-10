@@ -1,54 +1,55 @@
 #include "ecs/entities/EntityManager.hpp"
-using ren::ecs::entities::Entity;
-using ren::ecs::entities::EntityManager;
+
+namespace ren::ecs::entities {
 
 void EntityManager::add(const Entity& entity) {
-    if(entity.getId().length() == 0)
-    {
-        spdlog::warn("Entity has an no id.");
+    const std::string& id = entity.getId();
+    
+    if (id.empty()) {
+        spdlog::warn("Entity has no id");
+        return;
     }
-    if (this->entities.find(entity.getId()) != this->entities.end()) {
-        spdlog::warn("Entity with id: {} already existed: Entity replaced.", entity.getId());
+    
+    auto it = m_entities.find(id);
+    if (it != m_entities.end()) {
+        spdlog::warn("Entity with id: {} already existed: Entity replaced", id);
     }
-    this->entities[entity.getId()] = entity;
+    
+    m_entities[id] = entity;
 }
 
-std::optional<std::reference_wrapper<Entity>> EntityManager::get(const std::string& id)
-{
-    if(this->entities.find(id) == this->entities.end())
-    {
-        spdlog::warn("Entity with id: {} does not exist.", id);
+std::optional<std::reference_wrapper<Entity>> EntityManager::get(const std::string& id) {
+    auto it = m_entities.find(id);
+    if (it == m_entities.end()) {
+        spdlog::warn("Entity with id: {} does not exist", id);
         return std::nullopt;
     }
-    else
-    {
-        return this->entities.at(id);
-    }
+    
+    return it->second;
 }
 
-std::optional<std::reference_wrapper<const Entity>> EntityManager::get(const std::string& id) const
-{
-    if(this->entities.find(id) == this->entities.end())
-    {
+std::optional<std::reference_wrapper<const Entity>> EntityManager::get(const std::string& id) const {
+    auto it = m_entities.find(id);
+    if (it == m_entities.end()) {
         return std::nullopt;
     }
-    else
-    {
-        return this->entities.at(id);
-    }
+    
+    return it->second;
 }
 
-std::vector<std::string> EntityManager::getEntityIds() const
-{
+std::vector<std::string> EntityManager::getEntityIds() const {
     std::vector<std::string> keys;
-
-    for (const auto& pair : this->entities) {
-        keys.push_back(pair.first);
+    keys.reserve(m_entities.size());
+    
+    for (const auto& [id, _] : m_entities) {
+        keys.push_back(id);
     }
-
+    
     return keys;
 }
 
 void EntityManager::remove(const std::string& id) {
-    this->entities.erase(id);
+    m_entities.erase(id);
 }
+
+} 

@@ -18,12 +18,12 @@ public:
     
     Type getType() const;
 
-    const bool getIsTrigger() const;
+    bool getIsTrigger() const;
     void setIsTrigger(bool isTrigger);
 
 protected:
-    Type type;
-    bool isTrigger = false;
+    Type m_type;
+    bool m_isTrigger = false;
 };
 
 

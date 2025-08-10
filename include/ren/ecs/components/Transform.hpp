@@ -10,8 +10,11 @@ namespace ren::ecs::components
 class Transform : public Component
 {
 public:
-    Transform();
-    Transform(const glm::vec3& position, const glm::quat& rotation, const glm::vec3& scale);
+    Transform(
+        const glm::vec3& position = glm::vec3(0.0f),
+        const glm::quat& rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f), 
+        const glm::vec3& scale = glm::vec3(1.0f)
+    );
 
     void translate(const glm::vec3& delta);
     void rotate(const glm::quat& delta);
@@ -32,9 +35,9 @@ public:
     std::unique_ptr<Component> clone() const override;
 
 private:
-    glm::vec3 _position;
-    glm::quat _rotation;
-    glm::vec3 _scale;
+    glm::vec3 m_position;
+    glm::quat m_rotation;
+    glm::vec3 m_scale;
 };
 
 }

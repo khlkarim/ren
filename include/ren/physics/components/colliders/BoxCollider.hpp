@@ -10,7 +10,7 @@ class BoxCollider : public Collider
 {
 public:
     BoxCollider();
-    BoxCollider(const geometry::Box& geometry);
+    explicit BoxCollider(const geometry::Box& geometry);
 
     const geometry::Box& getGeometry() const;
     void setGeometry(const geometry::Box& geometry);
@@ -18,7 +18,7 @@ public:
     std::unique_ptr<ecs::components::Component> clone() const;
 
 private:
-    geometry::Box geometry;
+    geometry::Box m_geometry;
 };
 
 }

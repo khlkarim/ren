@@ -1,8 +1,7 @@
 #pragma once
 
-#include <string>
-#include "ecs/entities/EntityManager.hpp"
 #include "ecs/systems/SystemManager.hpp"
+#include "ecs/entities/EntityManager.hpp"
 
 namespace ren::core
 {
@@ -10,22 +9,20 @@ namespace ren::core
 class Scene 
 {
 public:
-    Scene();
-    virtual ~Scene();
-
     ecs::entities::EntityManager& getEntityManager();
     const ecs::entities::EntityManager& getEntityManager() const;
-    void setEntityManager(const ecs::entities::EntityManager& entityManager);
+    void setEntityManager(const ecs::entities::EntityManager& manager);
 
     ecs::systems::SystemManager& getSystemManager();
     const ecs::systems::SystemManager& getSystemManager() const;
-    void setSystemManager(const ecs::systems::SystemManager& systemManager);
+    void setSystemManager(const ecs::systems::SystemManager& manager);
 
-    void update(const float dt);
+    // Update all systems
+    void update(float deltaTime);
 
 private:
-    ecs::entities::EntityManager entityManager;
-    ecs::systems::SystemManager systemManager;
+    ecs::entities::EntityManager m_entityManager;
+    ecs::systems::SystemManager m_systemManager;
 };
 
 }

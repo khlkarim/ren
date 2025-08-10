@@ -6,39 +6,41 @@
 #include "io/events/keyboard/KeyInput.hpp"
 #include "renderer/Camera.hpp"
 #include "renderer/CameraSystem.hpp"
-using ren::renderer::Camera;
-using ren::renderer::CameraSystem;
 
-CameraSystem::CameraSystem()
+namespace ren::renderer {
+
+CameraSystem::CameraSystem() : m_cursorLocked(true)
 {
-    auto& mouse = ren::io::devices::Mouse::getInstance();
-    auto& keyboard = ren::io::devices::Keyboard::getInstance();
+    auto& mouse = io::devices::Mouse::getInstance();
+    auto& keyboard = io::devices::Keyboard::getInstance();
     GLFWwindow* window = mouse.getWindow();
 
-    this->cursorLocked = true;
+    // Initialize cursor state
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    keyboard.on<ren::io::events::keyboard::KeyInput>([window, this](const auto& event)
-        {
-            if(event.key == GLFW_KEY_ESCAPE)
-            {
-                this->cursorLocked = false;
-                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            }
-        });
-    mouse.on<ren::io::events::mouse::Clicked>([window, this](const auto& event)
-        {            
-            if(event.action == GLFW_PRESS)
-            {
-                this->cursorLocked = true;  
-                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            }
-        });
+    
+    // Setup keyboard events
+    keyboard.on<io::events::keyboard::KeyInput>([window, this](const auto& event) {
+        if (event.key == GLFW_KEY_ESCAPE) {
+            m_cursorLocked = false;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+    });
+    
+    // Setup mouse events
+    mouse.on<io::events::mouse::Clicked>([window, this](const auto& event) {            
+        if (event.action == GLFW_PRESS) {
+            m_cursorLocked = true;  
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+    });
 }
 
 void CameraSystem::update(const float dt, Camera& camera)
 {   
-    this->updatePosition(dt, camera);
-    if(this->cursorLocked) this->updateDirection(dt, camera);
+    updatePosition(dt, camera);
+    if (m_cursorLocked) {
+        updateDirection(dt, camera);
+    }
 }
 
 void CameraSystem::updateDirection(const float dt, Camera& camera)
@@ -72,35 +74,42 @@ void CameraSystem::updateDirection(const float dt, Camera& camera)
     camera.setPitch(camera.getPitch() + yoffset);
 }
 
-void CameraSystem::updatePosition(const float dt, Camera& camera)
+void CameraSystem::updatePosition(float dt, Camera& camera)
 {
-    auto& keyboard = ren::io::devices::Keyboard::getInstance();
-
+    auto& keyboard = io::devices::Keyboard::getInstance();
     const float speed = 5.0f;
 
     glm::vec3 position = camera.getPosition();
-    glm::vec3 up = camera.getUp();
-    glm::vec3 front = camera.getFront();
-    glm::vec3 right = camera.getRight();
+    const glm::vec3 up = camera.getUp();
+    const glm::vec3 front = camera.getFront();
+    const glm::vec3 right = camera.getRight();
 
     glm::vec3 moveDir(0.0f);
 
-    if (keyboard.isPressed(GLFW_KEY_W))
+    if (keyboard.isPressed(GLFW_KEY_W)) {
         moveDir += front;
-    if (keyboard.isPressed(GLFW_KEY_S))
+    }
+    if (keyboard.isPressed(GLFW_KEY_S)) {
         moveDir -= front;
-    if (keyboard.isPressed(GLFW_KEY_A))
+    }
+    if (keyboard.isPressed(GLFW_KEY_A)) {
         moveDir -= right;
-    if (keyboard.isPressed(GLFW_KEY_D))
+    }
+    if (keyboard.isPressed(GLFW_KEY_D)) {
         moveDir += right;
-    if (keyboard.isPressed(GLFW_KEY_SPACE))
+    }
+    if (keyboard.isPressed(GLFW_KEY_SPACE)) {
         moveDir += up;
-    if (keyboard.isPressed(GLFW_KEY_LEFT_CONTROL))
+    }
+    if (keyboard.isPressed(GLFW_KEY_LEFT_CONTROL)) {
         moveDir -= up;
+    }
 
-    if (glm::length(moveDir) > 0.0f)
+    if (glm::length(moveDir) > 0.0f) {
         moveDir = glm::normalize(moveDir);
+        position += moveDir * speed * dt;
+        camera.setPosition(position);
+    }
+}
 
-    position += moveDir * speed * dt;
-    camera.setPosition(position);
 }

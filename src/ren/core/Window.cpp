@@ -2,102 +2,126 @@
 #include "core/Scene.hpp"
 #include "core/Window.hpp"
 
-using ren::core::Window;
+namespace ren::core {
 
-Window::Window(const std::string& name, const unsigned int width, const unsigned int height) 
+Window::Window(const std::string& name, unsigned int width, unsigned int height) 
+    : m_name(name)
+    , m_width(width)
+    , m_height(height)
+    , m_window(nullptr)
 {
-    this->name = name;
-    this->width = width;
-    this->height = height;
-
-    spdlog::info("Window Constructor");
-
-    if(!glfwInit()) {
-        spdlog::critical("Failed to initialize GLFW");
-        exit(-1);
-    }
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    spdlog::info("Initialized GLFW");
-    
-    this->_window = glfwCreateWindow(this->width, this->height, this->name.c_str(), NULL, NULL);
-    if(!this->_window) {
-        spdlog::critical("Failed to create window");
-        glfwTerminate();
-        exit(-1);
-    }
-    glfwMakeContextCurrent(this->_window);
-    spdlog::info("Created a window");
-
-    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        spdlog::critical("Failed to initialize glad");
-        glfwDestroyWindow(this->_window);
-        glfwTerminate();
-        exit(-1);
-    }
-    glEnable(GL_DEPTH_TEST);
-    glfwSetFramebufferSizeCallback(this->_window, framebuffer_size_callback);
-    spdlog::info("Initialized glad");
-    spdlog::info("Set framebuffer size callback");
-
-    int framebufferWidth, framebufferHeight;
-    glfwGetFramebufferSize(this->_window, &framebufferWidth, &framebufferHeight);
-    glViewport(0, 0, framebufferWidth, framebufferHeight);   
-    spdlog::info("Set GL viewport");
-
-    glfwSwapInterval(1);
+    initGLFW();
+    createWindow();
+    initGLAD();
+    setupViewport();
 }
 
 Window::~Window() 
 {
-    spdlog::info("Window Destructor");
-
-    if (this->_window) {
-        glfwDestroyWindow(this->_window);
+    if (m_window) {
+        glfwDestroyWindow(m_window);
         spdlog::info("Destroyed window");
     }
     glfwTerminate();
     spdlog::info("Terminated GLFW");
 }
 
-bool Window::isOpen() 
+bool Window::isOpen() const
 {
-    return !glfwWindowShouldClose(this->_window);
+    return !glfwWindowShouldClose(m_window);
 }
 
-unsigned int Window::getWidth() const {
-    return this->width;
+unsigned int Window::getWidth() const 
+{
+    return m_width;
 }
 
-unsigned int Window::getHeight() const {
-    return this->height;
+unsigned int Window::getHeight() const 
+{
+    return m_height;
 }
 
-const std::string& Window::getName() const {
-    return this->name;
+const std::string& Window::getName() const 
+{
+    return m_name;
 }
 
-GLFWwindow* Window::getGLFWwindow() const {
-    return this->_window;
+GLFWwindow* Window::getGlfwWindow() const 
+{
+    return m_window;
 }
 
-void Window::setWidth(unsigned int width) {
-    this->width = width;
-    glfwSetWindowSize(this->_window, this->width, this->height);
+void Window::setWidth(unsigned int width) 
+{
+    m_width = width;
+    glfwSetWindowSize(m_window, m_width, m_height);
 }
 
-void Window::setHeight(unsigned int height) {
-    this->height = height;
-    glfwSetWindowSize(this->_window, this->width, this->height);
+void Window::setHeight(unsigned int height) 
+{
+    m_height = height;
+    glfwSetWindowSize(m_window, m_width, m_height);
 }
 
-void Window::setName(const std::string& name) {
-    this->name = name;
-    glfwSetWindowTitle(this->_window, this->name.c_str());
+void Window::setName(const std::string& name) 
+{
+    m_name = name;
+    glfwSetWindowTitle(m_window, m_name.c_str());
 }
 
-void ren::core::framebuffer_size_callback(GLFWwindow* window, int width, int height) 
-{  
+void Window::initGLFW()
+{
+    if (!glfwInit()) {
+        spdlog::critical("Failed to initialize GLFW");
+        exit(-1);
+    }
+    
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    spdlog::info("Initialized GLFW");
+}
+
+void Window::createWindow()
+{
+    m_window = glfwCreateWindow(m_width, m_height, m_name.c_str(), nullptr, nullptr);
+    if (!m_window) {
+        spdlog::critical("Failed to create window");
+        glfwTerminate();
+        exit(-1);
+    }
+    
+    glfwMakeContextCurrent(m_window);
+    spdlog::info("Created a window");
+}
+
+void Window::initGLAD()
+{
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
+        spdlog::critical("Failed to initialize GLAD");
+        glfwDestroyWindow(m_window);
+        glfwTerminate();
+        exit(-1);
+    }
+    
+    glEnable(GL_DEPTH_TEST);
+    glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
+    spdlog::info("Initialized GLAD");
+    spdlog::info("Set framebuffer size callback");
+}
+
+void Window::setupViewport()
+{
+    int framebufferWidth, framebufferHeight;
+    glfwGetFramebufferSize(m_window, &framebufferWidth, &framebufferHeight);
+    glViewport(0, 0, framebufferWidth, framebufferHeight);
+    glfwSwapInterval(1);
+
+    spdlog::info("Set GL viewport");
+}
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {  
     glViewport(0, 0, width, height);
+}
+
 }

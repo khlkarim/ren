@@ -9,17 +9,14 @@
 #include "utils/error_handler.hpp"
 #include "ecs/components/Component.hpp"
 
-namespace ren::ecs::components
-{
+namespace ren::ecs::components {
 
-class ComponentManager
-{
+class ComponentManager {
 public:
     ComponentManager() = default;
-    virtual ~ComponentManager() {};
+    virtual ~ComponentManager() = default;
     ComponentManager(const ComponentManager& other);
-
-    ComponentManager& operator=(const ComponentManager& other);    
+    ComponentManager& operator=(const ComponentManager& other);
 
     template<typename T>
     void add();
@@ -40,69 +37,69 @@ public:
     bool has() const;
 
 private:
-    std::vector<std::unique_ptr<ren::ecs::components::Component>> components;
+    template<typename T>
+    bool validateComponentType() const;
+
+    template<typename T>
+    bool findAndReplaceComponent(const T* replacement = nullptr);
+
+    std::vector<std::unique_ptr<Component>> m_components;
 };
 
+template<typename T>
+bool ComponentManager::validateComponentType() const {
+    if (!std::is_base_of<Component, T>::value) {
+        FATAL("{} must derive from Component", typeid(T).name());
+        return false;
+    }
+    return true;
 }
 
 template<typename T>
-void ren::ecs::components::ComponentManager::add()
-{
-    if(!std::is_base_of<ren::ecs::components::Component, T>::value)
-    {
-        FATAL("{} must derive from Component", typeid(T).name());
-    }
-    
-    for (auto& comp : components)
-    {
-        if (dynamic_cast<T*>(comp.get()))
-        {
-            comp = std::make_unique<T>();
-            spdlog::warn(
-                "Entity already has component of type: {}: Component replaced.", 
-                typeid(T).name()
-            );
-            return;
+bool ComponentManager::findAndReplaceComponent(const T* replacement) {
+    for (auto& comp : m_components) {
+        if (dynamic_cast<T*>(comp.get())) {
+            if (replacement) {
+                comp = std::make_unique<T>(*replacement);
+            }
+            return true;
         }
     }
-    components.push_back(std::make_unique<T>());
+    return false;
 }
 
 template<typename T>
-void ren::ecs::components::ComponentManager::set(const T& component)
-{
-    if(!std::is_base_of<ren::ecs::components::Component, T>::value)
-    {
-        FATAL("{} must derive from Component", typeid(T).name());
+void ComponentManager::add() {
+    validateComponentType<T>();
+    
+    if (findAndReplaceComponent<T>()) {
+        spdlog::warn("Entity already has component of type: {}: Component replaced.", 
+                    typeid(T).name());
+        return;
     }
     
-    for (auto& comp : components)
-    {
-        if (dynamic_cast<T*>(comp.get()))
-        {
-            comp = std::make_unique<T>(component);
-            spdlog::warn(
-                "Entity already has component of type: {}: Component replaced.", 
-                typeid(T).name()
-            );
-            return;
-        }
-    }
-    components.push_back(std::make_unique<T>(component));
+    m_components.push_back(std::make_unique<T>());
 }
 
 template<typename T>
-std::optional<std::reference_wrapper<T>> ren::ecs::components::ComponentManager::get()
-{
-    if(!std::is_base_of<ren::ecs::components::Component, T>::value)
-    {
-        FATAL("{} must derive from Component", typeid(T).name());
+void ComponentManager::set(const T& component) {
+    validateComponentType<T>();
+    
+    if (findAndReplaceComponent<T>(&component)) {
+        spdlog::warn("Entity already has component of type: {}: Component replaced.", 
+                    typeid(T).name());
+        return;
     }
+    
+    m_components.push_back(std::make_unique<T>(component));
+}
 
-    for (const auto& comp : components)
-    {
-        if (auto ptr = dynamic_cast<T*>(comp.get()))
-        {
+template<typename T>
+std::optional<std::reference_wrapper<T>> ComponentManager::get() {
+    validateComponentType<T>();
+
+    for (const auto& comp : m_components) {
+        if (auto ptr = dynamic_cast<T*>(comp.get())) {
             return *ptr;
         }
     }
@@ -112,17 +109,11 @@ std::optional<std::reference_wrapper<T>> ren::ecs::components::ComponentManager:
 }
 
 template<typename T>
-std::optional<std::reference_wrapper<const T>> ren::ecs::components::ComponentManager::get() const
-{
-    if(!std::is_base_of<ren::ecs::components::Component, T>::value)
-    {
-        FATAL("{} must derive from Component", typeid(T).name());
-    }
+std::optional<std::reference_wrapper<const T>> ComponentManager::get() const {
+    validateComponentType<T>();
 
-    for (const auto& comp : components)
-    {
-        if (auto ptr = dynamic_cast<T*>(comp.get()))
-        {
+    for (const auto& comp : m_components) {
+        if (auto ptr = dynamic_cast<const T*>(comp.get())) {
             return *ptr;
         }
     }
@@ -132,38 +123,31 @@ std::optional<std::reference_wrapper<const T>> ren::ecs::components::ComponentMa
 }
 
 template<typename T>
-void ren::ecs::components::ComponentManager::remove()
-{
-    if(!std::is_base_of<ren::ecs::components::Component, T>::value)
-    {
-        FATAL("{} must derive from Component", typeid(T).name());
-    }
+void ComponentManager::remove() {
+    validateComponentType<T>();
 
-    for(unsigned int i = 0; i<this->components.size(); i++)
-    {
-        if(dynamic_cast<T*>(this->components[i].get()))
-        {
-            this->components[i].reset(nullptr);
-            this->components.erase(this->components.begin() + i);
+    for (auto it = m_components.begin(); it != m_components.end(); ++it) {
+        if (dynamic_cast<T*>(it->get())) {
+            m_components.erase(it);
             return;
         }
     }
 }
 
 template<typename... ComponentTypes>
-bool ren::ecs::components::ComponentManager::has() const
-{
-    if(!(std::is_base_of<ren::ecs::components::Component, ComponentTypes>::value && ...))
-    {
+bool ComponentManager::has() const {
+    if (!(std::is_base_of<Component, ComponentTypes>::value && ...)) {
         FATAL("All types must derive from Component");
     }
 
     return (... && ([this]() {
-        for (const auto& comp : components) {
+        for (const auto& comp : m_components) {
             if (dynamic_cast<ComponentTypes*>(comp.get())) {
                 return true;
             }
         }
         return false;
     }()));
+}
+
 }

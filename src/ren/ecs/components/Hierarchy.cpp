@@ -1,61 +1,58 @@
 #include "ecs/components/Hierarchy.hpp"
-using ren::ecs::entities::Entity;
-using ren::ecs::components::Component;
-using ren::ecs::components::Hierarchy;
+#include <spdlog/spdlog.h>
 
-void Hierarchy::add(const Entity& child) {
-    if(child.getId().length() == 0)
-    {
+namespace ren::ecs::components {
+
+void Hierarchy::add(const entities::Entity& child) {
+    if (child.getId().empty()) {
         spdlog::warn("Entity has an empty id.");
+        return;
     }
-    if (children.find(child.getId()) != children.end()) {
+    
+    if (this->m_children.find(child.getId()) != this->m_children.end()) {
         spdlog::warn("Entity with id: {} already existed: Entity replaced.", child.getId());
     }
-    children[child.getId()] = child;
+    
+    this->m_children[child.getId()] = child;
 }
 
-std::optional<std::reference_wrapper<Entity>> Hierarchy::get(const std::string& id)
-{
-    if(this->children.find(id) == this->children.end())
-    {
+std::optional<std::reference_wrapper<entities::Entity>> Hierarchy::get(const std::string& id) {
+    auto it = this->m_children.find(id);
+    if (it == this->m_children.end()) {
         spdlog::warn("Entity with id: {} does not exist.", id);
         return std::nullopt;
     }
-    else
-    {
-        return this->children.at(id);
-    }
+    
+    return it->second;
 }
 
-std::optional<std::reference_wrapper<const Entity>> Hierarchy::get(const std::string& id) const
-{
-    if(this->children.find(id) == this->children.end())
-    {
+std::optional<std::reference_wrapper<const entities::Entity>> Hierarchy::get(const std::string& id) const {
+    auto it = this->m_children.find(id);
+    if (it == this->m_children.end()) {
         spdlog::warn("Entity with id: {} does not exist.", id);
         return std::nullopt;
     }
-    else
-    {
-        return this->children.at(id);
-    }
+    
+    return it->second;
 }
 
-std::vector<std::string> Hierarchy::getChildren() const
-{
+std::vector<std::string> Hierarchy::getChildren() const {
     std::vector<std::string> keys;
-
-    for (const auto& pair : children) {
-        keys.push_back(pair.first);
+    keys.reserve(this->m_children.size());
+    
+    for (const auto& [id, _] : this->m_children) {
+        keys.push_back(id);
     }
-
+    
     return keys;
 }
 
 void Hierarchy::remove(const std::string& id) {
-    children.erase(id);
+    this->m_children.erase(id);
 }
 
-std::unique_ptr<Component> Hierarchy::clone() const
-{
+std::unique_ptr<Component> Hierarchy::clone() const {
     return std::make_unique<Hierarchy>(*this);
 }
+
+} 

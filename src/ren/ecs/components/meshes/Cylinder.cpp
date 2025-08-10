@@ -1,18 +1,22 @@
 #include <glm/glm.hpp>
 #include <spdlog/spdlog.h>
 #include "ecs/components/meshes/Cylinder.hpp"
-using ren::ecs::components::meshes::Cylinder;
-using ren::ecs::components::meshes::Vertex;
+
+namespace ren::ecs::components::meshes {
 
 Cylinder::Cylinder(
-    const float radius,
-    const float height,
-    const unsigned int segments,
-    const unsigned int stacks
-) : radius(radius), height(height), segments(segments), stacks(stacks), 
+    float radius,
+    float height,
+    unsigned int segments,
+    unsigned int stacks
+) : 
+    m_radius(radius), 
+    m_height(height), 
+    m_segments(segments), 
+    m_stacks(stacks), 
     Mesh(
-        this->getVertices(radius, height, segments, stacks), 
-        this->getIndices(radius, height, segments, stacks)
+        getVertices(radius, height, segments, stacks), 
+        getIndices(segments, stacks)
     )
 {
     spdlog::info("Cylinder constructor");
@@ -24,36 +28,36 @@ Cylinder::~Cylinder()
 }
 
 std::vector<Vertex> Cylinder::getVertices(
-    const float radius,
-    const float height,
-    const unsigned int segments,
-    const unsigned int stacks
+    float radius,
+    float height,
+    unsigned int segments,
+    unsigned int stacks
 ) {
     std::vector<Vertex> vertices;
+    vertices.reserve((segments + 1) * (stacks + 1));
 
-    float theta_step = 180.0f / stacks;
-    float phi_step = 360.0f / segments;
+    const float thetaStep = 180.0f / stacks;
+    const float phiStep = 360.0f / segments;
 
-    for(unsigned int stack = 0; stack <= stacks; stack++) 
+    for (unsigned int stack = 0; stack <= stacks; ++stack) 
     {
-        float theta = glm::radians(-90.0f + stack * theta_step);
+        float theta = glm::radians(-90.0f + stack * thetaStep);
 
         for (unsigned int segment = 0; segment <= segments; ++segment) 
         {
-            float phi = glm::radians(segment * phi_step);
+            float phi = glm::radians(segment * phiStep);
         
             Vertex vertex;
-        
             vertex.Position = {
                 radius * glm::cos(phi),
                 height * glm::sin(theta),
                 radius * glm::sin(phi)
             };
             vertex.Normal = glm::normalize(vertex.Position);
-            vertex.TexCoords = glm::vec2(
+            vertex.TexCoords = {
                 static_cast<float>(segment) / static_cast<float>(segments),
                 static_cast<float>(stack) / static_cast<float>(stacks)
-            );
+            };
         
             vertices.push_back(vertex);
         }
@@ -63,24 +67,25 @@ std::vector<Vertex> Cylinder::getVertices(
 }
 
 std::vector<unsigned int> Cylinder::getIndices(
-    const float radius,
-    const float height,
-    const unsigned int segments,
-    const unsigned int stacks
-) {
+    unsigned int segments,
+    unsigned int stacks
+)  {
     std::vector<unsigned int> indices;
+    indices.reserve(6 * segments * stacks);
 
-    for(unsigned int stack = 0; stack < stacks; stack++) 
+    for (unsigned int stack = 0; stack < stacks; ++stack) 
     {
-        for(unsigned int segment = 0; segment < segments; segment++) 
+        for (unsigned int segment = 0; segment < segments; ++segment) 
         {
-            int current = stack * (segments + 1) + segment;
-            int next = (stack + 1) * (segments + 1) + segment;
+            unsigned int current = stack * (segments + 1) + segment;
+            unsigned int next = (stack + 1) * (segments + 1) + segment;
 
+            // First triangle
             indices.push_back(current);
             indices.push_back(next);
             indices.push_back(current + 1);
 
+            // Second triangle
             indices.push_back(current + 1);
             indices.push_back(next);
             indices.push_back(next + 1);
@@ -91,45 +96,45 @@ std::vector<unsigned int> Cylinder::getIndices(
 }
 
 float Cylinder::getRadius() const {
-    return radius;
+    return m_radius;
 }
 
 float Cylinder::getHeight() const {
-    return height;
+    return m_height;
 }
 
 unsigned int Cylinder::getSegments() const {
-    return segments;
+    return m_segments;
 }
 
 unsigned int Cylinder::getStacks() const {
-    return stacks;
+    return m_stacks;
 }
 
-void Cylinder::setRadius(float r) {
-    radius = r;
-    vertices = getVertices(radius, height, segments, stacks);
-    indices = getIndices(radius, height, segments, stacks);
-    reinit();
+void Cylinder::setRadius(float radius) {
+    m_radius = radius;
+    reinitialize();
 }
 
-void Cylinder::setHeight(float h) {
-    height = h;
-    vertices = getVertices(radius, height, segments, stacks);
-    indices = getIndices(radius, height, segments, stacks);
-    reinit();
+void Cylinder::setHeight(float height) {
+    m_height = height;
+    reinitialize();
 }
 
-void Cylinder::setSegments(unsigned int s) {
-    segments = s;
-    vertices = getVertices(radius, height, segments, stacks);
-    indices = getIndices(radius, height, segments, stacks);
-    reinit();
+void Cylinder::setSegments(unsigned int segments) {
+    m_segments = segments;
+    reinitialize();
 }
 
-void Cylinder::setStacks(unsigned int s) {
-    stacks = s;
-    vertices = getVertices(radius, height, segments, stacks);
-    indices = getIndices(radius, height, segments, stacks);
-    reinit();
+void Cylinder::setStacks(unsigned int stacks) {
+    m_stacks = stacks;
+    reinitialize();
+}
+
+void Cylinder::reinitialize() {
+    m_vertices = getVertices(m_radius, m_height, m_segments, m_stacks);
+    m_indices = getIndices(m_segments, m_stacks);
+    Mesh::reinitialize();
+}
+
 }

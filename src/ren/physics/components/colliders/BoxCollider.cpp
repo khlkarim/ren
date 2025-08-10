@@ -1,31 +1,32 @@
 #include "physics/components/colliders/BoxCollider.hpp"
-using ren::ecs::components::Component;
-using ren::physics::components::colliders::BoxCollider;
-using ren::physics::components::colliders::geometry::Box;
+
+namespace ren::physics::components::colliders {
 
 BoxCollider::BoxCollider()
+    : m_geometry{}
 {
-    this->type = Type::Box;
-    this->geometry = Box();
+    m_type = Type::Box;
 }
 
-BoxCollider::BoxCollider(const Box& geometry)
+BoxCollider::BoxCollider(const geometry::Box& geometry)
+    : m_geometry{geometry}
 {
-    this->type = Type::Box;
-    this->geometry = geometry;
+    m_type = Type::Box;
 }
 
-std::unique_ptr<Component> BoxCollider::clone() const
+std::unique_ptr<ecs::components::Component> BoxCollider::clone() const
 {
     return std::make_unique<BoxCollider>(*this);
 }
 
-const Box& BoxCollider::getGeometry() const
+const geometry::Box& BoxCollider::getGeometry() const
 {
-    return this->geometry;
+    return m_geometry;
 }
 
-void BoxCollider::setGeometry(const Box& geometry)
+void BoxCollider::setGeometry(const geometry::Box& geometry)
 {
-    this->geometry = geometry;
+    m_geometry = geometry;
+}
+
 }

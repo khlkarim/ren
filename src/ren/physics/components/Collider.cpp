@@ -1,15 +1,17 @@
 #include "physics/components/Collider.hpp"
-using ren::ecs::components::Component;
-using ren::physics::components::Collider;
 
-const bool Collider::getIsTrigger() const {
-    return isTrigger;
+namespace ren::physics::components {
+
+bool Collider::getIsTrigger() const {
+    return m_isTrigger;
 }
 
 void Collider::setIsTrigger(bool isTrigger) {
-    this->isTrigger = isTrigger;
+    m_isTrigger = isTrigger;
 }
 
 Collider::Type Collider::getType() const {
-    return this->type;
+    return m_type;
 }
+
+} 

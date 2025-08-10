@@ -20,8 +20,8 @@ public:
     void setComponentManager(const components::ComponentManager& manager);
 
 private:
-    std::string id;
-    components::ComponentManager componentManager;
+    std::string m_id;
+    components::ComponentManager m_componentManager;
 };
 
 }

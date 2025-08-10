@@ -8,14 +8,14 @@ class CameraSystem
 {
 public:
     CameraSystem();
-    void update(const float dt, renderer::Camera& camera);
+    void update(float dt, Camera& camera);
 
 private:
-    void updatePosition(const float dt, renderer::Camera& camera);
-    void updateDirection(const float dt, renderer::Camera& camera);
+    void updatePosition(float dt, Camera& camera);
+    void updateDirection(float dt, Camera& camera);
 
 private:
-    bool cursorLocked;
+    bool m_cursorLocked;
 };
 
 }

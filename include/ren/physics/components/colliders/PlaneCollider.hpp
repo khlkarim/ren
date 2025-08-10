@@ -10,7 +10,7 @@ class PlaneCollider : public Collider
 {
 public:
     PlaneCollider();
-    PlaneCollider(const geometry::Plane& geometry);
+    explicit PlaneCollider(const geometry::Plane& geometry);
 
     const geometry::Plane& getGeometry() const;
     void setGeometry(const geometry::Plane& geometry);
@@ -18,7 +18,7 @@ public:
     std::unique_ptr<ecs::components::Component> clone() const;
 
 private:
-    geometry::Plane geometry;
+    geometry::Plane m_geometry;
 };
 
 }

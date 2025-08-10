@@ -1,31 +1,32 @@
 #include "physics/components/colliders/SphereCollider.hpp"
-using ren::ecs::components::Component;
-using ren::physics::components::colliders::SphereCollider;
-using ren::physics::components::colliders::geometry::Sphere;
+
+namespace ren::physics::components::colliders {
 
 SphereCollider::SphereCollider()
+    : m_geometry{}
 {
-    this->type = Type::Sphere;
-    this->geometry = Sphere();
+    m_type = Type::Sphere;
 }
 
-SphereCollider::SphereCollider(const Sphere& geometry)
+SphereCollider::SphereCollider(const geometry::Sphere& geometry)
+    : m_geometry{geometry}
 {
-    this->type = Type::Sphere;
-    this->geometry = geometry;
+    m_type = Type::Sphere;
 }
 
-std::unique_ptr<Component> SphereCollider::clone() const
+std::unique_ptr<ecs::components::Component> SphereCollider::clone() const
 {
     return std::make_unique<SphereCollider>(*this);
 }
 
-const Sphere& SphereCollider::getGeometry() const
+const geometry::Sphere& SphereCollider::getGeometry() const
 {
-    return this->geometry;
+    return m_geometry;
 }
 
-void SphereCollider::setGeometry(const Sphere& geometry)
+void SphereCollider::setGeometry(const geometry::Sphere& geometry)
 {
-    this->geometry = geometry;
+    m_geometry = geometry;
+}
+
 }

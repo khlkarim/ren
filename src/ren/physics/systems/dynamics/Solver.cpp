@@ -2,10 +2,7 @@
 #include "physics/components/RigidBody.hpp"
 #include "physics/systems/dynamics/Solver.hpp"
 
-namespace ren {
-namespace physics {
-namespace systems {
-namespace dynamics {
+namespace ren::physics::systems::dynamics {
 
 void Solver::solve(float dt, components::RigidBody& rigidBody, ecs::components::Transform& transform) 
 {
@@ -40,7 +37,4 @@ void Solver::solve(float dt, components::RigidBody& rigidBody, ecs::components::
     transform.setRotation(glm::normalize(rotation));
 }
 
-} 
-}  
-} 
 } 

@@ -3,11 +3,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace ren::renderer
-{
+namespace ren::renderer {
 
-class Camera
-{
+class Camera {
 public:
     enum class ProjectionType {
         Perspective,
@@ -15,8 +13,8 @@ public:
     };
 
     Camera(
-        glm::vec3 position = glm::vec3(0.0f, 0.0f, 6.0f), 
-        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), 
+        const glm::vec3& position = glm::vec3(0.0f, 0.0f, 6.0f), 
+        const glm::vec3& up = glm::vec3(0.0f, 1.0f, 0.0f), 
         float yaw = -90.0f, 
         float pitch = 0.0f,
         float fov = 45.0f,
@@ -28,11 +26,10 @@ public:
 
     void setPosition(const glm::vec3& position);
     void setUp(const glm::vec3& up);
-
     void setYaw(float yaw);
     void setPitch(float pitch);
 
-    void setFOV(float fov);
+    void setFov(float fov);
     void setAspectRatio(float aspectRatio);
     void setNearPlane(float nearPlane);
     void setFarPlane(float farPlane);
@@ -43,11 +40,10 @@ public:
     const glm::vec3& getUp() const;
     const glm::vec3& getRight() const;
     const glm::vec3& getWorldUp() const;
-
     float getYaw() const;
     float getPitch() const;
 
-    float getFOV() const;
+    float getFov() const;
     float getAspectRatio() const;
     float getNearPlane() const;
     float getFarPlane() const;
@@ -59,21 +55,21 @@ public:
 private:
     void updateCameraVectors();
 
-private:
-    glm::vec3 position;
-    glm::vec3 front;
-    glm::vec3 up;
-    glm::vec3 right;
-    glm::vec3 worldUp;
+    // Camera position and orientation
+    glm::vec3 m_position;
+    glm::vec3 m_front;
+    glm::vec3 m_up;
+    glm::vec3 m_right;
+    glm::vec3 m_worldUp;
+    float m_yaw;
+    float m_pitch;
 
-    float yaw;
-    float pitch;
-
-    float fov;
-    float aspectRatio;
-    float nearPlane;
-    float farPlane;
-    ProjectionType projectionType;
+    // Projection parameters
+    float m_fov;
+    float m_aspectRatio;
+    float m_nearPlane;
+    float m_farPlane;
+    ProjectionType m_projectionType;
 };
 
-}
+} 

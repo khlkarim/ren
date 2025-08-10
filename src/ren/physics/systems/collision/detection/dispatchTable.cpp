@@ -5,38 +5,61 @@
 #include "physics/components/colliders/PlaneCollider.hpp"
 #include "physics/components/colliders/SphereCollider.hpp"
 #include "physics/systems/collision/ManifoldPoints.hpp"
-#include "physics/systems/collision/detection/dispatchTable.hpp"
 #include "physics/systems/collision/detection/broad.hpp"
 #include "physics/systems/collision/detection/narrow.hpp"
-using ren::ecs::components::Transform;
-using ren::physics::components::Collider;
-using ren::physics::components::colliders::BoxCollider;
-using ren::physics::components::colliders::PlaneCollider;
-using ren::physics::components::colliders::SphereCollider;
-using namespace ren::physics::systems::collision::detection;
+#include "physics/systems/collision/detection/dispatchTable.hpp"
 
 namespace ren::physics::systems::collision::detection {
 
-std::optional<ManifoldPoints> TestBoxBox(const Collider& c1, const Transform& t1, const Collider& c2, const Transform& t2) {
-    auto* bc1 = dynamic_cast<const BoxCollider*>(&c1);
-    auto* bc2 = dynamic_cast<const BoxCollider*>(&c2);
+std::optional<ManifoldPoints> TestBoxBox(
+        const components::Collider& c1, const ecs::components::Transform& t1,
+        const components::Collider& c2, const ecs::components::Transform& t2) {
+    
+    auto* bc1 = dynamic_cast<const components::colliders::BoxCollider*>(&c1);
+    auto* bc2 = dynamic_cast<const components::colliders::BoxCollider*>(&c2);
 
     if (!bc1 || !bc2) {
-        spdlog::warn("Wrong Collision Test Called: TestBoxBox({}, {})", static_cast<int>(c1.getType()), static_cast<int>(c2.getType()));
+        LogWrongCollisionTest("TestBoxBox", c1, c2);
         return std::nullopt;
     }
 
-   return broad::AABB(*bc1, t1, *bc2, t2);
+    // Check if rotations are identity (no rotation)
+    const float epsilon = 1e-5f;
+    glm::quat rot1 = t1.getRotation();
+    glm::quat rot2 = t2.getRotation();
+    
+    // Identity quaternion is (w=1, x=0, y=0, z=0)
+    bool isIdentity1 = std::abs(rot1.w - 1.0f) < epsilon && 
+                       std::abs(rot1.x) < epsilon && 
+                       std::abs(rot1.y) < epsilon && 
+                       std::abs(rot1.z) < epsilon;
+                       
+    bool isIdentity2 = std::abs(rot2.w - 1.0f) < epsilon && 
+                       std::abs(rot2.x) < epsilon && 
+                       std::abs(rot2.y) < epsilon && 
+                       std::abs(rot2.z) < epsilon;
+
+    if (isIdentity1 && isIdentity2) {
+        return broad::AABB(*bc1, t1, *bc2, t2);
+    } else {
+        return broad::OBB(*bc1, t1, *bc2, t2);
+    }
 }
 
-std::optional<ManifoldPoints> TestPlanePlane(const Collider& c1, const Transform& t1, const Collider& c2, const Transform& t2) {
-    auto* pc1 = dynamic_cast<const PlaneCollider*>(&c1);
-    auto* pc2 = dynamic_cast<const PlaneCollider*>(&c2);
+std::optional<ManifoldPoints> TestPlanePlane(
+        const components::Collider& c1, const ecs::components::Transform& t1,
+        const components::Collider& c2, const ecs::components::Transform& t2) {
+    
+    auto* pc1 = dynamic_cast<const components::colliders::PlaneCollider*>(&c1);
+    auto* pc2 = dynamic_cast<const components::colliders::PlaneCollider*>(&c2);
 
     if (!pc1 || !pc2) {
-        spdlog::warn("Wrong Collision Test Called: TestPlanePlane({}, {})", static_cast<int>(c1.getType()), static_cast<int>(c2.getType()));
+        LogWrongCollisionTest("TestPlanePlane", c1, c2);
         return std::nullopt;
     }
+
+    constexpr float kParallelThreshold = 0.999f;
+    constexpr float kDistanceThreshold = 1e-4f;
 
     // Two planes collide if they are coincident (normals parallel and distance equal)
     glm::vec3 n1 = t1.getRotation() * pc1->getGeometry().getNormal();
@@ -44,9 +67,10 @@ std::optional<ManifoldPoints> TestPlanePlane(const Collider& c1, const Transform
     float d1 = glm::dot(n1, t1.getPosition());
     float d2 = glm::dot(n2, t2.getPosition());
 
-    if (glm::abs(glm::dot(n1, n2)) > 0.999f && glm::abs(d1 - d2) < 1e-4f) {
+    if (glm::abs(glm::dot(n1, n2)) > kParallelThreshold && 
+        glm::abs(d1 - d2) < kDistanceThreshold) {
+        
         ManifoldPoints manifold;
-
         Contact contact;
         contact.position = t1.getPosition(); 
         contact.normal = n1;
@@ -58,24 +82,30 @@ std::optional<ManifoldPoints> TestPlanePlane(const Collider& c1, const Transform
     return std::nullopt;
 }
 
-std::optional<ManifoldPoints> TestSphereSphere(const Collider& c1, const Transform& t1, const Collider& c2, const Transform& t2) {
-    auto* sc1 = dynamic_cast<const SphereCollider*>(&c1);
-    auto* sc2 = dynamic_cast<const SphereCollider*>(&c2);
+std::optional<ManifoldPoints> TestSphereSphere(
+        const components::Collider& c1, const ecs::components::Transform& t1,
+        const components::Collider& c2, const ecs::components::Transform& t2) {
+    
+    auto* sc1 = dynamic_cast<const components::colliders::SphereCollider*>(&c1);
+    auto* sc2 = dynamic_cast<const components::colliders::SphereCollider*>(&c2);
 
     if (!sc1 || !sc2) {
-        spdlog::warn("Wrong Collision Test Called: TestSphereSphere({}, {})", static_cast<int>(c1.getType()), static_cast<int>(c2.getType()));
+        LogWrongCollisionTest("TestSphereSphere", c1, c2);
         return std::nullopt;
     }
 
     return broad::BoundingSpheres(*sc1, t1, *sc2, t2);
 }
 
-std::optional<ManifoldPoints> TestBoxPlane(const Collider& c1, const Transform& t1, const Collider& c2, const Transform& t2) {
-    auto* bc = dynamic_cast<const BoxCollider*>(&c1);
-    auto* pc = dynamic_cast<const PlaneCollider*>(&c2);
+std::optional<ManifoldPoints> TestBoxPlane(
+        const components::Collider& c1, const ecs::components::Transform& t1,
+        const components::Collider& c2, const ecs::components::Transform& t2) {
+    
+    auto* bc = dynamic_cast<const components::colliders::BoxCollider*>(&c1);
+    auto* pc = dynamic_cast<const components::colliders::PlaneCollider*>(&c2);
 
     if (!bc || !pc) {
-        spdlog::warn("Wrong Collision Test Called: TestBoxPlane({}, {})", static_cast<int>(c1.getType()), static_cast<int>(c2.getType()));
+        LogWrongCollisionTest("TestBoxPlane", c1, c2);
         return std::nullopt;
     }
 
@@ -100,6 +130,7 @@ std::optional<ManifoldPoints> TestBoxPlane(const Collider& c1, const Transform& 
         };
         glm::vec3 worldCorner = glm::vec3(boxTransform * glm::vec4(corner, 1.0f));
         float dist = glm::dot(planeNormal, worldCorner) + planeD;
+        
         if (dist < 0.0f) {
             collided = true;
             if (-dist < minPenetration) {
@@ -108,6 +139,7 @@ std::optional<ManifoldPoints> TestBoxPlane(const Collider& c1, const Transform& 
             }
         }
     }
+    
     if (collided) {
         Contact contact;
         contact.position = contactPoint;
@@ -120,12 +152,15 @@ std::optional<ManifoldPoints> TestBoxPlane(const Collider& c1, const Transform& 
     return std::nullopt;
 }
 
-std::optional<ManifoldPoints> TestSphereBox(const Collider& c1, const Transform& t1, const Collider& c2, const Transform& t2) {
-    auto* sc = dynamic_cast<const SphereCollider*>(&c1);
-    auto* bc = dynamic_cast<const BoxCollider*>(&c2);
+std::optional<ManifoldPoints> TestSphereBox(
+        const components::Collider& c1, const ecs::components::Transform& t1,
+        const components::Collider& c2, const ecs::components::Transform& t2) {
+    
+    auto* sc = dynamic_cast<const components::colliders::SphereCollider*>(&c1);
+    auto* bc = dynamic_cast<const components::colliders::BoxCollider*>(&c2);
     
     if (!sc || !bc) {
-        spdlog::warn("Wrong Collision Test Called: TestSphereBox({}, {})", static_cast<int>(c1.getType()), static_cast<int>(c2.getType()));
+        LogWrongCollisionTest("TestSphereBox", c1, c2);
         return std::nullopt;
     }
 
@@ -162,12 +197,15 @@ std::optional<ManifoldPoints> TestSphereBox(const Collider& c1, const Transform&
     return manifold;
 }
 
-std::optional<ManifoldPoints> TestSpherePlane(const Collider& c1, const Transform& t1, const Collider& c2, const Transform& t2) {
-    auto* sc = dynamic_cast<const SphereCollider*>(&c1);
-    auto* pc = dynamic_cast<const PlaneCollider*>(&c2);
+std::optional<ManifoldPoints> TestSpherePlane(
+        const components::Collider& c1, const ecs::components::Transform& t1,
+        const components::Collider& c2, const ecs::components::Transform& t2) {
+    
+    auto* sc = dynamic_cast<const components::colliders::SphereCollider*>(&c1);
+    auto* pc = dynamic_cast<const components::colliders::PlaneCollider*>(&c2);
 
     if (!sc || !pc) {
-        spdlog::warn("Wrong Collision Test Called: TestSpherePlane({}, {})", static_cast<int>(c1.getType()), static_cast<int>(c2.getType()));
+        LogWrongCollisionTest("TestSpherePlane", c1, c2);
         return std::nullopt;
     }
 
@@ -183,7 +221,6 @@ std::optional<ManifoldPoints> TestSpherePlane(const Collider& c1, const Transfor
     }
 
     ManifoldPoints manifold;
-
     Contact contact;
     contact.position = sphereCenter - planeNormal * dist;
     contact.normal = planeNormal;
@@ -193,4 +230,17 @@ std::optional<ManifoldPoints> TestSpherePlane(const Collider& c1, const Transfor
     return manifold;
 }
 
+void LogWrongCollisionTest(
+    const char* testName, 
+    const components::Collider& c1, 
+    const components::Collider& c2
+) {
+    spdlog::warn(
+        "Wrong Collision Test Called: {}({}, {})", 
+        testName, 
+        static_cast<int>(c1.getType()), 
+        static_cast<int>(c2.getType())
+    );
 }
+
+} 

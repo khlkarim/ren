@@ -3,109 +3,135 @@
 #include "ren/ecs.hpp"
 #include "ren/renderer.hpp"
 
-std::vector<glm::vec3> generateColors(const unsigned int count);
-std::vector<glm::vec3> generateControlPoints(const unsigned int gridWidth, const unsigned int gridHeight, const unsigned int count);
-std::vector<glm::vec3> interpolate(const std::vector<glm::vec3>& init, const std::vector<glm::vec3>& target, const float p);
+namespace {
+    // Function prototypes
+    std::vector<glm::vec3> GenerateRandomColors(size_t count);
+    std::vector<glm::vec3> GenerateRandomControlPoints(size_t gridWidth, size_t gridHeight, size_t count);
+    std::vector<glm::vec3> Interpolate(const std::vector<glm::vec3>& initial, const std::vector<glm::vec3>& target, float factor);
+    
+    constexpr size_t kNumPoints = 20;
+    constexpr size_t kGridWidth = 10;
+    constexpr size_t kGridHeight = 10;
+    constexpr float kAnimationDuration = 5.0f;
+    constexpr int kWindowWidth = 1980;
+    constexpr int kWindowHeight = 1080;
+    constexpr int kQuadWidth = 10;
+    constexpr int kQuadHeight = 5;
+    constexpr int kQuadSubdivX = 250;
+    constexpr int kQuadSubdivY = 250;
+}
 
 int main()
 {
-    ren::core::Window window("Voronoi", 1980, 1080);
+    // Create window and scene
+    ren::core::Window window("Voronoi", kWindowWidth, kWindowHeight);
     ren::core::Scene scene;
 
+    // Load shader
     ren::assets::AssetManager assetManager;
     auto shader = assetManager.loadShader(
         "assets\\shaders\\voronoi\\voronoi.vert", 
         "assets\\shaders\\voronoi\\voronoi.frag"
     );
 
+    // Create plane entity
     ren::ecs::entities::Entity plane("plane");
-
     auto& componentManager = plane.getComponentManager();
     componentManager.set(ren::ecs::components::MeshRenderer(shader, {}));
-    componentManager.set(ren::ecs::components::meshes::Quad(10, 5, 250, 250));
+    componentManager.set(ren::ecs::components::meshes::Quad(
+        kQuadWidth, kQuadHeight, kQuadSubdivX, kQuadSubdivY));
 
+    // Add entity to scene
     auto& entityManager = scene.getEntityManager();
     entityManager.add(plane);
 
-    std::vector<glm::vec3> initColors = generateColors(20);
-    std::vector<glm::vec3> initPositions = generateControlPoints(10, 10, 20);
-
-    std::vector<glm::vec3> targetColors = generateColors(20);
-    std::vector<glm::vec3> targetPositions = generateControlPoints(10, 10, 20);
+    // Generate initial and target data
+    std::vector<glm::vec3> initialColors = GenerateRandomColors(kNumPoints);
+    std::vector<glm::vec3> initialPositions = GenerateRandomControlPoints(kGridWidth, kGridHeight, kNumPoints);
+    std::vector<glm::vec3> targetColors = GenerateRandomColors(kNumPoints);
+    std::vector<glm::vec3> targetPositions = GenerateRandomControlPoints(kGridWidth, kGridHeight, kNumPoints);
     
+    // Setup renderer
     ren::renderer::Renderer renderer;
-    renderer.setRenderTarget(window.getGLFWwindow());
+    renderer.setRenderTarget(window.getGlfwWindow());
 
-    float lastT = static_cast<float>(glfwGetTime());
+    // Main loop
+    float lastTime = static_cast<float>(glfwGetTime());
     while(window.isOpen())
     {
-        float currT = static_cast<float>(glfwGetTime());
-        float dt = currT - lastT;
+        // Calculate time delta
+        float currentTime = static_cast<float>(glfwGetTime());
+        float deltaTime = currentTime - lastTime;
         
-        auto& mr = entityManager.getComponent<ren::ecs::components::MeshRenderer>("plane").value().get();
-        auto& s = mr.getShader();
+        // Update shader parameters
+        auto& meshRenderer = entityManager.getComponent<ren::ecs::components::MeshRenderer>("plane").value().get();
+        auto& shader = meshRenderer.getShader();
         
-        s.setVec3Array("vertexColors", interpolate(initColors, targetColors, dt/5.0f));
-        s.setVec3Array("vertexPositions", interpolate(initPositions, targetPositions, dt/5.0f));
+        float interpolationFactor = deltaTime / kAnimationDuration;
+        shader.setVec3Array("vertexColors", Interpolate(initialColors, targetColors, interpolationFactor));
+        shader.setVec3Array("vertexPositions", Interpolate(initialPositions, targetPositions, interpolationFactor));
 
-        if(dt > 5.0f)
+        // Start next animation cycle
+        if(deltaTime > kAnimationDuration)
         {
-            lastT = currT;
+            lastTime = currentTime;
 
-            initColors = targetColors;
-            initPositions = targetPositions;
+            initialColors = targetColors;
+            initialPositions = targetPositions;
             
-            targetColors = generateColors(20);
-            targetPositions = generateControlPoints(10, 10, 20);
+            targetColors = GenerateRandomColors(kNumPoints);
+            targetPositions = GenerateRandomControlPoints(kGridWidth, kGridHeight, kNumPoints);
         }
 
+        // Render the scene
         renderer.render(scene);
     }
 
     return 0;
 }
 
-std::vector<glm::vec3> generateColors(const unsigned int count)
-{
-    std::vector<glm::vec3> colors;
-    colors.reserve(count);
-
-    for (unsigned int i = 0; i < count; ++i) {
-        float r = static_cast<float>(rand()) / RAND_MAX;
-        float g = static_cast<float>(rand()) / RAND_MAX;
-        float b = static_cast<float>(rand()) / RAND_MAX;
-        colors.emplace_back(r, g, b);
-    }
-    
-    return colors;
-}
-
-std::vector<glm::vec3> generateControlPoints(const unsigned int gridWidth, const unsigned int gridHeight, const unsigned int count)
-{
-    std::vector<glm::vec3> controlPoints;
-    controlPoints.reserve(count);
-
-    for (unsigned int i = 0; i < count; ++i) {
-        float x = static_cast<float>(rand()) / RAND_MAX * gridWidth - gridWidth / 2.0f;
-        float y = static_cast<float>(rand()) / RAND_MAX * gridHeight - gridHeight / 2.0f;
-        float z = 0.0f;
-        controlPoints.emplace_back(x, y, z);
-    }
-
-    return controlPoints;
-}
-
-std::vector<glm::vec3> interpolate(const std::vector<glm::vec3>& init, const std::vector<glm::vec3>& target, const float p)
-{
-    const float t = glm::min<float>(1.0f, glm::max<float>(0.0f, p));
-
-    std::vector<glm::vec3> res;
-    res.reserve(init.size());
-
-    for(unsigned int i = 0; i<init.size(); i++)
+namespace {
+    std::vector<glm::vec3> GenerateRandomColors(size_t count)
     {
-        res.emplace_back((1-t) * init[i] + t * target[i]);
+        std::vector<glm::vec3> colors;
+        colors.reserve(count);
+
+        for (size_t i = 0; i < count; ++i) {
+            float r = static_cast<float>(rand()) / RAND_MAX;
+            float g = static_cast<float>(rand()) / RAND_MAX;
+            float b = static_cast<float>(rand()) / RAND_MAX;
+            colors.emplace_back(r, g, b);
+        }
+        
+        return colors;
     }
 
-    return res;
+    std::vector<glm::vec3> GenerateRandomControlPoints(size_t gridWidth, size_t gridHeight, size_t count)
+    {
+        std::vector<glm::vec3> controlPoints;
+        controlPoints.reserve(count);
+
+        for (size_t i = 0; i < count; ++i) {
+            float x = static_cast<float>(rand()) / RAND_MAX * gridWidth - gridWidth / 2.0f;
+            float y = static_cast<float>(rand()) / RAND_MAX * gridHeight - gridHeight / 2.0f;
+            float z = 0.0f;
+            controlPoints.emplace_back(x, y, z);
+        }
+
+        return controlPoints;
+    }
+
+    std::vector<glm::vec3> Interpolate(const std::vector<glm::vec3>& initial, const std::vector<glm::vec3>& target, float factor)
+    {
+        const float clampedFactor = std::clamp(factor, 0.0f, 1.0f);
+        std::vector<glm::vec3> result;
+        result.reserve(initial.size());
+
+        for(size_t i = 0; i < initial.size(); i++)
+        {
+            result.emplace_back((1.0f - clampedFactor) * initial[i] + clampedFactor * target[i]);
+        }
+
+        return result;
+    }
 }

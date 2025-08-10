@@ -1,86 +1,82 @@
 #include "ecs/components/Transform.hpp"
-using ren::ecs::components::Component;
-using ren::ecs::components::Transform;
 
-Transform::Transform()
-{
-    this->_position = glm::vec3(0.0f);
-    this->_rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
-    this->_scale = glm::vec3(1.0f, 1.0f, 1.0f);
-}
+namespace ren::ecs::components {
 
 Transform::Transform(const glm::vec3& position, const glm::quat& rotation, const glm::vec3& scale)
+    : m_position(position)
+    , m_rotation(rotation)
+    , m_scale(scale)
 {
-    this->_position = position;
-    this->_rotation = rotation;
-    this->_scale = scale;
 }
 
 void Transform::translate(const glm::vec3& delta)
 {
-    this->_position += delta;
+    m_position += delta;
 }
 
 void Transform::rotate(const glm::quat& delta)
 {
-    this->_rotation = glm::normalize(delta * this->_rotation);
+    m_rotation = glm::normalize(delta * m_rotation);
 }
 
 void Transform::rotate(float degrees, const glm::vec3& axis)
 {
-    glm::quat delta = glm::angleAxis(glm::radians(degrees), glm::normalize(axis));
-    this->_rotation = glm::normalize(delta * this->_rotation);
+    const glm::quat delta = glm::angleAxis(glm::radians(degrees), glm::normalize(axis));
+    m_rotation = glm::normalize(delta * m_rotation);
 }
 
 void Transform::scale(const glm::vec3& factor)
 {
-    this->_scale *= factor;
+    m_scale *= factor;
 }
 
 void Transform::setPosition(const glm::vec3& position)
 {
-    this->_position = position;
+    m_position = position;
 }
 
 void Transform::setRotation(const glm::quat& rotation)
 {
-    this->_rotation = rotation;
+    m_rotation = rotation;
 }
 
 void Transform::setScale(const glm::vec3& scale)
 {
-    this->_scale = scale;
+    m_scale = scale;
 }
 
 const glm::vec3& Transform::getPosition() const
 {
-    return this->_position;
+    return m_position;
 }
 
 const glm::quat& Transform::getRotation() const
 {
-    return this->_rotation;
+    return m_rotation;
 }
 
 const glm::vec3& Transform::getScale() const
 {
-    return this->_scale;
+    return m_scale;
 }
 
 glm::mat4 Transform::getModelMatrix() const
 {
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, this->_position);
-    model *= glm::mat4_cast(this->_rotation);
-    model = glm::scale(model, this->_scale);
+    glm::mat4 model(1.0f);
+    model = glm::translate(model, m_position);
+    model *= glm::mat4_cast(m_rotation);
+    model = glm::scale(model, m_scale);
     return model;
 }
 
 glm::mat4 Transform::getRotationMatrix() const
 {
-    return glm::mat4_cast(this->_rotation);
+    return glm::mat4_cast(m_rotation);
 }
 
-std::unique_ptr<Component> Transform::clone() const {
+std::unique_ptr<Component> Transform::clone() const
+{
     return std::make_unique<Transform>(*this);
+}
+
 }

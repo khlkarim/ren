@@ -25,9 +25,9 @@ Keyboard& Keyboard::getInstance()
 Keyboard& Keyboard::listen(const Window& window)
 {   
     if (!instance) {
-        instance = std::move(std::unique_ptr<Keyboard>(new Keyboard(window.getGLFWwindow())));
+        instance = std::move(std::unique_ptr<Keyboard>(new Keyboard(window.getGlfwWindow())));
     }
-    set_callbacks(window.getGLFWwindow());
+    set_callbacks(window.getGlfwWindow());
 
     return *instance;
 }

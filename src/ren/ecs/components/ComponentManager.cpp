@@ -1,11 +1,12 @@
 #include "ecs/components/ComponentManager.hpp"
-using ren::ecs::components::ComponentManager;
+
+namespace ren::ecs::components {
 
 ComponentManager::ComponentManager(const ComponentManager& other)
 {
-    for (const auto& comp : other.components) {
-        if (comp) {
-            this->components.push_back(comp->clone());
+    for (const auto& component : other.m_components) {
+        if (component) {
+            m_components.push_back(component->clone());
         }
     }
 }
@@ -13,12 +14,14 @@ ComponentManager::ComponentManager(const ComponentManager& other)
 ComponentManager& ComponentManager::operator=(const ComponentManager& other)
 {
     if (this != &other) {
-        this->components.clear();
-        for (const auto& comp : other.components) {
-            if (comp) {
-                this->components.push_back(comp->clone());
+        m_components.clear();
+        for (const auto& component : other.m_components) {
+            if (component) {
+                m_components.push_back(component->clone());
             }
         }
     }
     return *this;
+}
+
 }

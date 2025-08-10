@@ -9,14 +9,14 @@ class Cube : public Mesh
 {
 public:
     Cube(
-        const float width = 1,
-        const float height = 1,
-        const float depth = 1,
-        const unsigned int widthSegments = 1,
-        const unsigned int heightSegments = 1,
-        const unsigned int depthSegments = 1
+        float width = 1.0f,
+        float height = 1.0f,
+        float depth = 1.0f,
+        unsigned int widthSegments = 1,
+        unsigned int heightSegments = 1,
+        unsigned int depthSegments = 1
     );
-    virtual ~Cube();
+    virtual ~Cube() override;
 
     float getWidth() const;
     float getHeight() const;
@@ -32,50 +32,57 @@ public:
     void setHeightSegments(unsigned int heightSegments);
     void setDepthSegments(unsigned int depthSegments);
 
+    // Static mesh generation methods
     static std::vector<Vertex> getVertices(
-        const float width,
-        const float height,
-        const float depth,
-        const unsigned int widthSegments,
-        const unsigned int heightSegments,
-        const unsigned int depthSegments
+        float width,
+        float height,
+        float depth,
+        unsigned int widthSegments,
+        unsigned int heightSegments,
+        unsigned int depthSegments
     );
+
     static std::vector<unsigned int> getIndices(
-        const float width,
-        const float height,
-        const float depth,
-        const unsigned int widthSegments,
-        const unsigned int heightSegments,
-        const unsigned int depthSegments
+        float width,
+        float height,
+        float depth,
+        unsigned int widthSegments,
+        unsigned int heightSegments,
+        unsigned int depthSegments
     );
 
+protected:
+    virtual void reinitialize() override;
+
 private:
+    // Helper methods for mesh generation
     static std::vector<Vertex> getFaceVertices(
-        const float width,
-        const float height,
-        const float depth,
-        const unsigned int widthSegments,
-        const unsigned int heightSegments,
-        const unsigned int depthSegments,
+        float width,
+        float height,
+        float depth,
+        unsigned int widthSegments,
+        unsigned int heightSegments,
+        unsigned int depthSegments,
         const glm::vec3& normal
     );
+    
     static std::vector<unsigned int> getFaceIndices(
-        const float width,
-        const float height,
-        const float depth,
-        const unsigned int widthSegments,
-        const unsigned int heightSegments,
-        const unsigned int depthSegments,
+        float width,
+        float height,
+        float depth,
+        unsigned int widthSegments,
+        unsigned int heightSegments,
+        unsigned int depthSegments,
         const glm::vec3& normal
     );
 
 private:
-    float width;
-    float height;
-    float depth;
-    unsigned int widthSegments;
-    unsigned int heightSegments;
-    unsigned int depthSegments;
+    float m_width;
+    float m_height;
+    float m_depth;
+    unsigned int m_widthSegments;
+    unsigned int m_heightSegments;
+    unsigned int m_depthSegments;
 };
 
 }

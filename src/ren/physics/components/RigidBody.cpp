@@ -1,6 +1,6 @@
 #include "physics/components/RigidBody.hpp"
-using ren::ecs::components::Component;
-using ren::physics::components::RigidBody;
+
+namespace ren::physics::components {
 
 RigidBody::RigidBody(
     Type type, 
@@ -11,113 +11,112 @@ RigidBody::RigidBody(
     const glm::vec3& angularVelocity,
     const glm::vec3& torque,
     float restitution
-) : type(type),
-    mass(mass),
-    inertia(inertia),
-    velocity(velocity),
-    force(force),
-    angularVelocity(angularVelocity),
-    torque(torque),
-    restitution(restitution)
+) : m_type(type),
+    m_mass(mass),
+    m_inertia(inertia),
+    m_velocity(velocity),
+    m_force(force),
+    m_angularVelocity(angularVelocity),
+    m_torque(torque),
+    m_restitution(restitution)
 {
     updateDerivedValues();
 }
 
 void RigidBody::updateDerivedValues() {
-    invMass = (mass > 0.0f) ? 1.0f / mass : 0.0f;
+    m_invMass = (m_mass > 0.0f) ? 1.0f / m_mass : 0.0f;
     
-    // Calculate inverse inertia for each axis
-    invInertia.x = (inertia.x > 0.0f) ? 1.0f / inertia.x : 0.0f;
-    invInertia.y = (inertia.y > 0.0f) ? 1.0f / inertia.y : 0.0f;
-    invInertia.z = (inertia.z > 0.0f) ? 1.0f / inertia.z : 0.0f;
+    m_invInertia.x = (m_inertia.x > 0.0f) ? 1.0f / m_inertia.x : 0.0f;
+    m_invInertia.y = (m_inertia.y > 0.0f) ? 1.0f / m_inertia.y : 0.0f;
+    m_invInertia.z = (m_inertia.z > 0.0f) ? 1.0f / m_inertia.z : 0.0f;
 }
 
 // Type management
 RigidBody::Type RigidBody::getType() const {
-    return type;
+    return m_type;
 }
 
 void RigidBody::setType(Type type) {
-    this->type = type;
+    m_type = type;
 }
 
 // Mass properties
 float RigidBody::getMass() const {
-    return mass;
+    return m_mass;
 }
 
 void RigidBody::setMass(float mass) {
-    this->mass = mass;
+    m_mass = mass;
     updateDerivedValues();
 }
 
 float RigidBody::getInvMass() const {
-    return invMass;
+    return m_invMass;
 }
 
 // Inertia properties
 const glm::vec3& RigidBody::getInertia() const {
-    return inertia;
+    return m_inertia;
 }
 
 void RigidBody::setInertia(const glm::vec3& inertia) {
-    this->inertia = inertia;
+    m_inertia = inertia;
     updateDerivedValues();
 }
 
 const glm::vec3& RigidBody::getInvInertia() const {
-    return invInertia;
+    return m_invInertia;
 }
 
 // Material properties
 float RigidBody::getRestitution() const {
-    return restitution;
+    return m_restitution;
 }
 
 void RigidBody::setRestitution(float restitution) {
-    this->restitution = restitution;
+    m_restitution = restitution;
 }
 
 // Linear motion
 const glm::vec3& RigidBody::getVelocity() const {
-    return velocity;
+    return m_velocity;
 }
 
-void RigidBody::setVelocity(const glm::vec3& vel) {
-    velocity = vel;
+void RigidBody::setVelocity(const glm::vec3& velocity) {
+    m_velocity = velocity;
 }
 
 const glm::vec3& RigidBody::getForce() const {
-    return force;
+    return m_force;
 }
 
 void RigidBody::applyForce(const glm::vec3& force) {
-    this->force += force;
+    m_force += force;
 }
 
 void RigidBody::clearForces() {
-    force = glm::vec3(0.0f);
+    m_force = glm::vec3(0.0f);
 }
 
 // Angular motion
 const glm::vec3& RigidBody::getAngularVelocity() const {
-    return angularVelocity;
+    return m_angularVelocity;
 }
 
-void RigidBody::setAngularVelocity(const glm::vec3& angVel) {
-    angularVelocity = angVel;
+void RigidBody::setAngularVelocity(const glm::vec3& angularVelocity) {
+    m_angularVelocity = angularVelocity;
 }
 
 const glm::vec3& RigidBody::getTorque() const {
-    return torque;
+    return m_torque;
 }
 
 void RigidBody::applyTorque(const glm::vec3& torque) {
-    this->torque += torque;
+    m_torque += torque;
 }
 
 void RigidBody::clearTorques() {
-    torque = glm::vec3(0.0f);
+    m_torque = glm::vec3(0.0f);
 }
 
 // Reset all accumulators
@@ -126,7 +125,8 @@ void RigidBody::clearAccumulators() {
     clearTorques();
 }
 
-// Component interface implementation
-std::unique_ptr<Component> RigidBody::clone() const {
+std::unique_ptr<ecs::components::Component> RigidBody::clone() const {
     return std::make_unique<RigidBody>(*this);
+}
+
 }

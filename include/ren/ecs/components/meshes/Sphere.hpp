@@ -8,36 +8,38 @@ class Sphere : public Mesh
 {
 public:
     Sphere(
-        const float radius = 1,
-        const unsigned int segments = 32,
-        const unsigned int rings = 32
+        float radius = 1,
+        unsigned int segments = 32,
+        unsigned int rings = 32
     );
     virtual ~Sphere();
     
     float getRadius() const;
-    void setRadius(float radius);
-
+    unsigned int getRings() const;
     unsigned int getSegments() const;
+    
+    void setRadius(float radius);
+    void setRings(unsigned int rings);
     void setSegments(unsigned int segments);
 
-    unsigned int getRings() const;
-    void setRings(unsigned int rings);
 
     static std::vector<Vertex> getVertices(
-        const float radius,
-        const unsigned int segments,
-        const unsigned int rings
+        float radius,
+        unsigned int segments,
+        unsigned int rings
     );
     static std::vector<unsigned int> getIndices(
-        const float radius,
-        const unsigned int segments,
-        const unsigned int rings
+        unsigned int segments,
+        unsigned int rings
     );
 
+protected:
+    virtual void reinitialize() override;
+
 private: 
-    float radius;
-    unsigned int segments;
-    unsigned int rings;
+    float m_radius;
+    unsigned int m_segments;
+    unsigned int m_rings;
 };
 
 }

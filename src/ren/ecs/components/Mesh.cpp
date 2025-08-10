@@ -2,97 +2,118 @@
 #include <spdlog/spdlog.h>
 #include "ecs/components/Mesh.hpp"
 
-using ren::ecs::components::Mesh;
-using ren::ecs::components::Component;
-using ren::ecs::components::meshes::Vertex;
+namespace ren::ecs::components {
 
-Mesh::Mesh(
-    const std::vector<Vertex>& vertices, 
-    const std::vector<unsigned int>& indices
-) {
-    this->vertices = vertices;
-    this->indices = indices;
-
-    this->init();
+Mesh::Mesh(const std::vector<meshes::Vertex>& vertices, const std::vector<unsigned int>& indices)
+    : m_vertices(vertices), m_indices(indices) 
+{
+    initialize();
 }
 
-void Mesh::init()
+void Mesh::initialize()
 {
-    spdlog::info("initializing mesh");
+    glGenVertexArrays(1, &m_vao);
+    glGenBuffers(1, &m_vbo);
+    glGenBuffers(1, &m_ebo);
 
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
+    glBindVertexArray(m_vao);
     
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
-    spdlog::info("vertices initialized");
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
-    spdlog::info("indices initialized");
-
+    // Setup vertex buffer
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferData(GL_ARRAY_BUFFER, 
+                 m_vertices.size() * sizeof(meshes::Vertex), 
+                 m_vertices.data(), 
+                 GL_STATIC_DRAW);
+    
+    // Setup element buffer
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
+                 m_indices.size() * sizeof(unsigned int), 
+                 m_indices.data(), 
+                 GL_STATIC_DRAW);
+    
+    // Position attribute
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<GLvoid*>(0));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 
+                         sizeof(meshes::Vertex), 
+                         reinterpret_cast<GLvoid*>(0));
 
+    // Normal attribute
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, Normal)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 
+                         sizeof(meshes::Vertex), 
+                         reinterpret_cast<GLvoid*>(offsetof(meshes::Vertex, Normal)));
     
+    // Texture coordinates attribute
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, TexCoords)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 
+                         sizeof(meshes::Vertex), 
+                         reinterpret_cast<GLvoid*>(offsetof(meshes::Vertex, TexCoords)));
     
     glBindVertexArray(0);
+    spdlog::info("Mesh initialized successfully");
 }
 
-void Mesh::reinit()
+void Mesh::reinitialize()
 {
-    spdlog::info("reinitializing mesh data");
+    glBindVertexArray(m_vao);
 
-    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferData(GL_ARRAY_BUFFER, 
+                m_vertices.size() * sizeof(meshes::Vertex), 
+                m_vertices.data(), 
+                GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
+                m_indices.size() * sizeof(unsigned int), 
+                m_indices.data(), 
+                GL_STATIC_DRAW);
 
     glBindVertexArray(0);
+    spdlog::info("Mesh reinitialized successfully");
 }
 
-unsigned int Mesh::getVAO() const {
-    return VAO;
+unsigned int Mesh::getVao() const 
+{
+    return m_vao;
 }
 
-unsigned int Mesh::getVBO() const {
-    return VBO;
+unsigned int Mesh::getVbo() const 
+{
+    return m_vbo;
 }
 
-unsigned int Mesh::getEBO() const {
-    return EBO;
+unsigned int Mesh::getEbo() const 
+{
+    return m_ebo;
 }
 
-const std::vector<unsigned int>& Mesh::getIndices() const {
-    return indices;
+const std::vector<unsigned int>& Mesh::getIndices() const 
+{
+    return m_indices;
 }
 
-const std::vector<Vertex>& Mesh::getVertices() const {
-    return vertices;
+const std::vector<meshes::Vertex>& Mesh::getVertices() const 
+{
+    return m_vertices;
 }
 
 void Mesh::setIndices(const std::vector<unsigned int>& indices)
 {
-    this->indices = indices;
-    this->reinit();
+    m_indices = indices;
+    reinitialize();
 }
 
 void Mesh::setVertices(const std::vector<meshes::Vertex>& vertices)
 {
-    this->vertices = vertices;
-    this->reinit();
+    m_vertices = vertices;
+    reinitialize();
 }
 
-std::unique_ptr<Component> Mesh::clone() const {
+std::unique_ptr<Component> Mesh::clone() const 
+{
     return std::make_unique<Mesh>(*this);
 }
+
+} 

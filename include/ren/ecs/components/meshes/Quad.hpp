@@ -4,16 +4,15 @@
 
 namespace ren::ecs::components::meshes {
 
-class Quad : public Mesh
-{
+class Quad : public Mesh {
 public:
     Quad(
-        const float width = 1,
-        const float height = 1,
-        const unsigned int widthSegments = 1,
-        const unsigned int heightSegments = 1
+        float width = 1.0f,
+        float height = 1.0f,
+        unsigned int widthSegments = 1,
+        unsigned int heightSegments = 1
     );
-    virtual ~Quad();
+    virtual ~Quad() override;
     
     float getWidth() const;
     float getHeight() const;
@@ -26,23 +25,27 @@ public:
     void setHeightSegments(unsigned int heightSegments);
     
     static std::vector<Vertex> getVertices(
-        const float width,
-        const float height,
-        const unsigned int widthSegments,
-        const unsigned int heightSegments
+        float width,
+        float height,
+        unsigned int widthSegments,
+        unsigned int heightSegments
     );
+    
     static std::vector<unsigned int> getIndices(
-        const float width,
-        const float height,
-        const unsigned int widthSegments,
-        const unsigned int heightSegments
+        float width,
+        float height,
+        unsigned int widthSegments,
+        unsigned int heightSegments
     );
+
+protected:
+    virtual void reinitialize() override;
 
 private:
-    float width;
-    float height;
-    unsigned int widthSegments;
-    unsigned int heightSegments;
+    float m_width;
+    float m_height;
+    unsigned int m_widthSegments;
+    unsigned int m_heightSegments;
 };
 
-}
+} 

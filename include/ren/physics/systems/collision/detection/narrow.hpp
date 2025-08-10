@@ -6,7 +6,6 @@ namespace ren::ecs::components { class Transform; }
 namespace ren::physics::components { class Collider; }
 namespace ren::physics::systems::collision { struct ManifoldPoints; }
 
-// TODO
 namespace ren::physics::systems::collision::detection::narrow {
 
 std::optional<ManifoldPoints> SAT(

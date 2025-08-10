@@ -6,23 +6,6 @@
 
 namespace ren::physics::systems::collision::detection::broad {
 
-namespace {
-constexpr float EPSILON = 1e-6f;
-
-// Helper function to create a simple contact manifold
-ManifoldPoints createSingleContactManifold(const glm::vec3& position, 
-                                          const glm::vec3& normal,
-                                          float penetration) {
-    ManifoldPoints manifold;
-    Contact contact;
-    contact.position = position;
-    contact.normal = normal;
-    contact.penetration = penetration;
-    manifold.contacts.push_back(contact);
-    return manifold;
-}
-} // anonymous namespace
-
 std::optional<ManifoldPoints> AABB(
     const components::colliders::BoxCollider& c1,
     const ecs::components::Transform& t1,
@@ -239,4 +222,18 @@ std::optional<ManifoldPoints> BoundingSpheres(
     return createSingleContactManifold(contactPos, normal, penetration);
 }
 
-} // namespace ren::physics::systems::collision::detection::broad
+ManifoldPoints createSingleContactManifold(
+    const glm::vec3& position, 
+    const glm::vec3& normal,
+    float penetration
+) {
+    ManifoldPoints manifold;
+    Contact contact;
+    contact.position = position;
+    contact.normal = normal;
+    contact.penetration = penetration;
+    manifold.contacts.push_back(contact);
+    return manifold;
+}
+
+} 

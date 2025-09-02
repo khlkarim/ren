@@ -9,7 +9,7 @@ namespace {
     std::vector<glm::vec3> GenerateRandomControlPoints(size_t gridWidth, size_t gridHeight, size_t count);
     std::vector<glm::vec3> Interpolate(const std::vector<glm::vec3>& initial, const std::vector<glm::vec3>& target, float factor);
     
-    constexpr size_t kNumPoints = 20;
+    constexpr size_t kNumPoints = 50;
     constexpr size_t kGridWidth = 10;
     constexpr size_t kGridHeight = 10;
     constexpr float kAnimationDuration = 5.0f;

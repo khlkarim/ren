@@ -6,4 +6,4 @@ file(GLOB_RECURSE CORE_SOURCES
 add_library(core STATIC ${CORE_SOURCES})
 
 target_include_directories(core PUBLIC ${CMAKE_SOURCE_DIR}/include/ren)
-target_link_libraries(core PUBLIC ecs glfw imgui::imgui OpenGL::GL)
+target_link_libraries(core PUBLIC ecs glfw)

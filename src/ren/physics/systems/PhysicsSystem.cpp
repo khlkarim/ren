@@ -15,8 +15,8 @@ namespace ren::physics::systems {
 
 void PhysicsSystem::update(float dt, ecs::entities::EntityManager& entityManager)
 {
-    handleCollisions(dt, entityManager);
     updateDynamics(dt, entityManager);
+    handleCollisions(dt, entityManager);
 }
 
 void PhysicsSystem::handleCollisions(float dt, ecs::entities::EntityManager& entityManager)

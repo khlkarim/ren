@@ -1,3 +1,4 @@
+#include <spdlog/spdlog.h>
 #include "ecs/components/Transform.hpp"
 #include "physics/components/colliders/BoxCollider.hpp"
 #include "physics/components/colliders/SphereCollider.hpp"

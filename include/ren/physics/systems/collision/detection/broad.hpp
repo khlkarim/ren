@@ -1,6 +1,7 @@
 #pragma once
 
 #include <optional>
+#include <glm/glm.hpp>
 
 namespace ren::ecs::components { class Transform; }
 namespace ren::physics::systems::collision { struct ManifoldPoints; }
@@ -13,7 +14,6 @@ namespace ren::physics::systems::collision::detection::broad {
 
 constexpr float EPSILON = 1e-6f;
 
-// Helper function to create a simple contact manifold
 ManifoldPoints createSingleContactManifold(
     const glm::vec3& position, 
     const glm::vec3& normal,

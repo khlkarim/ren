@@ -53,8 +53,11 @@ void Mouse::set_callbacks(GLFWwindow* window)
 
 void Mouse::clicked_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    ImGuiIO& io = ImGui::GetIO();
-    if (io.WantCaptureMouse) return;
+    if (ImGui::GetCurrentContext())
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.WantCaptureKeyboard) return;
+    }
 
     Clicked event(window, button, action, mods);
 
@@ -71,15 +74,21 @@ void Mouse::clicked_callback(GLFWwindow* window, int button, int action, int mod
 }
 void Mouse::entered_callback(GLFWwindow* window, int entered)
 {
-    ImGuiIO& io = ImGui::GetIO();
-    if (io.WantCaptureMouse) return;
+    if (ImGui::GetCurrentContext())
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.WantCaptureKeyboard) return;
+    }
 
     instance->emit(Entered(window, entered));
 }
 void Mouse::moved_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    ImGuiIO& io = ImGui::GetIO();
-    if (io.WantCaptureMouse) return;
+    if (ImGui::GetCurrentContext())
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.WantCaptureKeyboard) return;
+    }
 
     if (instance->first_move) {
         instance->prev_xpos = xpos;
@@ -97,8 +106,11 @@ void Mouse::moved_callback(GLFWwindow* window, double xpos, double ypos)
 }
 void Mouse::scrolled_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    ImGuiIO& io = ImGui::GetIO();
-    if (io.WantCaptureMouse) return;
+    if (ImGui::GetCurrentContext())
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.WantCaptureKeyboard) return;
+    }
 
     instance->emit(Scrolled(window, xoffset, yoffset));
 }

@@ -1,9 +1,9 @@
-#include "ren/core.hpp"
 #include "ren/ecs.hpp"
-#include "ren/physics.hpp"
-#include "ren/renderer.hpp"
+#include "ren/core.hpp"
 #include "ren/io.hpp"
 #include "ren/assets.hpp"
+#include "ren/physics.hpp"
+#include "ren/renderer.hpp"
 
 // Forward declarations
 void initializeScene(ren::core::Scene& scene);

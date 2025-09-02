@@ -16,6 +16,8 @@ private:
 
 private:
     bool m_cursorLocked;
+    bool m_firstMove = true;
+    double m_lastX, m_lastY;
 };
 
 }

@@ -30,6 +30,7 @@ CameraSystem::CameraSystem() : m_cursorLocked(true)
     mouse.on<io::events::mouse::Clicked>([window, this](const auto& event) {            
         if (event.action == GLFW_PRESS) {
             m_cursorLocked = true;  
+            m_firstMove = true;
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
     });
@@ -51,20 +52,17 @@ void CameraSystem::updateDirection(const float dt, Camera& camera)
     if(!eventOpt) return;
     auto& event = eventOpt.value();
 
-    static bool firstMouse = true;
-    static double lastX, lastY;
-
-    if (firstMouse) {
-        lastX = event.xpos;
-        lastY = event.ypos;
-        firstMouse = false;
+    if (m_firstMove) {
+        m_lastX = event.xpos;
+        m_lastY = event.ypos;
+        m_firstMove = false;
     }
 
-    float xoffset = static_cast<float>(event.xpos - lastX);
-    float yoffset = static_cast<float>(lastY - event.ypos);
+    float xoffset = static_cast<float>(event.xpos - m_lastX);
+    float yoffset = static_cast<float>(m_lastY - event.ypos);
 
-    lastX = event.xpos;
-    lastY = event.ypos;
+    m_lastX = event.xpos;
+    m_lastY = event.ypos;
 
     const float sensitivity = 5.0f;
     xoffset *= sensitivity * dt;

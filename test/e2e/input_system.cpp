@@ -87,6 +87,8 @@ int main() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
     ImGui::StyleColorsDark();
 
     // Setup Platform/Renderer backends
@@ -96,6 +98,11 @@ int main() {
     // Main loop
     double lastTime = glfwGetTime();
     while (window.isOpen()) {
+        // Start a new ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
         const double currentTime = glfwGetTime();
         const float deltaTime = static_cast<float>(currentTime - lastTime);
         lastTime = currentTime;
@@ -104,10 +111,17 @@ int main() {
         cameraSystem.update(deltaTime, renderer.getCamera());
         renderer.render(scene);
 
-        // Start a new ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        ImGui::Begin("DockSpace Demo", nullptr, 
+            ImGuiWindowFlags_NoTitleBar | 
+            ImGuiWindowFlags_NoCollapse |
+            ImGuiWindowFlags_NoResize |
+            ImGuiWindowFlags_NoMove |
+            ImGuiWindowFlags_NoBringToFrontOnFocus |
+            ImGuiWindowFlags_NoNavFocus);
+
+        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+        ImGui::End();
 
         // Example window
         ImGui::Begin("Hello, world!");

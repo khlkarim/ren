@@ -7,3 +7,4 @@ vcpkg_downloads
 .vscode
 CMakeUserPresets.json
 test/cpp
+*.ini

@@ -1,3 +1,4 @@
+#include "imgui.h"
 #include "core/Window.hpp"
 #include "io/events/mouse/Moved.hpp"
 #include "io/events/mouse/Clicked.hpp"
@@ -52,6 +53,9 @@ void Mouse::set_callbacks(GLFWwindow* window)
 
 void Mouse::clicked_callback(GLFWwindow* window, int button, int action, int mods)
 {
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.WantCaptureMouse) return;
+
     Clicked event(window, button, action, mods);
 
     if(action == GLFW_PRESS)
@@ -67,10 +71,16 @@ void Mouse::clicked_callback(GLFWwindow* window, int button, int action, int mod
 }
 void Mouse::entered_callback(GLFWwindow* window, int entered)
 {
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.WantCaptureMouse) return;
+
     instance->emit(Entered(window, entered));
 }
 void Mouse::moved_callback(GLFWwindow* window, double xpos, double ypos)
 {
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.WantCaptureMouse) return;
+
     if (instance->first_move) {
         instance->prev_xpos = xpos;
         instance->prev_ypos = ypos;
@@ -87,6 +97,9 @@ void Mouse::moved_callback(GLFWwindow* window, double xpos, double ypos)
 }
 void Mouse::scrolled_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.WantCaptureMouse) return;
+
     instance->emit(Scrolled(window, xoffset, yoffset));
 }
 

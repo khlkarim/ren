@@ -1,3 +1,4 @@
+#include "imgui.h"
 #include <spdlog/spdlog.h>
 #include "core/Window.hpp"
 #include "io/events/keyboard/KeyInput.hpp"
@@ -44,6 +45,9 @@ void Keyboard::set_callbacks(GLFWwindow* window)
 
 void Keyboard::key_input_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.WantCaptureKeyboard) return;
+
     KeyInput event(window, key, scancode, action, mods);
 
     if(action == GLFW_PRESS)

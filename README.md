@@ -319,5 +319,12 @@ entities has physics properties
 entities can interact and have relationships (joints and constraints)
 
 // TODO: 
-    fix cube mesh generation
+    testing correctness
+        normals
+        debug textures
     add a timer utility
+
+simple and scalable
+integrating imgui, sdl, trying to implement cool graphics stuff
+polish physics
+get 5 ideas to present

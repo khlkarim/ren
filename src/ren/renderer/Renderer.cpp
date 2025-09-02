@@ -22,27 +22,26 @@ using ren::ecs::entities::Entity;
 
 void Renderer::render(const core::Scene& scene) const
 {
+    glfwPollEvents();
+    glfwSwapBuffers(m_renderTarget);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    
     const glm::mat4 view = m_camera.getViewMatrix();
     const glm::mat4 projection = m_camera.getProjectionMatrix();
-
+    
     auto& entityManager = scene.getEntityManager();
     
     // Render skybox first if it exists
     if (auto skyboxEntity = entityManager.get("skybox")) {
         renderSkybox(*skyboxEntity, projection, view);
     }
-
+    
     // Render all other entities
     for (const auto& entityId : entityManager.getEntityIds()) {
         if (auto entity = entityManager.get(entityId)) {
             renderEntity(*entity, projection, view);
         }
     }
-
-    glfwPollEvents();
-    glfwSwapBuffers(m_renderTarget);
 }
 
 void Renderer::renderEntity(

@@ -4,6 +4,11 @@
     "glad",
     "glfw3",
     "glm",
-    "spdlog"
+    "spdlog", 
+    "gtest",
+    {
+      "name": "imgui",
+      "features": ["glfw-binding", "opengl3-binding"]
+    }
   ]
 }

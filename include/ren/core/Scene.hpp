@@ -17,7 +17,6 @@ public:
     const ecs::systems::SystemManager& getSystemManager() const;
     void setSystemManager(const ecs::systems::SystemManager& manager);
 
-    // Update all systems
     void update(float deltaTime);
 
 private:

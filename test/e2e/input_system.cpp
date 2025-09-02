@@ -1,3 +1,6 @@
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 #include "ren/core.hpp"
 #include "ren/assets.hpp"
 #include "ren/ecs.hpp"
@@ -80,6 +83,16 @@ int main() {
     ren::renderer::CameraSystem cameraSystem;
     renderer.setRenderTarget(window.getGlfwWindow());
 
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGui::StyleColorsDark();
+
+    // Setup Platform/Renderer backends
+    ImGui_ImplGlfw_InitForOpenGL(window.getGlfwWindow(), true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+
     // Main loop
     double lastTime = glfwGetTime();
     while (window.isOpen()) {
@@ -90,7 +103,32 @@ int main() {
         updateShaders(scene, currentTime);
         cameraSystem.update(deltaTime, renderer.getCamera());
         renderer.render(scene);
+
+        // Start a new ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        // Example window
+        ImGui::Begin("Hello, world!");
+        ImGui::Text("This is a demo window!");
+        static float f = 0.0f;
+        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+        if (ImGui::Button("Close")) 
+            glfwSetWindowShouldClose(window.getGlfwWindow(), true);
+        ImGui::End();
+
+        // Rendering
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
+
+    // Cleanup
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    glfwDestroyWindow(window.getGlfwWindow());
+    glfwTerminate();
 
     return 0;
 }

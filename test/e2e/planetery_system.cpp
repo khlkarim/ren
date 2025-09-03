@@ -3,6 +3,7 @@
 #include "ren/ecs.hpp"
 #include "ren/renderer.hpp"
 #include "ren/io.hpp"
+#include "ren/utils.hpp"
 
 // Forward declarations
 namespace planetary_system {
@@ -37,11 +38,12 @@ int main() {
     renderer.setRenderTarget(window.getGlfwWindow());
 
     // Main loop
-    double last_time = glfwGetTime();
+    ren::utils::Timer timer;
+    timer.start();
+    
     while(window.isOpen()) {
-        double current_time = glfwGetTime();
-        float delta_time = static_cast<float>(current_time - last_time);
-        last_time = current_time;
+        timer.update();
+        float delta_time = static_cast<float>(timer.getDeltaTime());
 
         planetary_system::update_system(scene, delta_time);
         camera_system.update(delta_time, renderer.getCamera());

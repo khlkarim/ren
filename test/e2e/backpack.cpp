@@ -2,6 +2,7 @@
 #include "ren/ecs.hpp"
 #include "ren/assets.hpp"
 #include "ren/renderer.hpp"
+#include "ren/utils.hpp"
 
 namespace {
     // Forward declaration
@@ -41,12 +42,14 @@ int main()
     renderer.setRenderTarget(window.getGlfwWindow());
 
     // Main loop
-    float lastFrame = static_cast<float>(glfwGetTime());
+    ren::utils::Timer timer;
+    timer.start();
+    
     while(window.isOpen()) {
+        timer.update();
+
         // Calculate delta time
-        float currentFrame = static_cast<float>(glfwGetTime());
-        float deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        float deltaTime = static_cast<float>(timer.getDeltaTime());
 
         // Update entity rotation
         auto& transform = entityManager.getComponent<ren::ecs::components::Transform>(entity.getId())

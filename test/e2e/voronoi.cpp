@@ -2,6 +2,7 @@
 #include "ren/assets.hpp"
 #include "ren/ecs.hpp"
 #include "ren/renderer.hpp"
+#include "ren/utils.hpp"
 
 namespace {
     // Function prototypes
@@ -56,25 +57,28 @@ int main()
     renderer.setRenderTarget(window.getGlfwWindow());
 
     // Main loop
-    float lastTime = static_cast<float>(glfwGetTime());
+    ren::utils::Timer timer;
+    double accumulator = 0.0;
+
+    timer.start();
     while(window.isOpen())
     {
-        // Calculate time delta
-        float currentTime = static_cast<float>(glfwGetTime());
-        float deltaTime = currentTime - lastTime;
+        timer.update();
+        float deltaTime = static_cast<float>(timer.getDeltaTime());
+        accumulator += deltaTime;
         
         // Update shader parameters
         auto& meshRenderer = entityManager.getComponent<ren::ecs::components::MeshRenderer>("plane").value().get();
         auto& shader = meshRenderer.getShader();
         
-        float interpolationFactor = deltaTime / kAnimationDuration;
+        float interpolationFactor = accumulator / kAnimationDuration;
         shader.setVec3Array("vertexColors", Interpolate(initialColors, targetColors, interpolationFactor));
         shader.setVec3Array("vertexPositions", Interpolate(initialPositions, targetPositions, interpolationFactor));
 
         // Start next animation cycle
-        if(deltaTime > kAnimationDuration)
+        if(accumulator > kAnimationDuration)
         {
-            lastTime = currentTime;
+            accumulator = 0.0;
 
             initialColors = targetColors;
             initialPositions = targetPositions;

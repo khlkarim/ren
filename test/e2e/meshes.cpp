@@ -3,6 +3,7 @@
 #include "ren/ecs.hpp"
 #include "ren/assets.hpp"
 #include "ren/renderer.hpp"
+#include "ren/utils.hpp"
 
 int main()
 {
@@ -31,12 +32,13 @@ int main()
     ren::renderer::CameraSystem cameraSystem;
     renderer.setRenderTarget(window.getGlfwWindow());
 
-    double lastTime = glfwGetTime();
+    ren::utils::Timer timer;
+    timer.start();
+
     while (window.isOpen())
     {   
-        const double currentTime = glfwGetTime();
-        const float deltaTime = static_cast<float>(currentTime - lastTime);
-        lastTime = currentTime;
+        timer.update();
+        const float deltaTime = static_cast<float>(timer.getDeltaTime());
 
         scene
             .getEntityManager()

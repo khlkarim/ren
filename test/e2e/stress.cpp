@@ -3,6 +3,7 @@
 #include "ren/ecs.hpp"
 #include "ren/assets.hpp"
 #include "ren/renderer.hpp"
+#include "ren/utils.hpp"
 
 void fill(ren::core::Scene& scene);
 
@@ -19,14 +20,14 @@ int main()
     ren::renderer::CameraSystem cameraSystem;
     renderer.setRenderTarget(window.getGlfwWindow());
 
-    double lastTime = glfwGetTime();
+    ren::utils::Timer timer;
+    timer.start();
+
     while (window.isOpen())
     {   
-        const double currentTime = glfwGetTime();
-        const float deltaTime = static_cast<float>(currentTime - lastTime);
-        lastTime = currentTime;
+        timer.update();
 
-        cameraSystem.update(deltaTime, renderer.getCamera());
+        cameraSystem.update(timer.getDeltaTime(), renderer.getCamera());
         renderer.render(scene);
     }
 

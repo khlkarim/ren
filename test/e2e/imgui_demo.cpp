@@ -1,4 +1,6 @@
 #include "ren/utils/imgui.hpp"
+#include <spdlog/spdlog.h>
+#include "ren/utils/Timer.hpp"
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
@@ -30,12 +32,12 @@ int main(int, char**)
     ren::utils::imgui::init(window);
 
     // Main loop
-    double lastTime = glfwGetTime();
+    ren::utils::Timer timer;
+    timer.start();
+
     while (!glfwWindowShouldClose(window))
     {
-        const double currentTime = glfwGetTime();
-        const float deltaTime = static_cast<float>(currentTime - lastTime);
-        lastTime = currentTime;
+        timer.update();
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -43,7 +45,7 @@ int main(int, char**)
 
         ren::utils::imgui::startFrame();
         ren::utils::imgui::windows::hello_world(window);
-        ren::utils::imgui::windows::performance_monitor(deltaTime);
+        ren::utils::imgui::windows::performance_monitor(timer.getDeltaTime());
         ren::utils::imgui::endFrame();
 
         glfwSwapBuffers(window);

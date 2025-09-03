@@ -1,11 +1,9 @@
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
 #include "ren/core.hpp"
 #include "ren/assets.hpp"
 #include "ren/ecs.hpp"
 #include "ren/io.hpp"
 #include "ren/renderer.hpp"
+#include "ren/utils.hpp"
 
 namespace {
 
@@ -83,66 +81,32 @@ int main() {
     ren::renderer::CameraSystem cameraSystem;
     renderer.setRenderTarget(window.getGlfwWindow());
 
-    // Setup Dear ImGui context
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-    ImGui::StyleColorsDark();
-
-    // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window.getGlfwWindow(), true);
-    ImGui_ImplOpenGL3_Init("#version 330");
+    ren::utils::imgui::init(window.getGlfwWindow());
 
     // Main loop
-    double lastTime = glfwGetTime();
-    while (window.isOpen()) {
-        // Start a new ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+    ren::utils::Timer timer;
+    timer.start();
 
-        const double currentTime = glfwGetTime();
-        const float deltaTime = static_cast<float>(currentTime - lastTime);
-        lastTime = currentTime;
+    while (window.isOpen()) {
+        timer.update();
+
+        ren::utils::imgui::startFrame();
+
+        const float deltaTime = static_cast<float>(timer.getDeltaTime());
+        const float currentTime = static_cast<float>(timer.getElapsedTime());
 
         updateShaders(scene, currentTime);
         cameraSystem.update(deltaTime, renderer.getCamera());
         renderer.render(scene);
 
-        ImGui::Begin("DockSpace Demo", nullptr, 
-            ImGuiWindowFlags_NoTitleBar | 
-            ImGuiWindowFlags_NoCollapse |
-            ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoMove |
-            ImGuiWindowFlags_NoBringToFrontOnFocus |
-            ImGuiWindowFlags_NoNavFocus);
-
-        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
-        ImGui::End();
-
         // Example window
-        ImGui::Begin("Hello, world!");
-        ImGui::Text("This is a demo window!");
-        static float f = 0.0f;
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-        if (ImGui::Button("Close")) 
-            glfwSetWindowShouldClose(window.getGlfwWindow(), true);
-        ImGui::End();
+        ren::utils::imgui::windows::performance_monitor(deltaTime);
 
         // Rendering
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        ren::utils::imgui::endFrame();
     }
 
     // Cleanup
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-    glfwDestroyWindow(window.getGlfwWindow());
-    glfwTerminate();
-
+    ren::utils::imgui::terminate();
     return 0;
 }

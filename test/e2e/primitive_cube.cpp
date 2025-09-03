@@ -2,6 +2,7 @@
 #include "ren/assets.hpp"
 #include "ren/ecs.hpp"
 #include "ren/renderer.hpp"
+#include "ren/utils.hpp"
 
 namespace {
     // Helper function to update shader lighting parameters
@@ -61,20 +62,19 @@ int main()
     renderer.setRenderTarget(window.getGlfwWindow());
     
     // Main loop
-    float lastFrameTime = static_cast<float>(glfwGetTime());
+    ren::utils::Timer timer;
+    timer.start();
+    
     while(window.isOpen()) {
-        // Calculate delta time
-        float currentTime = static_cast<float>(glfwGetTime());
-        float deltaTime = currentTime - lastFrameTime;
-        lastFrameTime = currentTime;
+        timer.update();
 
         // Update parent entity
         auto& parentTransform = entityManager.getComponent<ren::ecs::components::Transform>("player1").value().get();
         auto& parentRenderer = entityManager.getComponent<ren::ecs::components::MeshRenderer>("player1").value().get();
         auto& parentShader = parentRenderer.getShader();
 
-        parentTransform.rotate(50.0f * deltaTime, glm::vec3(1.0f, 0.0f, 1.0f));
-        updateShaderLighting(parentShader, currentTime);
+        parentTransform.rotate(50.0f * timer.getDeltaTime(), glm::vec3(1.0f, 0.0f, 1.0f));
+        updateShaderLighting(parentShader, timer.getElapsedTime());
 
         // Update child entity
         auto& childEntity = hierarchy.get("player2").value().get();
@@ -82,9 +82,9 @@ int main()
         auto& childRenderer = childEntity.getComponentManager().get<ren::ecs::components::MeshRenderer>().value().get();
         auto& childShader = childRenderer.getShader();
 
-        childTransform.rotate(50.0f * deltaTime, glm::vec3(1.0f, 0.0f, 1.0f));
+        childTransform.rotate(50.0f * timer.getDeltaTime(), glm::vec3(1.0f, 0.0f, 1.0f));
         childTransform.setPosition(glm::vec3(1.0f, 0.0f, 1.0f));
-        updateShaderLighting(childShader, currentTime);
+        updateShaderLighting(childShader, timer.getElapsedTime());
         
         // Render scene
         renderer.render(scene);

@@ -12,6 +12,6 @@ namespace ren::utils::imgui
     namespace windows
     {
         void hello_world(GLFWwindow* window);
-        void performance_monitor(float dt);
+        void performance_monitor(double dt);
     }
 }

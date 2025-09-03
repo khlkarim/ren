@@ -4,6 +4,7 @@
 #include "ren/assets.hpp"
 #include "ren/physics.hpp"
 #include "ren/renderer.hpp"
+#include "ren/utils.hpp"
 
 // Forward declarations
 void initializeScene(ren::core::Scene& scene);
@@ -30,13 +31,13 @@ int main()
     renderer.setRenderTarget(window.getGlfwWindow());
 
     // Main game loop
-    float lastFrameTime = static_cast<float>(glfwGetTime());
+    ren::utils::Timer timer;
+    timer.start();
+
     while (window.isOpen())
     {   
-        // Calculate delta time
-        float currentFrameTime = static_cast<float>(glfwGetTime());
-        float deltaTime = currentFrameTime - lastFrameTime;
-        lastFrameTime = currentFrameTime;
+        timer.update();
+        float deltaTime = static_cast<float>(timer.getDeltaTime());
 
         // Update and render
         cameraSystem.update(deltaTime, renderer.getCamera());

@@ -116,13 +116,8 @@ ren::core::Scene create_system() {
     std::vector<Planet> planets = get_planets();
     auto& transform = component_manager.get<ren::ecs::components::Transform>().value().get();
 
-    ren::ecs::components::shaders::Texture texture;
-    texture.type = "texture_diffuse";
-
     for(const auto& planet_data : planets) {
-        // Set planet texture
-        texture.path = "assets\\textures\\planetary_system\\" + planet_data.name + ".jpg";
-        texture.id = asset_manager.loadTextureFromImage(texture.path);
+        auto texture = asset_manager.loadTextureFromImage(ren::ecs::components::shaders::Texture::TextureType::Diffuse, "assets\\textures\\planetary_system\\" + planet_data.name + ".jpg");
         component_manager.set(ren::ecs::components::MeshRenderer(shader, {texture}));
         
         // Set initial position

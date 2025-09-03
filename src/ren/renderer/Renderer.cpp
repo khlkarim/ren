@@ -116,14 +116,18 @@ void Renderer::bindTextures(const ren::ecs::components::MeshRenderer& meshRender
     for (unsigned int i = 0; i < textures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i);
 
+        std::string name = "texture";
         std::string number;
-        const std::string& name = textures[i].type;
+        const ecs::components::shaders::Texture::TextureType& type = textures[i].type;
 
-        if (name == "texture_diffuse") {
+        if (type == ecs::components::shaders::Texture::TextureType::Diffuse) {
+            name += "_diffuse";
             number = std::to_string(diffuseNr++);
-        } else if (name == "texture_specular") {
+        } else if (type == ecs::components::shaders::Texture::TextureType::Specular) {
+            name += "_specular";
             number = std::to_string(specularNr++);
-        } else if (name == "texture_normal") {
+        } else if (type == ecs::components::shaders::Texture::TextureType::Normals) {
+            name += "_normals";
             number = std::to_string(normalNr++);
         }
 

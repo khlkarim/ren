@@ -332,3 +332,6 @@ get 5 ideas to present
 audio engine (fmod)
 time system
 imgui helpers (performance monitor)
+
+texture utilities
+poll events and swap buffers is not the job of the renderer

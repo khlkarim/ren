@@ -78,12 +78,7 @@ void setupSkybox(ren::core::Scene& scene, ren::assets::AssetManager& assetManage
         "assets\\shaders\\skybox\\skybox.frag"
     );
     
-    unsigned int cubemapId = assetManager.loadCubemap(kSkyboxFaces);
-    
-    ren::ecs::components::shaders::Texture skyboxTexture;
-    skyboxTexture.id = cubemapId;
-    skyboxTexture.path = "assets\\textures\\skybox\\stars\\";
-    skyboxTexture.type = "texture_cubemap";
+    auto skyboxTexture = assetManager.loadCubemap(kSkyboxFaces);
 
     // Create skybox entity
     ren::ecs::entities::Entity skybox("skybox");
@@ -102,19 +97,9 @@ void setupBalls(ren::core::Scene& scene, ren::assets::AssetManager& assetManager
         "assets\\shaders\\planetary_system\\planetary.frag"
     );
     
-    unsigned int earthTextureId = assetManager.loadTextureFromImage("assets\\textures\\planetary_system\\Earth.jpg");
-    unsigned int sunTextureId = assetManager.loadTextureFromImage("assets\\textures\\planetary_system\\Sun.jpg");
+    auto earthTexture = assetManager.loadTextureFromImage(ren::ecs::components::shaders::Texture::TextureType::Diffuse, "assets\\textures\\planetary_system\\Earth.jpg");
+    auto sunTexture = assetManager.loadTextureFromImage(ren::ecs::components::shaders::Texture::TextureType::Diffuse, "assets\\textures\\planetary_system\\Sun.jpg");
     
-    ren::ecs::components::shaders::Texture earthTexture;
-    earthTexture.id = earthTextureId;
-    earthTexture.path = "assets\\textures\\Earth.jpg";
-    earthTexture.type = "texture_diffuse";
-
-    ren::ecs::components::shaders::Texture sunTexture;
-    sunTexture.id = sunTextureId;
-    sunTexture.path = "assets\\textures\\Sun.jpg";
-    sunTexture.type = "texture_diffuse";
-
     auto& entityManager = scene.getEntityManager();
 
     // Create first static ball

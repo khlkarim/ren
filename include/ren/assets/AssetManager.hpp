@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include "ecs/components/shaders/Texture.hpp"
 
 // Forward declaration
 struct aiScene;
@@ -15,7 +16,6 @@ namespace ren::ecs::entities { class Entity; }
 namespace ren::ecs::components::shaders 
 { 
     class Shader; 
-    struct Texture; 
 }
 // Forward declaration
 
@@ -26,8 +26,8 @@ class AssetManager
 {
 public:
     ecs::entities::Entity loadEntity(const std::string& path);
-    unsigned int loadCubemap(const std::vector<std::string>& faces);
-    unsigned int loadTextureFromImage(const std::string& path, bool gamma = false);
+    ecs::components::shaders::Texture loadCubemap(const std::vector<std::string>& faces);
+    ecs::components::shaders::Texture loadTextureFromImage(const ecs::components::shaders::Texture::TextureType& type, const std::string& path, bool gamma = false);
     ecs::components::shaders::Shader loadShader(const std::string& vertexShader, const std::string& fragShader) const;
 
 private:
@@ -47,7 +47,7 @@ private:
 
     std::vector<ecs::components::shaders::Texture> loadMaterialTextures(
         const std::string& directory, 
-        const std::string& typeName, 
+        const ecs::components::shaders::Texture::TextureType& typeName, 
         aiMaterial* material, 
         aiTextureType type);
 

@@ -122,9 +122,11 @@ Shader AssetManager::loadShader(const std::string& vertexShader, const std::stri
     return shader;
 }
 
-unsigned int AssetManager::loadTextureFromImage(const std::string& path, bool gamma) {
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
+Texture AssetManager::loadTextureFromImage(const Texture::TextureType& type, const std::string& path, bool gamma) {
+    Texture texture;
+    texture.path = path;
+    texture.type = type;
+    glGenTextures(1, &texture.id);
 
     int width, height, nrComponents;
     stbi_set_flip_vertically_on_load(true);
@@ -139,7 +141,7 @@ unsigned int AssetManager::loadTextureFromImage(const std::string& path, bool ga
         else if (nrComponents == 4)
             format = GL_RGBA;
 
-        glBindTexture(GL_TEXTURE_2D, textureID);
+        glBindTexture(GL_TEXTURE_2D, texture.id);
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -155,12 +157,12 @@ unsigned int AssetManager::loadTextureFromImage(const std::string& path, bool ga
         FATAL("Texture failed to load at path: {}", path);
     }
 
-    return textureID;
+    return texture;
 }
 
 std::vector<Texture> AssetManager::loadMaterialTextures(
     const std::string& directory, 
-    const std::string& typeName, 
+    const Texture::TextureType& typeName, 
     aiMaterial *mat, 
     aiTextureType type
 ) {
@@ -181,10 +183,7 @@ std::vector<Texture> AssetManager::loadMaterialTextures(
         }
         
         if (!skip) {   
-            Texture texture;
-            texture.id = loadTextureFromImage(directory + str.C_Str());
-            texture.type = typeName;
-            texture.path = str.C_Str();
+            Texture texture = loadTextureFromImage(typeName, directory + str.C_Str());
             textures.push_back(texture);
             this->m_texturesLoaded.push_back(texture);
         }
@@ -244,16 +243,16 @@ void AssetManager::processMesh(Entity& entity, const std::string& directory, con
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];    
 
         // Load textures for this material
-        auto diffuseMaps = loadMaterialTextures(directory, "texture_diffuse", material, aiTextureType_DIFFUSE);
+        auto diffuseMaps = loadMaterialTextures(directory, Texture::TextureType::Diffuse, material, aiTextureType_DIFFUSE);
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-        auto specularMaps = loadMaterialTextures(directory, "texture_specular", material, aiTextureType_SPECULAR);
+        auto specularMaps = loadMaterialTextures(directory, Texture::TextureType::Specular, material, aiTextureType_SPECULAR);
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
-        auto normalMaps = loadMaterialTextures(directory, "texture_normal", material, aiTextureType_HEIGHT);
+        auto normalMaps = loadMaterialTextures(directory, Texture::TextureType::Normals, material, aiTextureType_HEIGHT);
         textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
-        auto heightMaps = loadMaterialTextures(directory, "texture_height", material, aiTextureType_AMBIENT);
+        auto heightMaps = loadMaterialTextures(directory, Texture::TextureType::Height, material, aiTextureType_AMBIENT);
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
     }
     
@@ -308,10 +307,10 @@ Entity AssetManager::loadEntity(const std::string& path) {
     return entity;
 }
 
-unsigned int AssetManager::loadCubemap(const std::vector<std::string>& faces) {
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+Texture AssetManager::loadCubemap(const std::vector<std::string>& faces) {
+    Texture texture;
+    glGenTextures(1, &texture.id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture.id);
 
     int width, height, nrComponents;
     for (unsigned int i = 0; i < faces.size(); i++) {
@@ -335,7 +334,7 @@ unsigned int AssetManager::loadCubemap(const std::vector<std::string>& faces) {
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-    return textureID;
+    return texture;
 }
 
 }

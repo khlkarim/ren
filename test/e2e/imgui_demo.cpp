@@ -1,6 +1,4 @@
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "ren/utils/imgui.hpp"
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
@@ -29,52 +27,29 @@ int main(int, char**)
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
 
-    // Setup Dear ImGui context
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    ImGui::StyleColorsDark();
-
-    // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
+    ren::utils::imgui::init(window);
 
     // Main loop
+    double lastTime = glfwGetTime();
     while (!glfwWindowShouldClose(window))
     {
-        glfwPollEvents();
+        const double currentTime = glfwGetTime();
+        const float deltaTime = static_cast<float>(currentTime - lastTime);
+        lastTime = currentTime;
 
-        // Start a new ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        // Example window
-        ImGui::Begin("Hello, world!");
-        ImGui::Text("This is a demo window!");
-        static float f = 0.0f;
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-        if (ImGui::Button("Close")) 
-            glfwSetWindowShouldClose(window, true);
-        ImGui::End();
-
-        // Rendering
-        ImGui::Render();
-        int display_w, display_h;
-        glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        glfwPollEvents();
 
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        ren::utils::imgui::startFrame();
+        ren::utils::imgui::windows::hello_world(window);
+        ren::utils::imgui::windows::performance_monitor(deltaTime);
+        ren::utils::imgui::endFrame();
 
         glfwSwapBuffers(window);
     }
 
-    // Cleanup
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    ren::utils::imgui::terminate();
     glfwDestroyWindow(window);
     glfwTerminate();
 
